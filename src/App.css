@@ -77,6 +77,79 @@
   color: var(--text);
 }
 
+/* 笔记区（每日市场笔记 / 模拟盘日记） */
+.notes-section {
+  margin-top: 56px;
+  text-align: left;
+}
+
+.notes-heading {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.notes-list {
+  display: grid;
+  gap: 20px;
+}
+
+.note {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 28px;
+  background: var(--social-bg);
+}
+
+/* 笔记内部的排版：标题、正文、链接、列表等 */
+.note h3 {
+  font-size: 16px;
+  margin: 18px 0 8px;
+  color: var(--accent);
+}
+
+.note p {
+  margin: 8px 0;
+  line-height: 1.7;
+}
+
+.note a {
+  color: var(--accent);
+}
+
+.note ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.note li {
+  margin: 6px 0;
+  line-height: 1.6;
+}
+
+.note blockquote {
+  margin: 12px 0;
+  padding: 8px 16px;
+  border-left: 3px solid var(--accent-border);
+  background: var(--accent-bg);
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.note blockquote p {
+  margin: 0;
+}
+
+.note hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+.note em {
+  color: var(--text);
+  font-size: 14px;
+}
+
 /* 底部说明 */
 .footer {
   margin-top: 56px;
