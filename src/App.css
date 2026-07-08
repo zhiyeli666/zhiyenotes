@@ -1,6 +1,11 @@
 /* 少年市场笔记 · 主页样式
    想改颜色/间距，改这里的数值即可。 */
 
+/* 点卡片跳到对应栏目时，平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
 .page {
   max-width: 820px;
   margin: 0 auto;
@@ -43,17 +48,21 @@
 }
 
 .card {
+  display: block; /* 卡片本身是 <a> 链接，撑满整块 */
+  color: inherit;
+  text-decoration: none;
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 28px 24px;
   text-align: left;
   background: var(--social-bg);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
 .card:hover {
   box-shadow: var(--shadow);
   transform: translateY(-2px);
+  border-color: var(--accent-border); /* 悬停时给点“可点击”的提示 */
 }
 
 .card-emoji {
@@ -81,6 +90,7 @@
 .notes-section {
   margin-top: 56px;
   text-align: left;
+  scroll-margin-top: 24px; /* 跳转时上方留点空，标题不贴顶 */
 }
 
 .notes-heading {

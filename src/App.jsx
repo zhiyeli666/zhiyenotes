@@ -22,11 +22,13 @@ const columns = [
   {
     emoji: '📰',
     title: 'Daily Market Notes',
+    anchor: '#market-notes',
     desc: 'Every day I read one real English financial article and write my own reflection — practicing English while learning how markets work.',
   },
   {
     emoji: '📈',
-    title: 'Simulated Portfolio Diary',
+    title: 'Virtual Trading Journal',
+    anchor: '#trading-journal',
     desc: 'A journal of imaginary trades using virtual money only, starting from $1,000,000 in virtual capital. No real trading — just practicing judgment.',
   },
 ]
@@ -65,9 +67,10 @@ const marketNotes = loadNotes(marketRaw)
 const diaryNotes = loadNotes(diaryRaw)
 
 // One section = a heading + a stack of note cards.
-function NotesSection({ emoji, title, notes }) {
+// The `id` lets the cards above link straight down to this section.
+function NotesSection({ emoji, title, notes, id }) {
   return (
-    <section className="notes-section">
+    <section className="notes-section" id={id}>
       <h2 className="notes-heading">
         {emoji} {title}
       </h2>
@@ -95,30 +98,37 @@ function App() {
         </p>
       </header>
 
-      {/* Middle: the two column cards */}
+      {/* Middle: the two column cards. Each card is a link that jumps
+          down to its matching notes section below. */}
       <section className="columns">
         {columns.map((c) => (
-          <article className="card" key={c.title}>
+          <a className="card" key={c.title} href={c.anchor}>
             <div className="card-emoji">{c.emoji}</div>
             <h2>{c.title}</h2>
             <p className="card-desc">{c.desc}</p>
-          </article>
+          </a>
         ))}
       </section>
 
       {/* The actual notes, read from the markdown folders */}
-      <NotesSection emoji="📰" title="Daily Market Notes" notes={marketNotes} />
+      <NotesSection
+        emoji="📰"
+        title="Daily Market Notes"
+        notes={marketNotes}
+        id="market-notes"
+      />
       <NotesSection
         emoji="📈"
-        title="Simulated Portfolio Diary"
+        title="Virtual Trading Journal"
         notes={diaryNotes}
+        id="trading-journal"
       />
 
       {/* Bottom: notes + disclaimer */}
       <footer className="footer">
         <p>
           This site links to original articles and shares only my own
-          reflections — no full reprints. The portfolio diary is a learning
+          reflections — no full reprints. The trading journal is a learning
           simulation using virtual money and is not investment advice.
         </p>
       </footer>
