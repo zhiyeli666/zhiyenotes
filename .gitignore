@@ -21,6 +21,9 @@ HANDOFF.md
 # 机密 & 本地文件 —— 绝不能进公开仓库
 密钥.txt
 onedrive-autostart-backup.txt
+# 本地测试工作台用的密码/令牌（线上用 Cloudflare 后台设置，不走这个文件）
+.dev.vars
+.wrangler
 
 # Editor directories and files
 .vscode/*

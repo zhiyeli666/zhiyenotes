@@ -1,0 +1,381 @@
+/* 工作台样式 —— 沿用主站的配色变量（见 src/index.css） */
+
+/* ---------- 登录页 ---------- */
+.login-wrap {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 360px;
+  display: grid;
+  gap: 14px;
+  padding: 32px 28px 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--social-bg);
+  text-align: center;
+}
+
+.login-box h1 {
+  font-size: 30px;
+  margin: 0;
+}
+
+.login-hint {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.back-link {
+  font-size: 14px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ---------- 通用控件 ---------- */
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.input:focus {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 1px;
+}
+
+.btn {
+  font: inherit;
+  font-size: 15px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn.danger {
+  color: #d93636;
+}
+
+.btn.danger:hover:not(:disabled) {
+  border-color: #d93636;
+}
+
+.btn.ghost {
+  background: transparent;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.btn.block {
+  width: 100%;
+}
+
+.msg {
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.msg.error {
+  color: #d93636;
+  background: rgba(217, 54, 54, 0.1);
+}
+
+.msg.ok {
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+/* ---------- 工作台整体 ---------- */
+.admin {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.admin-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-top h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.admin-sub {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ---------- 左侧栏 ---------- */
+.sidebar {
+  display: grid;
+  gap: 12px;
+  position: sticky;
+  top: 24px;
+}
+
+.seg {
+  display: grid;
+  gap: 6px;
+}
+
+.seg-btn {
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.seg-btn.on {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.note-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.note-item {
+  font: inherit;
+  font-size: 15px;
+  font-family: var(--mono);
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.note-item:hover {
+  background: var(--social-bg);
+}
+
+.note-item.on {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.empty {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+/* ---------- 编辑区 ---------- */
+.editor-area {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.placeholder {
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  padding: 48px 24px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.editor-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.date-field {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.date-field .input {
+  width: auto;
+}
+
+.path-hint {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding-bottom: 10px;
+}
+
+.editor-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.pane {
+  min-width: 0;
+}
+
+.editor {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 65vh;
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.65;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text-h);
+  resize: vertical;
+  tab-size: 2;
+}
+
+.editor:focus {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 1px;
+}
+
+.preview-label {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.note.preview {
+  min-height: 65vh;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.note.preview table {
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.note.preview th,
+.note.preview td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* ---------- 手机上：单栏，写/预览切换 ---------- */
+@media (max-width: 860px) {
+  .admin {
+    padding: 16px;
+  }
+
+  .admin-body {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .note-list {
+    max-height: 30vh;
+  }
+
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .mobile-only {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .hide-mobile {
+    display: none;
+  }
+
+  .editor,
+  .note.preview {
+    min-height: 50vh;
+  }
+
+  .editor-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .editor-actions .btn {
+    flex: 1;
+  }
+}
