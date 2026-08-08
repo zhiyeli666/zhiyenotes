@@ -1,18 +1,23 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  --text: #4a5568;
+  --text-h: #0f172a;
+  --muted: #8a94a6;
+  --bg: #fcfcfd;
+  --border: #e3e6ec;
+  --code-bg: #f1f4f9;
+  --accent: #1d4ed8;
+  --accent-bg: rgba(29, 78, 216, 0.08);
+  --accent-border: rgba(29, 78, 216, 0.35);
+  --social-bg: #ffffff;
+  --pos: #167a4a;
+  --pos-bg: rgba(22, 122, 74, 0.1);
+  --neg: #c0322b;
+  --neg-bg: rgba(192, 50, 43, 0.1);
   --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    rgba(15, 23, 42, 0.08) 0 10px 20px -8px, rgba(15, 23, 42, 0.04) 0 3px 6px -3px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -32,17 +37,22 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
+    --text: #a8b1c1;
+    --text-h: #f1f5f9;
+    --muted: #78839a;
+    --bg: #0e1117;
+    --border: #262c38;
+    --code-bg: #171c25;
+    --accent: #7ea8ff;
+    --accent-bg: rgba(126, 168, 255, 0.12);
+    --accent-border: rgba(126, 168, 255, 0.4);
+    --social-bg: #141922;
+    --pos: #4ade80;
+    --pos-bg: rgba(74, 222, 128, 0.12);
+    --neg: #f87171;
+    --neg-bg: rgba(248, 113, 113, 0.12);
     --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+      rgba(0, 0, 0, 0.5) 0 10px 20px -8px, rgba(0, 0, 0, 0.3) 0 3px 6px -3px;
   }
 
   #social .button-icon {
@@ -63,22 +73,22 @@ body {
 h1,
 h2 {
   font-family: var(--heading);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-h);
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
+  font-size: 54px;
+  letter-spacing: -1.2px;
+  margin: 32px 0 0;
   @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+    font-size: 34px;
+    margin: 20px 0 0;
   }
 }
 h2 {
   font-size: 24px;
-  line-height: 118%;
+  line-height: 124%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
   @media (max-width: 1024px) {

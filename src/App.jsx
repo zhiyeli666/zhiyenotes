@@ -1,4 +1,5 @@
 import './App.css'
+import { Children } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -48,6 +49,25 @@ const diaryRaw = import.meta.glob('../portfolio-diary/*.md', {
   eager: true,
 })
 
+// One short line describing a note, shown when the card is collapsed.
+// Market notes → the article title. Trading journal → the trades.
+function summarize(text) {
+  const article = text.match(/\*\*Article:\*\*\s*\[([^\]]+)\]/)
+  if (article) return article[1]
+
+  const topic = text.match(/\*\*Topic:\*\*\s*([^\n]+)/)
+  if (topic) return topic[1]
+
+  const trades = [...text.matchAll(/^-\s+\*\*(Buy|Sell)\s+([^*]+)\*\*/gm)].map(
+    (m) => `${m[1]} ${m[2].replace(/\s*\([^)]*\)/g, '').trim()}`,
+  )
+  if (trades.length) return trades.join(' · ')
+
+  if (/Account Snapshot/i.test(text)) return 'Account snapshot'
+  if (/No trades/i.test(text)) return 'No trades'
+  return ''
+}
+
 // Turn that object into a tidy array, newest date first. We skip the
 // template files and any note that still has the empty starter text.
 function loadNotes(raw) {
@@ -57,8 +77,13 @@ function loadNotes(raw) {
     .map(([path, text]) => ({
       // '../notes/2026-06-28.md' -> '2026-06-28'
       key: path.split('/').pop().replace('.md', ''),
-      // Drop the first "# Heading" line — the section title covers it.
-      body: text.replace(/^#[^\n]*\n/, '').trim(),
+      title: summarize(text),
+      body: text
+        // Drop the first "# Heading" line — the section title covers it.
+        .replace(/^#[^\n]*\n/, '')
+        // Drop the "**Date:**" line — the date badge shows it instead.
+        .replace(/^\s*\*\*Date:\*\*[^\n]*\n/m, '')
+        .trim(),
     }))
     .sort((a, b) => b.key.localeCompare(a.key))
 }
@@ -66,7 +91,49 @@ function loadNotes(raw) {
 const marketNotes = loadNotes(marketRaw)
 const diaryNotes = loadNotes(diaryRaw)
 
-// One section = a heading + a stack of note cards.
+// ---- Small helpers that make the notes easier to read ------------------
+
+// Money amounts that carry a + or - sign get coloured green / red.
+const MONEY = /([+-]\$[\d,]+(?:\.\d+)?|[+-][\d,]+\.\d{2}\b|[+-][\d.]+%)/g
+const IS_MONEY = /^[+-]/
+
+function withMoney(children) {
+  return Children.map(children, (child) => {
+    if (typeof child !== 'string') return child
+    return child
+      .split(MONEY)
+      .map((part, i) =>
+        IS_MONEY.test(part) ? (
+          <span key={i} className={part[0] === '-' ? 'neg' : 'pos'}>
+            {part}
+          </span>
+        ) : (
+          part
+        ),
+      )
+  })
+}
+
+// "**Buy 700 TSLA**" / "**Sell 300 MSFT**" become coloured tags.
+function flatten(children) {
+  return Children.toArray(children)
+    .map((c) => (typeof c === 'string' ? c : ''))
+    .join('')
+}
+
+const mdComponents = {
+  strong: ({ children }) => {
+    const text = flatten(children)
+    if (/^Buy\b/.test(text)) return <strong className="tag buy">{children}</strong>
+    if (/^Sell\b/.test(text)) return <strong className="tag sell">{children}</strong>
+    return <strong>{children}</strong>
+  },
+  li: ({ children }) => <li>{withMoney(children)}</li>,
+  p: ({ children }) => <p>{withMoney(children)}</p>,
+  td: ({ children }) => <td>{withMoney(children)}</td>,
+}
+
+// One section = a heading + a stack of collapsible note cards.
 // The `id` lets the cards above link straight down to this section.
 function NotesSection({ emoji, title, notes, id }) {
   return (
@@ -74,11 +141,23 @@ function NotesSection({ emoji, title, notes, id }) {
       <h2 className="notes-heading">
         {emoji} {title}
       </h2>
+      <p className="notes-hint">
+        {notes.length} entries · click any row to open it
+      </p>
       <div className="notes-list">
-        {notes.map((n) => (
-          <article className="note" key={n.key}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{n.body}</ReactMarkdown>
-          </article>
+        {notes.map((n, i) => (
+          // The newest three are open already; the rest start collapsed.
+          <details className="note" key={n.key} open={i < 3}>
+            <summary>
+              <span className="note-date">{n.key}</span>
+              <span className="note-title">{n.title}</span>
+            </summary>
+            <div className="note-body">
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                {n.body}
+              </ReactMarkdown>
+            </div>
+          </details>
         ))}
       </div>
     </section>
@@ -86,6 +165,15 @@ function NotesSection({ emoji, title, notes, id }) {
 }
 
 function App() {
+  // How many different days are covered across both columns.
+  const days = new Set([...marketNotes, ...diaryNotes].map((n) => n.key)).size
+
+  const stats = [
+    { value: marketNotes.length, label: 'market notes' },
+    { value: diaryNotes.length, label: 'journal days' },
+    { value: days, label: 'days covered' },
+  ]
+
   return (
     <main className="page">
       {/* Top: site title */}
@@ -96,6 +184,15 @@ function App() {
           A teenager's public log of reading real financial news and thinking
           out loud about markets.
         </p>
+
+        <div className="stats">
+          {stats.map((s) => (
+            <div className="stat" key={s.label}>
+              <div className="stat-value">{s.value}</div>
+              <div className="stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
       </header>
 
       {/* Middle: the two column cards. Each card is a link that jumps
