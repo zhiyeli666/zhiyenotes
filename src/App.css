@@ -197,6 +197,17 @@ html {
   color: var(--text-h);
 }
 
+/* 每周收尾的账户快照：加粗，方便一眼分出“周”的界限 */
+.note.weekly .note-title {
+  font-weight: 700;
+}
+
+.note.weekly .note-date {
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--bg); /* 跟随背景色，浅色/深色模式下都够清晰 */
+}
+
 .note-body {
   padding: 0 20px 16px;
   border-top: 1px solid var(--border);

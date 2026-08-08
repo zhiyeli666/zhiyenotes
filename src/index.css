@@ -2,8 +2,10 @@
   --text: #4a5568;
   --text-h: #0f172a;
   --muted: #8a94a6;
-  --bg: #fcfcfd;
-  --border: #e3e6ec;
+  --bg: #f2f5fa;
+  --glow: rgba(29, 78, 216, 0.09);
+  --grid: rgba(15, 23, 42, 0.035);
+  --border: #e0e5ee;
   --code-bg: #f1f4f9;
   --accent: #1d4ed8;
   --accent-bg: rgba(29, 78, 216, 0.08);
@@ -40,7 +42,9 @@
     --text: #a8b1c1;
     --text-h: #f1f5f9;
     --muted: #78839a;
-    --bg: #0e1117;
+    --bg: #0b0e14;
+    --glow: rgba(126, 168, 255, 0.1);
+    --grid: rgba(255, 255, 255, 0.028);
     --border: #262c38;
     --code-bg: #171c25;
     --accent: #7ea8ff;
@@ -62,6 +66,15 @@
 
 body {
   margin: 0;
+  min-height: 100svh;
+  /* 背景：顶部一层很淡的光晕 + 细网格，低调不抢内容 */
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%, var(--glow), transparent 72%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 100% 100%, 44px 44px, 44px 44px;
+  background-attachment: fixed;
 }
 
 #root {

@@ -78,6 +78,8 @@ function loadNotes(raw) {
       // '../notes/2026-06-28.md' -> '2026-06-28'
       key: path.split('/').pop().replace('.md', ''),
       title: summarize(text),
+      // Account snapshots mark the end of a week — shown in bold.
+      weekly: /Account Snapshot/i.test(text),
       body: text
         // Drop the first "# Heading" line — the section title covers it.
         .replace(/^#[^\n]*\n/, '')
@@ -147,7 +149,11 @@ function NotesSection({ emoji, title, notes, id }) {
       <div className="notes-list">
         {notes.map((n, i) => (
           // The newest three are open already; the rest start collapsed.
-          <details className="note" key={n.key} open={i < 3}>
+          <details
+            className={n.weekly ? 'note weekly' : 'note'}
+            key={n.key}
+            open={i < 3}
+          >
             <summary>
               <span className="note-date">{n.key}</span>
               <span className="note-title">{n.title}</span>
