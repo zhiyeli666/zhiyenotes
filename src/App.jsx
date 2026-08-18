@@ -213,19 +213,22 @@ function App() {
         ))}
       </section>
 
-      {/* The actual notes, read from the markdown folders */}
-      <NotesSection
-        emoji="📰"
-        title="Daily Market Notes"
-        notes={marketNotes}
-        id="market-notes"
-      />
-      <NotesSection
-        emoji="📈"
-        title="Virtual Trading Journal"
-        notes={diaryNotes}
-        id="trading-journal"
-      />
+      {/* The actual notes, read from the markdown folders.
+          Side by side on a wide screen, stacked on a narrow one. */}
+      <div className="notes-columns">
+        <NotesSection
+          emoji="📰"
+          title="Daily Market Notes"
+          notes={marketNotes}
+          id="market-notes"
+        />
+        <NotesSection
+          emoji="📈"
+          title="Virtual Trading Journal"
+          notes={diaryNotes}
+          id="trading-journal"
+        />
+      </div>
 
       {/* Bottom: notes + disclaimer */}
       <footer className="footer">

@@ -7,10 +7,19 @@ html {
 }
 
 .page {
-  max-width: 860px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 48px 24px 64px;
   text-align: center;
+}
+
+/* 顶部区域保持原来的阅读宽度，只有下面的笔记区用满宽 */
+.hero,
+.columns,
+.footer {
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* 顶部标题区 */
@@ -113,6 +122,33 @@ html {
 }
 
 /* 笔记区（每日市场笔记 / 模拟盘日记） */
+/* 两栏并排：宽屏左右各一栏，窄屏自动叠成一栏 */
+.notes-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+  margin-top: 64px;
+}
+
+@media (max-width: 900px) {
+  .notes-columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.notes-columns .notes-section {
+  margin-top: 0;
+  min-width: 0; /* 让宽表格能在栏内自己横向滚动，而不是把栏撑爆 */
+}
+
+@media (max-width: 900px) {
+  .notes-columns .notes-section + .notes-section {
+    margin-top: 56px;
+  }
+}
+
 .notes-section {
   margin-top: 64px;
   text-align: left;
