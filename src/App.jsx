@@ -49,7 +49,9 @@ const research = [
     date: '2026-08-23',
     ticker: 'TSLA',
     title: 'Buying Options With Profit',
-    href: '/research/tsla-margin-collapse-2026.html',
+    // Cloudflare Pages serves these without the .html extension, so link to
+    // the clean URL directly and skip a redirect on every click.
+    href: '/research/tsla-margin-collapse-2026',
     desc: "Tesla's operating margin fell from 4.1% to 1.4% in a year, and the stock dropped 14.5% in one session. Taking the decline apart shows gross profit actually grew $875 million — the entire drop came from spending on things that do not exist yet.",
   },
 ]
