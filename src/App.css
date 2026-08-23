@@ -75,9 +75,10 @@ html {
 }
 
 /* 栏目卡片区 */
+/* auto-fit：三张卡片在宽屏排一行，屏幕变窄自动折行，手机上一列 */
 .columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
   margin-top: 16px;
 }
@@ -170,6 +171,102 @@ html {
 .notes-list {
   display: grid;
   gap: 10px;
+}
+
+/* 深度研究栏目（Stock Analysis）
+   跟上面两栏不一样：每篇是一个独立的完整页面（在 public/research/ 里），
+   所以这里不做折叠卡片，而是列出标题 + 摘要，点进去看全文。
+   要加新一篇：把 html 放进 public/research/，然后在 App.jsx 的
+   research 数组里加一条。 */
+.research-section {
+  max-width: 860px;
+  margin: 64px auto 0;
+  text-align: left;
+  scroll-margin-top: 24px;
+}
+
+.research-list {
+  display: grid;
+  gap: 14px;
+}
+
+.research-item {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--social-bg);
+  padding: 22px 24px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.research-item:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+  border-color: var(--accent-border);
+}
+
+.research-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.research-meta .note-date {
+  font-weight: 700;
+}
+
+.research-tag {
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+.research-item h3 {
+  font-family: var(--heading);
+  font-size: 21px;
+  line-height: 1.3;
+  margin: 0 0 8px;
+  color: var(--text-h);
+}
+
+.research-item p {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text);
+  margin: 0;
+}
+
+.research-more {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--accent);
+}
+
+/* 「本栏目使用了 AI」的说明条 */
+.ai-note {
+  margin: 0 0 22px;
+  padding: 14px 18px;
+  border: 1px solid var(--accent-border);
+  border-left-width: 4px;
+  border-radius: 0 12px 12px 0;
+  background: var(--accent-bg);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  text-align: left;
+}
+
+.ai-note strong {
+  color: var(--text-h);
 }
 
 /* 一条笔记 = 一个可折叠卡片 */

@@ -7,7 +7,7 @@ import { api } from './api.js'
 import { COLLECTIONS } from './templates.js'
 
 // ============================================================
-//  工作台（后台）· Youth Market Notes
+//  工作台（后台）· Zhiye's Market Notes
 //
 //  给以后看代码的人：
 //  - 这是一个只有登录后才能用的编辑页面，网址是 /admin。

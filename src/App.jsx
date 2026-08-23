@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 // ============================================================
-//  Youth Market Notes · Home page
+//  Zhiye's Market Notes · Home page
 //
 //  For whoever reads this code later:
 //  - This is a React component named App. Whatever it returns is what
@@ -18,7 +18,7 @@ import remarkGfm from 'remark-gfm'
 //    note you just drop a new .md file in — no code change needed.
 // ============================================================
 
-// The two columns of the site. To add one, add another item to this array.
+// The three columns of the site. To add one, add another item to this array.
 const columns = [
   {
     emoji: '📰',
@@ -31,6 +31,26 @@ const columns = [
     title: 'Virtual Trading Journal',
     anchor: '#trading-journal',
     desc: 'A journal of imaginary trades using virtual money only, starting from $1,000,000 in virtual capital. No real trading — just practicing judgment.',
+  },
+  {
+    emoji: '🔬',
+    title: 'Stock Analysis',
+    anchor: '#stock-analysis',
+    desc: 'Longer research notes that take one company apart in detail — sourced, with the arithmetic shown. Written with AI assistance.',
+  },
+]
+
+// ---- Deep research notes -----------------------------------------------
+// Unlike the two columns above, each of these is a complete standalone page
+// living in public/research/. To publish a new one: drop the .html file into
+// public/research/, then add an entry here (newest first).
+const research = [
+  {
+    date: '2026-08-23',
+    ticker: 'TSLA',
+    title: 'Buying Options With Profit',
+    href: '/research/tsla-margin-collapse-2026.html',
+    desc: "Tesla's operating margin fell from 4.1% to 1.4% in a year, and the stock dropped 14.5% in one session. Taking the decline apart shows gross profit actually grew $875 million — the entire drop came from spending on things that do not exist yet.",
   },
 ]
 
@@ -170,13 +190,51 @@ function NotesSection({ emoji, title, notes, id }) {
   )
 }
 
+// The Stock Analysis column: one row per research paper, each linking out to
+// its own full page.
+function ResearchSection() {
+  return (
+    <section className="research-section" id="stock-analysis">
+      <h2 className="notes-heading">🔬 Stock Analysis</h2>
+      <p className="notes-hint">
+        {research.length} {research.length === 1 ? 'note' : 'notes'} · click to
+        read the full paper
+      </p>
+      <p className="ai-note">
+        <strong>Written with AI assistance.</strong> I use an AI assistant to
+        gather the reported figures, check the arithmetic, and help draft these
+        longer notes. Every number is linked to its source, and anything
+        calculated rather than read off a company report is marked as derived so
+        you can check it yourself. The argument, and any mistake in it, is mine.
+      </p>
+      <div className="research-list">
+        {research.map((r) => (
+          <a className="research-item" key={r.href} href={r.href}>
+            <div className="research-meta">
+              <span className="note-date">{r.date}</span>
+              <span className="research-tag">{r.ticker}</span>
+            </div>
+            <h3>{r.title}</h3>
+            <p>{r.desc}</p>
+            <span className="research-more">Read the full note →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function App() {
-  // How many different days are covered across both columns.
+  // How many different days are covered across both daily columns.
   const days = new Set([...marketNotes, ...diaryNotes].map((n) => n.key)).size
 
   const stats = [
     { value: marketNotes.length, label: 'market notes' },
     { value: diaryNotes.length, label: 'journal days' },
+    {
+      value: research.length,
+      label: research.length === 1 ? 'research note' : 'research notes',
+    },
     { value: days, label: 'days covered' },
   ]
 
@@ -184,7 +242,7 @@ function App() {
     <main className="page">
       {/* Top: site title */}
       <header className="hero">
-        <h1>Youth Market Notes</h1>
+        <h1>Zhiye's Market Notes</h1>
         <p className="subtitle">Reading &amp; Writing About Markets in English</p>
         <p className="tagline">
           A teenager's public log of reading real financial news and thinking
@@ -230,12 +288,17 @@ function App() {
         />
       </div>
 
+      {/* The deep research column. Each entry opens its own full page. */}
+      <ResearchSection />
+
       {/* Bottom: notes + disclaimer */}
       <footer className="footer">
         <p>
           This site links to original articles and shares only my own
           reflections — no full reprints. The trading journal is a learning
-          simulation using virtual money and is not investment advice.
+          simulation using virtual money and is not investment advice. The
+          Stock Analysis notes are researched and drafted with AI assistance,
+          with every figure sourced and derived numbers marked as derived.
         </p>
       </footer>
     </main>
