@@ -27,7 +27,15 @@ import remarkGfm from 'remark-gfm'
 //
 // While this list is empty the Stock Analysis card and section hide
 // themselves, so the site never shows an empty column.
-const research = []
+const research = [
+  {
+    date: '2026-08-24',
+    ticker: 'GOOGL',
+    title: 'The Wrong Victim',
+    href: '/research/google-ai-search-2026',
+    desc: 'Everyone spent a year saying AI would eat Google Search. Over that year search revenue growth accelerated from 10% to 19%, paid clicks rose 13%, and the price per click rose 5%. Something did get eaten — 68% of searches now end without a click to anyone else.',
+  },
+]
 
 // The columns of the site. To add one, add another item to this array.
 const columns = [

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Wrong Victim — Is AI Eating Google Search?</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 1</p>
+<h1>The Wrong Victim</h1>
+<p class="lede">Everyone spent a year saying AI would eat Google Search. Google's search revenue growth doubled over that year. Something did get eaten — just not Google.</p>
+<p class="byline">Zhiye's Market Notes · August 24, 2026 · Data through Q2 2026</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">The claim is false about Google and true about the open web.</p>
+<p>Google Search revenue grew <strong>17% to $63.3 billion</strong> in Q2 2026. Over the four quarters when the "AI kills Google" story was loudest, search revenue growth <em>accelerated</em> from 10% to 19%. Paid clicks rose 13% and the price of each click rose 5% — more clicks, sold for more money. Google's share of search sits at 89.9%, down about a point in a year.</p>
+<p>Meanwhile 68% of Google searches now end without a click to anyone else. On queries showing an AI Overview it is 83%. Click-through on the top organic result falls 58% when an AI Overview appears, and publishers measured a 10% drop in search traffic in a single month.</p>
+<p>Both facts are true at once because they describe different victims. The click that used to leave Google for a publisher now stays on Google. AI did not take the search business away from Google — it let Google stop giving so much of it away.</p>
+</div>
+
+<h2>1. Stating the claim so it can fail</h2>
+
+<p>"AI is eating Google Search" gets repeated constantly, but as usually stated it cannot be tested. So here is the version I will test, which is what people generally mean:</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> As people shift to ChatGPT and other AI assistants, Google will handle fewer searches, sell fewer ads against them, and lose search market share. Its search revenue will decelerate and eventually shrink.</p>
+</div>
+
+<p>That version makes three checkable predictions: search revenue slows, ad volume falls, share erodes. Gartner put a number on it, forecasting that search engine query volume would <strong>fall 25% by 2026</strong>. It is now 2026, so the forecast can be scored rather than argued about.</p>
+
+<h2>2. Test one — did search revenue slow down?</h2>
+
+<p>The opposite. Google Search and other revenue grew 10% year over year in Q1 2025, then 12%, then 15%, then 17%, reaching <strong>19% in Q1 2026</strong> — four straight quarters of acceleration, exactly during the period the claim was most widely believed. Q2 2026 came in at 17%, the first easing in a year, on revenue of $63.27 billion.</p>
+
+<figure>
+<svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of Google Search year-over-year revenue growth rising from 10 percent in Q1 2025 to 19 percent in Q1 2026 then easing to 17 percent in Q2 2026">
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="90" y1="260" x2="690" y2="260"/><line x1="90" y1="220" x2="690" y2="220"/>
+    <line x1="90" y1="180" x2="690" y2="180"/><line x1="90" y1="140" x2="690" y2="140"/>
+    <line x1="90" y1="100" x2="690" y2="100"/><line x1="90" y1="60"  x2="690" y2="60"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end">
+    <text x="80" y="264">10%</text><text x="80" y="224">12%</text>
+    <text x="80" y="184">14%</text><text x="80" y="144">16%</text>
+    <text x="80" y="104">18%</text><text x="80" y="64">20%</text>
+  </g>
+
+  <rect x="100" y="50" width="336" height="252" fill="var(--neg)" opacity=".07"/>
+  <text x="268" y="44" font-family="system-ui,sans-serif" font-size="12" fill="var(--neg)" text-anchor="middle" font-weight="600">“AI is killing Google Search”</text>
+
+  <polyline points="100,260 212,220 324,160 436,120 548,80 660,120"
+            fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>
+  <g fill="var(--accent)">
+    <circle cx="100" cy="260" r="5"/><circle cx="212" cy="220" r="5"/>
+    <circle cx="324" cy="160" r="5"/><circle cx="436" cy="120" r="5"/>
+    <circle cx="548" cy="80" r="6.5" fill="var(--pos)"/><circle cx="660" cy="120" r="5"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)" text-anchor="middle">
+    <text x="100" y="248">10%</text><text x="212" y="208">12%</text>
+    <text x="324" y="148">15%</text><text x="436" y="108">17%</text>
+    <text x="548" y="66" fill="var(--pos)">19%</text><text x="660" y="108">17%</text>
+  </g>
+
+  <line x1="90" y1="302" x2="690" y2="302" stroke="var(--border)" stroke-width="1"/>
+  <g font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">
+    <text x="100" y="320">Q1 25</text><text x="212" y="320">Q2 25</text>
+    <text x="324" y="320">Q3 25</text><text x="436" y="320">Q4 25</text>
+    <text x="548" y="320">Q1 26</text><text x="660" y="320">Q2 26</text>
+  </g>
+  <text x="390" y="352" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">Google Search &amp; other revenue, year-over-year growth</text>
+</svg>
+<figcaption><b>Figure 1.</b> The line goes the wrong way for the claim. Growth nearly doubled across the shaded period, then eased once. A business being eaten does not do this.</figcaption>
+</figure>
+
+<p>Seventeen percent growth on a $63 billion quarterly base is not a business in retreat. For scale, Search alone is about 53% of Alphabet's $119.8 billion of quarterly revenue, and it grew faster in Q2 2026 than in any quarter of 2025.</p>
+
+<h2>3. Test two — did the ads and the users go away?</h2>
+
+<p>Also no, on both counts.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> Every metric the claim predicts would fall. Paid click and cost-per-click figures are the most recent disclosed (Q1 2026). Prior-year search revenue is <span class="tag d">derived</span> from the reported growth rate.</caption>
+<thead><tr><th>What the claim predicts falls</th><th>What actually happened</th><th>Direction</th></tr></thead>
+<tbody>
+<tr><td>Search revenue</td><td class="n">$63.27B, +17%</td><td class="n pos">up</td></tr>
+<tr><td>Ad volume (paid clicks)</td><td class="n">+13%</td><td class="n pos">up</td></tr>
+<tr><td>Price per ad (cost-per-click)</td><td class="n">+5%</td><td class="n pos">up</td></tr>
+<tr><td>Search market share</td><td class="n">89.9%</td><td class="n neg">−1pp</td></tr>
+<tr><td>Query volume (Gartner: −25%)</td><td class="n">grew</td><td class="n pos">forecast failed</td></tr>
+<tr class="total"><td>Google's own AI adoption</td><td class="n">1B users</td><td class="n pos">Gemini &amp; AI Mode</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Paid clicks rising 13% is the single most damaging number for the claim. It means people did not stop searching, and advertisers did not stop paying. Cost-per-click rising 5% at the same time means the ads got <em>more</em> valuable, not less — the opposite of what happens when an audience drains away.</p>
+
+<p>The market-share story is equally unhelpful for the claim: Google holds roughly 89.9% of global search, down from about 91% a year earlier. A point of share is not an extinction event.</p>
+
+<p>And Google did not lose the AI product race on its own turf. The Gemini app passed <strong>1 billion monthly users</strong> in August 2026 — the fourteenth Google product to reach that mark — while AI Mode also passed a billion monthly users, with its query volume more than doubling every quarter. ChatGPT reached a billion monthly users in June 2026. Google is not being displaced by that; it is running alongside it with a comparable user base and an advertising system already attached.</p>
+
+<h2>4. Test three — then who is being eaten?</h2>
+
+<p>Here the numbers turn hard in the other direction, and this is the real finding.</p>
+
+<p>A Similarweb study of US Google searches from January to April 2026 found <strong>68% of searches now end with no click to any website</strong>. For every 1,000 searches, only 360 send a visitor to the open web; the other 640 end on Google's own page. On queries where an AI Overview appears, the no-click rate is 83%, against about 60% where it does not.</p>
+
+<figure>
+<svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diverging bar chart showing Google metrics rising and open web metrics falling">
+  <line x1="360" y1="46" x2="360" y2="330" stroke="var(--border)" stroke-width="1.5"/>
+
+  <text x="360" y="34" font-family="system-ui,sans-serif" font-size="12.5" fill="var(--muted)" text-anchor="middle" font-style="italic">same year, same product, opposite outcomes</text>
+
+  <rect x="360" y="57"  width="85" height="26" rx="3" fill="var(--pos)"/>
+  <rect x="360" y="97"  width="65" height="26" rx="3" fill="var(--pos)"/>
+  <rect x="360" y="137" width="25" height="26" rx="3" fill="var(--pos)"/>
+
+  <rect x="310" y="197" width="50"  height="26" rx="3" fill="var(--neg)"/>
+  <rect x="125" y="237" width="235" height="26" rx="3" fill="var(--neg)"/>
+  <rect x="70"  y="277" width="290" height="26" rx="3" fill="var(--neg)"/>
+
+  <g font-family="system-ui,sans-serif" font-size="13" fill="var(--text)" text-anchor="end">
+    <text x="350" y="75">Search revenue</text>
+    <text x="350" y="115">Paid clicks</text>
+    <text x="350" y="155">Price per click</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="13" fill="var(--text)" text-anchor="start">
+    <text x="370" y="215">Publisher search traffic</text>
+    <text x="370" y="255">Organic click rate, w/ AI Overview</text>
+    <text x="370" y="295">Top-result click-through, w/ AI Overview</text>
+  </g>
+
+  <g font-family="ui-monospace,Consolas,monospace" font-size="13.5" font-weight="700">
+    <text x="453" y="75"  fill="var(--pos)" text-anchor="start">+17%</text>
+    <text x="433" y="115" fill="var(--pos)" text-anchor="start">+13%</text>
+    <text x="393" y="155" fill="var(--pos)" text-anchor="start">+5%</text>
+    <text x="302" y="215" fill="var(--neg)" text-anchor="end">−10%</text>
+    <text x="117" y="255" fill="var(--neg)" text-anchor="end">−47%</text>
+    <text x="62"  y="295" fill="var(--neg)" text-anchor="end">−58%</text>
+  </g>
+
+  <text x="500" y="352" font-family="system-ui,sans-serif" font-size="12.5" fill="var(--pos)" text-anchor="middle" font-weight="600">Google →</text>
+  <text x="200" y="352" font-family="system-ui,sans-serif" font-size="12.5" fill="var(--neg)" text-anchor="middle" font-weight="600">← the open web</text>
+  <text x="360" y="380" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">Every green bar is Google. Every red bar is somebody else.</text>
+</svg>
+<figcaption><b>Figure 2.</b> The claim predicted the green bars would be red. They are not — but a different set of bars is. Google figures are Alphabet disclosures; open-web figures come from third-party studies (Similarweb, Pew, Digital Content Next) measured on different samples and periods, so they are directionally comparable rather than like-for-like.</figcaption>
+</figure>
+
+<p>Independent measurements agree on direction and roughly on size. Pew Research found users click an organic result 8% of the time when an AI Overview is present, versus 15% when it is not — a 47% drop. Click-through on the number-one result falls 58% with an AI Overview. Digital Content Next measured a 10% fall in search traffic across member publishers in a single month, and in news the no-click rate went from 56% to 69% within a year of AI Overviews launching in the US.</p>
+
+<div class="callout">
+<p><strong>This is the answer.</strong> The prediction was that AI would move the search <em>query</em> away from Google. What AI actually moved was the <em>click</em> — away from the websites Google used to send it to, and onto Google's own page. The traffic did not leave the system. It stopped being passed along.</p>
+</div>
+
+<h2>5. Why both things are true at once</h2>
+
+<p>The two findings only look contradictory if you assume Google's revenue depends on sending people away. It never did. Google is paid when someone clicks an <em>ad</em>, not when someone clicks a search result. Every organic click Google used to hand to a publisher was, from Google's point of view, a visitor leaving without generating anything.</p>
+
+<p>An AI Overview answers the question on the page, keeps the user there, and makes room for more paid inventory against a longer, more specific query. That is why paid clicks and cost-per-click can both rise while the click-through rate on organic results collapses. The two numbers are not in tension — one is Google's revenue and the other is somebody else's traffic.</p>
+
+<p>Put plainly: the people forecasting Google's death correctly identified that AI would break the old bargain of search. They just assumed Google would be on the losing side of the break.</p>
+
+<h2>6. What the market believes</h2>
+
+<p>The interesting part is that the market appears to have believed the claim rather than the numbers.</p>
+
+<p>Alphabet closed at <strong>$344.82</strong> on August 21, 2026, a $4.18 trillion company and the world's third most valuable. It earned $244.1 billion over the trailing twelve months, $20.14 per share. That puts it at a trailing P/E of <strong>17.3 — about 37% below its own ten-year median of 27.6</strong>.</p>
+
+<figure>
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart comparing Alphabet current trailing price to earnings ratio of 17.3 against its ten year median of 27.6">
+  <line x1="200" y1="30" x2="200" y2="190" stroke="var(--border)" stroke-width="1"/>
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="360" y1="30" x2="360" y2="190"/><line x1="520" y1="30" x2="520" y2="190"/><line x1="680" y1="30" x2="680" y2="190"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="200" y="208">0×</text><text x="360" y="208">10×</text><text x="520" y="208">20×</text><text x="680" y="208">30×</text>
+  </g>
+  <rect x="200" y="52"  width="277" height="46" rx="4" fill="var(--accent)"/>
+  <rect x="200" y="122" width="441" height="46" rx="4" fill="var(--muted)" opacity=".55"/>
+  <g font-family="system-ui,sans-serif" font-size="13.5" fill="var(--text)" text-anchor="end">
+    <text x="188" y="72">Alphabet today</text><text x="188" y="142">Its own 10-yr median</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="10.5" fill="var(--muted)" text-anchor="end">
+    <text x="188" y="88">Aug 21, 2026</text><text x="188" y="158">2016–2026</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="15" font-weight="700" fill="var(--text-h)" text-anchor="start">
+    <text x="487" y="82">17.3×</text><text x="651" y="152">27.6×</text>
+  </g>
+  <text x="440" y="238" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">Trailing P/E on $20.14 of twelve-month earnings per share</text>
+</svg>
+<figcaption><b>Figure 3.</b> A 37% discount to its own long-run multiple, applied to a business whose largest segment just grew 17%. Multiples vary by source and date; this uses the trailing figure as of August 22, 2026.</figcaption>
+</figure>
+
+<p>A company is normally marked down to a multiple like that when its core business is expected to shrink. Alphabet's core business grew 17%, its cloud segment grew 82% to $24.8 billion, and consolidated operating income rose 30%. The gap between the multiple and the numbers <em>is</em> the market pricing in the claim this note just tested.</p>
+
+<p>I will not turn that into a price target, because a cheap multiple can stay cheap for years and the discount may partly reflect antitrust risk rather than the AI story. But the direction is worth stating plainly: <strong>if the claim is wrong, the discount is unearned.</strong></p>
+
+<h2>7. How I would know I am wrong</h2>
+
+<p>Two pieces of evidence genuinely cut against my verdict, and I would rather name them than bury them.</p>
+
+<ul class="tight">
+<li><strong>Q2 2026 was the first deceleration in a year</strong> — 19% down to 17%. One quarter is noise. If Q3 and Q4 keep stepping down, the acceleration story is over and the claim starts looking early rather than wrong. This is the single number I would watch.</li>
+<li><strong>Google is losing share of the growth, not of the base.</strong> One widely cited estimate puts Google's share of combined "information discovery" — search plus AI assistants — at 57.6% at the end of 2025, down from 89.3% three years earlier, because the category expanded and AI tools captured most of the new volume. That figure comes from marketing-industry analysis rather than audited data and should be treated as rough, but the shape of it is the real long-run risk: you can grow 17% a year and still be losing the future.</li>
+</ul>
+
+<p>What would <em>not</em> change my mind: more headlines, more anecdotes about people asking ChatGPT instead of Googling, or another forecast. Gartner's 25% decline is what that kind of reasoning produced, and it was wrong by a wide margin. I will change my mind when paid clicks fall.</p>
+
+<h2>8. Limitations and sources</h2>
+
+<p><strong>Limitations.</strong> Alphabet does not break out AI Overview revenue, so the causal link between AI Overviews and rising monetisation is inference from timing, not a disclosed figure. Paid click and cost-per-click figures are the most recent I could source (Q1 2026); if Q2 volumes turned negative, my second test weakens. The open-web numbers come from third-party studies with different samples, geographies and windows — they establish direction reliably and magnitude only roughly, and mixing them with Alphabet's audited disclosures in one chart is a comparison of unlike things, which Figure 2's caption states. Search market share and the "information discovery" share figure come from marketing-industry trackers, not audited sources. I could not open Alphabet's earnings release PDF or its SEC filings directly, so segment figures come from press coverage of those filings rather than the filings themselves; anyone checking this should go to the primary document.</p>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures, run the arithmetic and help draft this note. Every number is linked to a source below, and anything I calculated rather than read off a report is marked <span class="tag d">derived</span>. The argument, and any error in it, is mine to own.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.cnbc.com/2026/07/22/google-earnings-q2-goog-live-updates.html">Alphabet earnings takeaways: Q2 revenue beats, GOOGL stock sinks on 2026 capex hike</a> — CNBC, July 22, 2026</li>
+<li><a href="https://finance.yahoo.com/markets/stocks/articles/alphabet-q2-2026-earnings-revenue-203058727.html">Alphabet Q2 2026 earnings: revenue up 24%, Cloud surges 82%</a> — Yahoo Finance</li>
+<li><a href="https://www.fool.com/investing/2026/07/24/google-search-revenue-grew-17-last-quarter-down-fr/">Google Search Revenue Grew 17% Last Quarter, Down From 19% — the first slowdown in a year</a> — The Motley Fool</li>
+<li><a href="https://www.searchenginejournal.com/google-search-revenue-growth-eases-after-a-year-of-acceleration/583181/">Google Search Revenue Growth Eases After A Year Of Acceleration</a> — Search Engine Journal</li>
+<li><a href="https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf">Alphabet Announces Second Quarter 2026 Results</a> — Alphabet Investor Relations (primary source)</li>
+<li><a href="https://searchengineland.com/google-zero-click-searches-2026-study-479717">Google zero-click searches reach 68% in early 2026</a> — Search Engine Land / Similarweb</li>
+<li><a href="https://www.searchenginejournal.com/impact-of-ai-overviews-how-publishers-need-to-adapt/556843/">Google AI Overviews Impact On Publishers</a> — Search Engine Journal (incl. Pew Research, Digital Content Next)</li>
+<li><a href="https://techcrunch.com/2026/08/11/googles-gemini-app-surges-to-one-billion-users/">Google's Gemini app surges to 1 billion users</a> — TechCrunch, August 11, 2026</li>
+<li><a href="https://www.gurufocus.com/term/pettm/GOOGL">GOOGL P/E Ratio (TTM) and 10-year median</a> — GuruFocus · <a href="https://companiesmarketcap.com/alphabet-google/marketcap/">Market capitalization</a> — CompaniesMarketCap</li>
+<li><a href="https://firstpagesage.com/seo-blog/google-vs-chatgpt-market-share-report/">Google vs ChatGPT Market Share: 2026 Report</a> — First Page Sage (search share and information-discovery estimates)</li>
+</ol>
+<p style="margin-top:18px">This page links to original articles and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>
