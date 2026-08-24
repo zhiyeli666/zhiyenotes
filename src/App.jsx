@@ -285,8 +285,10 @@ function App() {
         ))}
       </section>
 
-      {/* The actual notes, read from the markdown folders.
-          Side by side on a wide screen, stacked on a narrow one. */}
+      {/* The columns, side by side on a wide screen and stacked on a narrow
+          one. The first two are read from the markdown folders; the Stock
+          Analysis column links out to standalone research pages and only
+          appears once there is at least one note. */}
       <div className="notes-columns">
         <NotesSection
           emoji="📰"
@@ -300,10 +302,8 @@ function App() {
           notes={diaryNotes}
           id="trading-journal"
         />
+        {research.length > 0 && <ResearchSection />}
       </div>
-
-      {/* The deep research column. Each entry opens its own full page. */}
-      {research.length > 0 && <ResearchSection />}
 
       {/* Bottom: notes + disclaimer */}
       <footer className="footer">

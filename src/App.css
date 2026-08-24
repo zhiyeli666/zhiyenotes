@@ -122,32 +122,26 @@ html {
   font-size: 16px;
 }
 
-/* 笔记区（每日市场笔记 / 模拟盘日记） */
-/* 两栏并排：宽屏左右各一栏，窄屏自动叠成一栏 */
+/* 笔记区（每日市场笔记 / 模拟盘日记 / 深度研究） */
+/* 三栏并排：宽屏一行三栏，屏幕变窄自动减列、最后叠成一栏。
+   用 auto-fit 而不是写死列数，好处是：研究栏被撤掉（只剩两栏）时，
+   剩下的两栏会自动撑满整行，不会留一个空格子。
+   minmax 里套 min(...100%) 防止在很窄的手机上把页面撑出横向滚动条。 */
 .notes-columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 32px;
   align-items: start;
   margin-top: 64px;
 }
 
-@media (max-width: 900px) {
-  .notes-columns {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-}
-
-.notes-columns .notes-section {
-  margin-top: 0;
-  min-width: 0; /* 让宽表格能在栏内自己横向滚动，而不是把栏撑爆 */
-}
-
-@media (max-width: 900px) {
-  .notes-columns .notes-section + .notes-section {
-    margin-top: 56px;
-  }
+/* 这三种栏放进网格后都当成等宽的格子：去掉各自的外边距和最大宽度，
+   min-width:0 让宽表格在栏内横向滚动，而不是把整栏撑爆。 */
+.notes-columns .notes-section,
+.notes-columns .research-section {
+  margin: 0;
+  max-width: none;
+  min-width: 0;
 }
 
 .notes-section {
@@ -179,10 +173,8 @@ html {
    要加新一篇：把 html 放进 public/research/，然后在 App.jsx 的
    research 数组里加一条。 */
 .research-section {
-  max-width: 860px;
-  margin: 64px auto 0;
   text-align: left;
-  scroll-margin-top: 24px;
+  scroll-margin-top: 24px; /* 跳转时上方留点空，标题不贴顶 */
 }
 
 .research-list {
