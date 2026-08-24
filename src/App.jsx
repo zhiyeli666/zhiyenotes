@@ -18,7 +18,18 @@ import remarkGfm from 'remark-gfm'
 //    note you just drop a new .md file in — no code change needed.
 // ============================================================
 
-// The three columns of the site. To add one, add another item to this array.
+// ---- Deep research notes -----------------------------------------------
+// Unlike the two daily columns, each of these is a complete standalone page
+// living in public/research/. To publish a new one: drop the .html file into
+// public/research/, then add an entry here (newest first). Use the href
+// WITHOUT the .html extension — Cloudflare Pages redirects to the clean URL,
+// so linking straight to it saves a redirect on every click.
+//
+// While this list is empty the Stock Analysis card and section hide
+// themselves, so the site never shows an empty column.
+const research = []
+
+// The columns of the site. To add one, add another item to this array.
 const columns = [
   {
     emoji: '📰',
@@ -32,28 +43,16 @@ const columns = [
     anchor: '#trading-journal',
     desc: 'A journal of imaginary trades using virtual money only, starting from $1,000,000 in virtual capital. No real trading — just practicing judgment.',
   },
-  {
-    emoji: '🔬',
-    title: 'Stock Analysis',
-    anchor: '#stock-analysis',
-    desc: 'Longer research notes that take one company apart in detail — sourced, with the arithmetic shown. Written with AI assistance.',
-  },
-]
-
-// ---- Deep research notes -----------------------------------------------
-// Unlike the two columns above, each of these is a complete standalone page
-// living in public/research/. To publish a new one: drop the .html file into
-// public/research/, then add an entry here (newest first).
-const research = [
-  {
-    date: '2026-08-23',
-    ticker: 'TSLA',
-    title: 'Buying Options With Profit',
-    // Cloudflare Pages serves these without the .html extension, so link to
-    // the clean URL directly and skip a redirect on every click.
-    href: '/research/tsla-margin-collapse-2026',
-    desc: "Tesla's operating margin fell from 4.1% to 1.4% in a year, and the stock dropped 14.5% in one session. Taking the decline apart shows gross profit actually grew $875 million — the entire drop came from spending on things that do not exist yet.",
-  },
+  ...(research.length
+    ? [
+        {
+          emoji: '🔬',
+          title: 'Stock Analysis',
+          anchor: '#stock-analysis',
+          desc: 'Longer research notes that take one company apart in detail — sourced, with the arithmetic shown. Written with AI assistance.',
+        },
+      ]
+    : []),
 ]
 
 // ---- Load notes from the markdown files --------------------------------
@@ -233,10 +232,15 @@ function App() {
   const stats = [
     { value: marketNotes.length, label: 'market notes' },
     { value: diaryNotes.length, label: 'journal days' },
-    {
-      value: research.length,
-      label: research.length === 1 ? 'research note' : 'research notes',
-    },
+    // Only counts once there is at least one research note to point at.
+    ...(research.length
+      ? [
+          {
+            value: research.length,
+            label: research.length === 1 ? 'research note' : 'research notes',
+          },
+        ]
+      : []),
     { value: days, label: 'days covered' },
   ]
 
@@ -291,16 +295,22 @@ function App() {
       </div>
 
       {/* The deep research column. Each entry opens its own full page. */}
-      <ResearchSection />
+      {research.length > 0 && <ResearchSection />}
 
       {/* Bottom: notes + disclaimer */}
       <footer className="footer">
         <p>
           This site links to original articles and shares only my own
           reflections — no full reprints. The trading journal is a learning
-          simulation using virtual money and is not investment advice. The
-          Stock Analysis notes are researched and drafted with AI assistance,
-          with every figure sourced and derived numbers marked as derived.
+          simulation using virtual money and is not investment advice.
+          {research.length > 0 && (
+            <>
+              {' '}
+              The Stock Analysis notes are researched and drafted with AI
+              assistance, with every figure sourced and derived numbers marked
+              as derived.
+            </>
+          )}
         </p>
       </footer>
     </main>
