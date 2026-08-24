@@ -31,7 +31,7 @@ const research = [
   {
     date: '2026-08-24',
     ticker: 'GOOGL',
-    title: 'The Wrong Victim',
+    title: 'Is AI Eating Google?',
     href: '/research/google-ai-search-2026',
     desc: 'Everyone spent a year saying AI would eat Google Search. Over that year search revenue growth accelerated from 10% to 19%, paid clicks rose 13%, and the price per click rose 5%. Something did get eaten — 68% of searches now end without a click to anyone else.',
   },
