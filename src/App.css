@@ -122,17 +122,81 @@ html {
   font-size: 16px;
 }
 
-/* 笔记区（每日市场笔记 / 模拟盘日记 / 深度研究） */
-/* 三栏并排：宽屏一行三栏，屏幕变窄自动减列、最后叠成一栏。
-   用 auto-fit 而不是写死列数，好处是：研究栏被撤掉（只剩两栏）时，
-   剩下的两栏会自动撑满整行，不会留一个空格子。
-   minmax 里套 min(...100%) 防止在很窄的手机上把页面撑出横向滚动条。 */
+/* 笔记区（每日市场笔记 / 模拟盘日记 / 深度研究）
+   两种布局，1024px 为界：
+   - 宽屏：三栏并排。用 auto-fit 而不是写死列数，这样研究栏被撤掉
+     （只剩两栏）时剩下的两栏会自动撑满整行，不会留空格子。
+   - 窄屏：上面出现一排标签，点哪个就只显示哪一栏、占满整个宽度。
+     否则三栏竖着堆成一长条，要滚很久才能看到第三栏。 */
 .notes-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 32px;
   align-items: start;
-  margin-top: 64px;
+  margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  .notes-columns {
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    margin-top: 64px;
+  }
+}
+
+/* 窄屏：只显示被选中的那一栏 */
+@media (max-width: 1023px) {
+  .notes-columns > section {
+    display: none;
+  }
+  .notes-columns[data-open='market-notes'] > #market-notes,
+  .notes-columns[data-open='trading-journal'] > #trading-journal,
+  .notes-columns[data-open='stock-analysis'] > #stock-analysis {
+    display: block;
+  }
+}
+
+/* 三选一的标签条：只在窄屏出现 */
+.column-tabs {
+  display: none;
+  gap: 8px;
+  margin-top: 48px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--social-bg);
+}
+
+@media (max-width: 1023px) {
+  .column-tabs {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr; /* 每个标签等宽，一起铺满整条 */
+  }
+}
+
+.column-tab {
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  padding: 11px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.column-tab:hover {
+  color: var(--text-h);
+}
+
+.column-tab.open {
+  background: var(--accent);
+  color: var(--bg); /* 跟随背景色，浅色/深色模式下都够清晰 */
+  font-weight: 600;
 }
 
 /* 这三种栏放进网格后都当成等宽的格子：去掉各自的外边距和最大宽度，

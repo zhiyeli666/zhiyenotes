@@ -1,5 +1,5 @@
 import './App.css'
-import { Children } from 'react'
+import { Children, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -38,25 +38,31 @@ const research = [
 ]
 
 // The columns of the site. To add one, add another item to this array.
+// `id` matches the id on the matching section below — it drives both the
+// jump-links on the cards and the narrow-screen tab switcher. `tab` is the
+// short label used on that switcher, where there is no room for the full name.
 const columns = [
   {
     emoji: '📰',
+    id: 'market-notes',
     title: 'Daily Market Notes',
-    anchor: '#market-notes',
+    tab: 'Notes',
     desc: 'Every day I read one real English financial article and write my own reflection — practicing English while learning how markets work.',
   },
   {
     emoji: '📈',
+    id: 'trading-journal',
     title: 'Virtual Trading Journal',
-    anchor: '#trading-journal',
+    tab: 'Journal',
     desc: 'A journal of imaginary trades using virtual money only, starting from $1,000,000 in virtual capital. No real trading — just practicing judgment.',
   },
   ...(research.length
     ? [
         {
           emoji: '🔬',
+          id: 'stock-analysis',
           title: 'Stock Analysis',
-          anchor: '#stock-analysis',
+          tab: 'Research',
           desc: 'Longer research notes that take one company apart in detail — sourced, with the arithmetic shown. Written with AI assistance.',
         },
       ]
@@ -234,6 +240,12 @@ function ResearchSection() {
 }
 
 function App() {
+  // Which column is showing. Only matters on a narrow screen: below the
+  // breakpoint in App.css the three columns collapse into a tab switcher and
+  // just this one is displayed, full width. On a wide screen the CSS shows all
+  // three side by side and ignores this entirely.
+  const [openColumn, setOpenColumn] = useState(columns[0].id)
+
   // How many different days are covered across both daily columns.
   const days = new Set([...marketNotes, ...diaryNotes].map((n) => n.key)).size
 
@@ -273,11 +285,17 @@ function App() {
         </div>
       </header>
 
-      {/* Middle: the two column cards. Each card is a link that jumps
-          down to its matching notes section below. */}
+      {/* Middle: the column cards. Each card jumps down to its matching
+          section, and also opens it — otherwise on a narrow screen the jump
+          would land on a column the tab switcher is currently hiding. */}
       <section className="columns">
         {columns.map((c) => (
-          <a className="card" key={c.title} href={c.anchor}>
+          <a
+            className="card"
+            key={c.id}
+            href={`#${c.id}`}
+            onClick={() => setOpenColumn(c.id)}
+          >
             <div className="card-emoji">{c.emoji}</div>
             <h2>{c.title}</h2>
             <p className="card-desc">{c.desc}</p>
@@ -285,11 +303,29 @@ function App() {
         ))}
       </section>
 
-      {/* The columns, side by side on a wide screen and stacked on a narrow
-          one. The first two are read from the markdown folders; the Stock
-          Analysis column links out to standalone research pages and only
-          appears once there is at least one note. */}
-      <div className="notes-columns">
+      {/* Narrow screens only (hidden by CSS on wide ones): pick one column to
+          fill the width, instead of scrolling through all three stacked. */}
+      <div className="column-tabs" role="tablist" aria-label="Choose a column">
+        {columns.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            role="tab"
+            aria-selected={openColumn === c.id}
+            aria-controls={c.id}
+            className={openColumn === c.id ? 'column-tab open' : 'column-tab'}
+            onClick={() => setOpenColumn(c.id)}
+          >
+            <span aria-hidden="true">{c.emoji}</span> {c.tab}
+          </button>
+        ))}
+      </div>
+
+      {/* The columns, side by side on a wide screen. On a narrow one the CSS
+          shows only the column named by data-open. The first two are read from
+          the markdown folders; the Stock Analysis column links out to
+          standalone research pages and only appears once there is a note. */}
+      <div className="notes-columns" data-open={openColumn}>
         <NotesSection
           emoji="📰"
           title="Daily Market Notes"
