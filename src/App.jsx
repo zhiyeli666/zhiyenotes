@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-08-29',
+    ticker: 'NVDA',
+    title: 'Losing Share, Raising Prices',
+    href: '/research/nvidia-custom-silicon-2026',
+    desc: 'Google, Amazon, Microsoft and Meta are all making their own AI chips, and it is working — custom chips are now about 28% of AI servers sold. In the same week Nvidia reported sales up 106%, a 75% margin, and said it is putting prices up. A company losing a price war does not do that.',
+  },
+  {
     date: '2026-08-24',
     ticker: 'GOOGL',
     title: 'Is AI Eating Google?',

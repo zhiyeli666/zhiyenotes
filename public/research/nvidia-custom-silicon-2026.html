@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Losing Share, Raising Prices</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 2</p>
+<h1>Losing Share, Raising Prices</h1>
+<p class="lede">Google, Amazon, Microsoft and Meta are all making their own AI chips, and it is working. Nvidia just had its biggest quarter ever — and says it still cannot build chips fast enough.</p>
+<p class="byline">Zhiye's Market Notes · August 29, 2026 · Data through Q2 FY2027</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">Custom chips really are taking market share. It has not cost Nvidia anything yet, and the proof is the price.</p>
+<p>Chips built by the cloud companies are now about <strong>28% of all AI servers sold</strong>, up from almost nothing three years ago. They are growing 44.6% a year, against 16.1% for GPUs. That part of the story is true.</p>
+<p>But in the same week, Nvidia reported sales of <strong>$96.2 billion, up 106%</strong>. Data centre sales rose 117%. Gross margin was 75.0%. It told investors to expect $108 billion next quarter. And it said next year's growth — about 70% — is limited by how much it can <em>make</em>, not by how much it can sell. It is also putting prices <em>up</em>.</p>
+<p>That last part settles it. A company losing a price war cuts prices. Nvidia is raising them, at a 75% margin, while it runs short of supply. Whatever the custom chips are taking, they are not taking Nvidia's power to set prices. Until they do, losing share is just a number.</p>
+</div>
+
+<h2>1. The claim, written so it can be wrong</h2>
+
+<p>The case against Nvidia is simple, and it sounds right. Its biggest customers are also the companies best able to compete with it. Google has TPUs. Amazon has Trainium. Microsoft has Maia. Meta has MTIA. Every one of those is a chip Nvidia does not get to sell.</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> As the cloud companies build their own chips, they buy fewer from Nvidia. Nvidia loses market share, then loses the power to set prices, then loses growth.</p>
+</div>
+
+<p>That is three steps, and they have to happen in that order. You cannot lose sales to a rival who has not first taken share. So the fair way to test it is to check each step, and see how far reality has actually got.</p>
+
+<h2>2. Step one — are custom chips really taking share?</h2>
+
+<p>Yes. This part is simply true, and worth saying plainly before the rest of the note complicates it.</p>
+
+<p>TrendForce counts custom chips at <strong>27.8% of AI servers sold in 2026</strong> — the highest since 2023 — with GPUs at 69.7%. Those custom chips are growing <strong>44.6% this year, against 16.1% for GPUs</strong>: nearly three times as fast. Amazon says it has put more than a million Trainium chips to work, and calls it a business worth billions.</p>
+
+<figure>
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart of estimated 2026 AI chip revenue share: Nvidia 73 percent, Google TPU 8, AMD 7, AWS 5, Microsoft and Meta 3, other 4">
+  <line x1="200" y1="26" x2="200" y2="264" stroke="var(--border)" stroke-width="1"/>
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="320" y1="26" x2="320" y2="264"/><line x1="440" y1="26" x2="440" y2="264"/><line x1="560" y1="26" x2="560" y2="264"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="200" y="282">0%</text><text x="320" y="282">20%</text><text x="440" y="282">40%</text><text x="560" y="282">60%</text>
+  </g>
+
+  <rect x="200" y="34"  width="438" height="26" rx="3" fill="var(--accent)"/>
+  <rect x="200" y="72"  width="48"  height="26" rx="3" fill="var(--warn)"/>
+  <rect x="200" y="110" width="42"  height="26" rx="3" fill="var(--muted)" opacity=".6"/>
+  <rect x="200" y="148" width="30"  height="26" rx="3" fill="var(--warn)"/>
+  <rect x="200" y="186" width="18"  height="26" rx="3" fill="var(--warn)"/>
+  <rect x="200" y="224" width="24"  height="26" rx="3" fill="var(--muted)" opacity=".35"/>
+
+  <g font-family="system-ui,sans-serif" font-size="13" fill="var(--text)" text-anchor="end">
+    <text x="190" y="52">Nvidia</text>
+    <text x="190" y="90">Google TPU</text>
+    <text x="190" y="128">AMD</text>
+    <text x="190" y="166">AWS Trainium</text>
+    <text x="190" y="204">Maia + MTIA</text>
+    <text x="190" y="242">everyone else</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" text-anchor="start">
+    <text x="646" y="52" fill="var(--accent)">73%</text>
+    <text x="256" y="90"  fill="var(--warn)">8%</text>
+    <text x="250" y="128" fill="var(--text-h)">7%</text>
+    <text x="238" y="166" fill="var(--warn)">5%</text>
+    <text x="226" y="204" fill="var(--warn)">3%</text>
+    <text x="232" y="242" fill="var(--text-h)">4%</text>
+  </g>
+  <text x="460" y="16" font-family="system-ui,sans-serif" font-size="12" fill="var(--warn)" text-anchor="middle" font-weight="600">orange = custom chips, about 16% together</text>
+</svg>
+<figcaption><b>Figure 1.</b> Share of AI chip <em>sales in dollars</em>, 2026. These are outside estimates and they disagree with each other by a few points — trust the order, not the exact numbers. Nvidia's own sales are the only audited figure here.</figcaption>
+</figure>
+
+<p>So step one holds. Nvidia used to have almost the whole market and now has about three quarters of it. Anyone who said in 2024 that the cloud companies would never get their own chips working was wrong.</p>
+
+<h2>3. Step two — machines are not money</h2>
+
+<p>Here the story starts to fall apart, on a difference most headlines skip.</p>
+
+<p>That 27.8% counts <strong>machines sold</strong>. Counted in <strong>money</strong>, custom chips are only about <strong>16%</strong>. Both numbers are right, and the gap between them is the point. A custom chip is a cheaper machine than a rack of Nvidia's Blackwells. The cloud companies build their own chips <em>because</em> they are cheaper — so every sale they win is worth less than the sale Nvidia lost.</p>
+
+<figure>
+<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grouped bar chart comparing share of machines sold against share of money, for custom chips and for GPUs">
+  <line x1="230" y1="26" x2="230" y2="230" stroke="var(--border)" stroke-width="1"/>
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="342" y1="26" x2="342" y2="230"/><line x1="454" y1="26" x2="454" y2="230"/>
+    <line x1="566" y1="26" x2="566" y2="230"/><line x1="678" y1="26" x2="678" y2="230"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="230" y="248">0%</text><text x="342" y="248">20%</text><text x="454" y="248">40%</text>
+    <text x="566" y="248">60%</text><text x="678" y="248">80%</text>
+  </g>
+
+  <rect x="230" y="42"  width="156" height="26" rx="3" fill="var(--warn)"/>
+  <rect x="230" y="76"  width="90"  height="26" rx="3" fill="var(--warn)" opacity=".45"/>
+  <rect x="230" y="140" width="390" height="26" rx="3" fill="var(--accent)"/>
+  <rect x="230" y="174" width="448" height="26" rx="3" fill="var(--accent)" opacity=".45"/>
+
+  <g font-family="system-ui,sans-serif" font-size="12.5" fill="var(--text)" text-anchor="end">
+    <text x="220" y="60">Custom chips · machines</text>
+    <text x="220" y="94">Custom chips · money</text>
+    <text x="220" y="158">GPUs · machines</text>
+    <text x="220" y="192">GPUs · money</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" text-anchor="start">
+    <text x="394" y="60"  fill="var(--warn)">27.8%</text>
+    <text x="328" y="94"  fill="var(--text-h)">≈16%</text>
+    <text x="628" y="158" fill="var(--accent)">69.7%</text>
+    <text x="686" y="192" fill="var(--text-h)">≈80%</text>
+  </g>
+  <text x="430" y="270" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">Custom chips win more machines than money. GPUs do the opposite.</text>
+</svg>
+<figcaption><b>Figure 2.</b> The machine counts are TrendForce forecasts for 2026; the money shares are outside estimates and are softer. The two come from different methods, so read this as a direction rather than a precise gap — but the direction is not in doubt, and it explains why a rising machine count has not shown up in Nvidia's results.</figcaption>
+</figure>
+
+<p>The size comparison makes it plainer. Nvidia's data centre sales went from about $41 billion a year ago to $89.0 billion this quarter <span class="tag d">derived</span> — a rise of about <strong>$48 billion in one quarter</strong>. If custom chips are 16% of a market worth roughly $122 billion a quarter <span class="tag d">derived</span>, then all of them together earn about $20 billion a quarter. Nvidia's <em>growth</em> is more than twice the size of the whole thing that is supposed to be eating it.</p>
+
+<h2>4. Step three — the price test</h2>
+
+<p>A company can lose share slowly and safely for years. What tells you a rival is really hurting you is the price. So this is the step that matters, and it is where the claim breaks.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> Nvidia's second quarter of its 2027 financial year, reported August 26, 2026. The figures come from the company's results release; the next-year outlook and the memory-cost comment come from the earnings call. Shares of revenue are <span class="tag d">derived</span>.</caption>
+<thead><tr><th>Measure</th><th>Q2 FY2027</th><th>Change</th></tr></thead>
+<tbody>
+<tr><td>Sales</td><td class="n">$96.2B</td><td class="n pos">+106% vs last year</td></tr>
+<tr><td>Data centre sales</td><td class="n">$89.0B</td><td class="n pos">+117%</td></tr>
+<tr><td>Data centre as share of sales <span class="tag d">derived</span></td><td class="n">92.5%</td><td class="n">—</td></tr>
+<tr><td>Gross margin</td><td class="n">75.0%</td><td class="n">before and after adjustments</td></tr>
+<tr><td>Operating profit</td><td class="n">$63.7B</td><td class="n pos">66.2% of sales <span class="tag d">derived</span></td></tr>
+<tr><td>Next quarter guidance</td><td class="n">$108.0B</td><td class="n pos">+12% <span class="tag d">derived</span></td></tr>
+<tr class="total"><td>Next year's growth outlook</td><td class="n">≈70%</td><td class="n">limited by supply</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Gross margin is 75.0% now, guided to 74.0% next quarter, then 71–72%, then back to about 72–73%. A falling margin sounds exactly like competition biting. Which is why the reason for it matters so much.</p>
+
+<figure>
+<svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of Nvidia gross margin falling from 75 percent to about 71.5 percent then recovering, labelled as caused by memory costs rather than price cuts">
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="110" y1="280" x2="690" y2="280"/><line x1="110" y1="207" x2="690" y2="207"/>
+    <line x1="110" y1="133" x2="690" y2="133"/><line x1="110" y1="60"  x2="690" y2="60"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end">
+    <text x="100" y="284">70%</text><text x="100" y="211">72%</text>
+    <text x="100" y="137">74%</text><text x="100" y="64">76%</text>
+  </g>
+
+  <polyline points="150,97 320,133 490,225 640,188" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>
+  <g fill="var(--accent)">
+    <circle cx="150" cy="97"  r="6"/><circle cx="320" cy="133" r="5"/>
+    <circle cx="490" cy="225" r="5"/><circle cx="640" cy="188" r="5"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="13.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">
+    <text x="150" y="84">75.0%</text><text x="320" y="120">74.0%</text>
+    <text x="490" y="248">71–72%</text><text x="640" y="175">72–73%</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">
+    <text x="150" y="304">Q2 FY27</text><text x="320" y="304">next quarter</text>
+    <text x="490" y="304">quarter after</text><text x="640" y="304">next year</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="150" y="318">reported</text><text x="320" y="318">guided</text>
+    <text x="490" y="318">guided</text><text x="640" y="318">outlook</text>
+  </g>
+
+  <text x="470" y="42" font-family="system-ui,sans-serif" font-size="12.5" fill="var(--warn)" text-anchor="middle" font-weight="600">the dip is memory cost, not price cuts</text>
+  <line x1="490" y1="50" x2="490" y2="212" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="640" y="150" font-family="system-ui,sans-serif" font-size="11" fill="var(--pos)" text-anchor="middle" font-weight="600">price rises</text>
+</svg>
+<figcaption><b>Figure 3.</b> Nvidia's own margin path. The company says the fall is caused by memory getting more expensive — a cost the custom chip builders pay too — and that it plans to win it back by charging more. Q2 is reported; the rest is guidance.</figcaption>
+</figure>
+
+<div class="callout">
+<p><strong>This is the whole argument in one sentence.</strong> The margin is falling because memory got expensive, not because Nvidia is cutting prices to keep customers — and the plan to fix it is to charge more. You cannot raise prices in a market where customers have a cheaper option they are willing to take.</p>
+</div>
+
+<p>The supply comment says the same thing. The finance chief put next year's growth near 70% and said the limit was how much Nvidia can build. A company losing customers has spare capacity. A company running short has the opposite problem. Both things were said on the same call, and only one of them fits the claim.</p>
+
+<h2>5. Why both things are true at once</h2>
+
+<p>The mistake is treating market share like a fixed pie. It is not. The cloud companies did not move their Nvidia orders over to their own chips. They added a huge amount of new capacity, filled some of it with their own chips, and kept buying every Nvidia chip they could get. Custom chips growing 44.6% while Nvidia grows over 100% means Nvidia is <em>gaining</em> in dollars while losing in percent.</p>
+
+<p>So the thing worth watching is not Trainium or TPU. It is the cloud companies spending less on data centres, because that is the only way losing share and losing sales become the same thing. And the first sign that custom chips have started to bite will not be a market share headline. It will be Nvidia cutting prices.</p>
+
+<h2>6. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures, do the arithmetic and help draft this note. Anything I worked out myself, rather than read off a report, is marked <span class="tag d">derived</span>. Nvidia's figures come from its results release and earnings call. The market share numbers are outside estimates that disagree with each other, and the machine counts and money shares come from different methods, so I have kept them clearly labelled instead of mixing them. The argument, and any mistake in it, is mine.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027">NVIDIA Announces Financial Results for Second Quarter Fiscal 2027</a> — NVIDIA, August 26, 2026 (primary source)</li>
+<li><a href="https://www.cnbc.com/2026/08/26/nvidia-nvda-earnings-report-q2-2027-live-updates.html">Nvidia earnings takeaways: Huang forecasts 70% fiscal 2028 revenue growth</a> — CNBC, August 26, 2026</li>
+<li><a href="https://finance.biggo.com/news/US_NVDA_2026-08-26">NVIDIA Q2 2027 earnings call: record $96B revenue, gross margins slump on memory costs</a> — BigGo Finance (earnings call detail on margins and pricing)</li>
+<li><a href="https://www.trendforce.com/presscenter/news/20260120-12887.html">Global AI Server Shipments Forecast to Grow Over 28% YoY in 2026, with a Rising Share of ASIC-Based Systems</a> — TrendForce</li>
+<li><a href="https://www.trendforce.com/presscenter/news/20260803-13161.html">AI Server Shipments Forecast Raised to Nearly 31% YoY in 2026 as CSP CapEx Surges</a> — TrendForce</li>
+<li><a href="https://www.tomshardware.com/tech-industry/semiconductors/custom-ai-asics-examined-from-broadcom-to-mtia">The custom AI ASIC state of play — Broadcom deals, Google TPUs, Meta MTIA and beyond</a> — Tom's Hardware</li>
+<li><a href="https://www.cnbc.com/2025/11/21/nvidia-gpus-google-tpus-aws-trainium-comparing-the-top-ai-chips.html">Nvidia sales are "off the charts," but Google, Amazon and others now make their own custom AI chips</a> — CNBC</li>
+<li><a href="https://alatirok.com/ai-chip-market-share-2026/">AI Chip Market Share 2026: Nvidia, AMD, Custom Silicon</a> — Alatirok (money share estimates; industry analysis, not audited data)</li>
+</ol>
+<p style="margin-top:18px">This page links to original articles and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>
