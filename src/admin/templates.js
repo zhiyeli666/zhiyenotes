@@ -23,7 +23,7 @@ export const DIARY_TEMPLATE = `# Simulated Portfolio Diary
 
 > ⚠️ Virtual-money record — not a real trade.
 
-### 📊 Account Snapshot
+### 📊 Account Review
 
 - **Net asset value:** $
 - **Today's P&L:**

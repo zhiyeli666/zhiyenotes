@@ -105,7 +105,7 @@ function summarize(text) {
   )
   if (trades.length) return trades.join(' · ')
 
-  if (/Account Snapshot/i.test(text)) return 'Account snapshot'
+  if (/Account Review/i.test(text)) return 'Account review'
   if (/No trades/i.test(text)) return 'No trades'
   return ''
 }
@@ -120,8 +120,8 @@ function loadNotes(raw) {
       // '../notes/2026-06-28.md' -> '2026-06-28'
       key: path.split('/').pop().replace('.md', ''),
       title: summarize(text),
-      // Account snapshots mark the end of a week — shown in bold.
-      weekly: /Account Snapshot/i.test(text),
+      // Account reviews mark the end of a week — shown in bold.
+      weekly: /Account Review/i.test(text),
       body: text
         // Drop the first "# Heading" line — the section title covers it.
         .replace(/^#[^\n]*\n/, '')
