@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Price Was Right</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 3</p>
+<h1>The Price Was Right</h1>
+<p class="lede">SpaceX sold shares at $135. They closed the first day at $161, hit $226 four days later, then fell to $105. People say the bankers left $16.6 billion on the table. They did not.</p>
+<p class="byline">Zhiye's Market Notes · September 5, 2026 · Data through September 4</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">The biggest share sale in history was priced almost exactly right. The first three days were the part that was wrong.</p>
+<p>SpaceX sold 638.9 million shares at $135 and raised <strong>$85.7 billion</strong>, the largest IPO ever. The shares closed the first day at $160.95 — a jump of <strong>19.2%</strong>. Across 9,343 American IPOs since 1980, the average first-day jump is <strong>19.0%</strong>. On the largest deal ever attempted, with no other company to compare it to, the bankers landed within a fifth of a percentage point of the 45-year average.</p>
+<p>The famous "$16.6 billion left on the table" is real arithmetic but a weak fact. It was measured on a day when only about <strong>5%</strong> of the company could be traded. A price set by 5% of the shares does not tell you what the other 95% was worth.</p>
+<p>We got to test that. On August 6 the number of tradable shares roughly doubled. If the June price had only been high because shares were scarce, that was the day it should have broken. Instead the stock <em>rose 6%</em>, and it now trades at $149.74 — 11% above the price the bankers picked.</p>
+</div>
+
+<h2>1. What "priced wrong" has to mean</h2>
+
+<p>When a company sells shares to the public for the first time, someone has to guess a price. Guess too low and the company hands free money to whoever bought at that price. Guess too high and the shares sink and the buyers are angry.</p>
+
+<p>The usual way people score this is the <strong>first-day jump</strong>: the gap between the price the company sold at and the price the shares closed at that evening. The gap, times the number of shares, is called <strong>money left on the table</strong> — the extra cash the company could have raised if it had picked the higher price.</p>
+
+<div class="callout">
+<p><strong>The claim to test.</strong> SpaceX's shares jumped 19.2% on day one. So the bankers set the price far too low, and cost the company billions it should have collected.</p>
+</div>
+
+<p>That sounds damning. It is also the single most common criticism made of every large IPO, which is a reason to check it rather than repeat it.</p>
+
+<h2>2. Test one — was a 19% jump unusual?</h2>
+
+<p>No. It is the average, almost to the decimal.</p>
+
+<p>Research covering <strong>9,343 US IPOs from 1980 to 2025</strong> puts the mean first-day return at <strong>19.0%</strong>. SpaceX's was 19.2%. Over those 45 years companies raised $1.2 trillion and left about $250 billion on the table — <strong>20.8%</strong> of what they collected. SpaceX left $16.6 billion <span class="tag d">derived</span> on $85.7 billion, which is <strong>19.3%</strong>.</p>
+
+<figure>
+<svg viewBox="0 0 720 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart comparing SpaceX first-day jump of 19.2 percent with the US average of 19.0 percent and median of 7.0 percent">
+  <line x1="220" y1="26" x2="220" y2="242" stroke="var(--border)" stroke-width="1"/>
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="320" y1="26" x2="320" y2="242"/><line x1="420" y1="26" x2="420" y2="242"/>
+    <line x1="520" y1="26" x2="520" y2="242"/><line x1="620" y1="26" x2="620" y2="242"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="220" y="260">0%</text><text x="320" y="260">5%</text><text x="420" y="260">10%</text>
+    <text x="520" y="260">15%</text><text x="620" y="260">20%</text>
+  </g>
+
+  <rect x="220" y="40"  width="384" height="28" rx="3" fill="var(--accent)"/>
+  <rect x="220" y="78"  width="380" height="28" rx="3" fill="var(--muted)" opacity=".55"/>
+  <rect x="220" y="116" width="140" height="28" rx="3" fill="var(--muted)" opacity=".35"/>
+  <rect x="220" y="172" width="386" height="28" rx="3" fill="var(--accent)"/>
+  <rect x="220" y="210" width="416" height="28" rx="3" fill="var(--muted)" opacity=".55"/>
+
+  <g font-family="system-ui,sans-serif" font-size="12.5" fill="var(--text)" text-anchor="end">
+    <text x="210" y="59">SpaceX first-day jump</text>
+    <text x="210" y="97">US average, 1980–2025</text>
+    <text x="210" y="135">US middle deal (median)</text>
+    <text x="210" y="191">SpaceX money left</text>
+    <text x="210" y="229">US money left, 1980–2025</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" text-anchor="start">
+    <text x="612" y="59"  fill="var(--accent)">19.2%</text>
+    <text x="608" y="97"  fill="var(--text-h)">19.0%</text>
+    <text x="368" y="135" fill="var(--text-h)">7.0%</text>
+    <text x="614" y="191" fill="var(--accent)">19.3%</text>
+    <text x="644" y="229" fill="var(--text-h)">20.8%</text>
+  </g>
+  <text x="420" y="18" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle" font-style="italic">money left is shown as a share of the cash raised</text>
+  <text x="420" y="282" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">SpaceX against 45 years of American IPOs</text>
+</svg>
+<figcaption><b>Figure 1.</b> Two ways of measuring the same thing, and SpaceX sits on the average for both. The median deal jumps far less than the mean because a few huge pops drag the average up — which is worth knowing, but the mean is the fair comparison for a deal of this size.</figcaption>
+</figure>
+
+<p>So the first test does not find a scandal. It finds a completely ordinary result, achieved on a deal seven times larger than any before it.</p>
+
+<h2>3. Test two — the number was measured on 5% of the company</h2>
+
+<p>Here is the part the headline misses. On the day the shares jumped 19%, only about <strong>5% of SpaceX was available to trade</strong>. Everything else was locked up: insiders for 366 days, other early backers on a staggered 180-day schedule.</p>
+
+<p>That matters because price is set by supply and demand. If a huge number of people want shares and almost none exist, the price goes up — and that tells you nothing about what buyers would have paid for twenty times as many shares. "Money left on the table" quietly assumes SpaceX could have sold every share at $160.95. It could not have. Nobody offered to buy 638 million shares at that price; a small pool of buyers bid up a small pool of shares.</p>
+
+<p>The number is also strangely fragile. Measure it on a different day and it changes sign.</p>
+
+<figure>
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diverging bar chart showing money left on the table as positive 16.6 billion on day one, negative 17 billion at the July low, and positive 9.4 billion today">
+  <line x1="360" y1="40" x2="360" y2="250" stroke="var(--border)" stroke-width="1.5"/>
+  <text x="360" y="32" font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">$0</text>
+
+  <rect x="360" y="66"  width="232" height="34" rx="3" fill="var(--pos)"/>
+  <rect x="122" y="126" width="238" height="34" rx="3" fill="var(--neg)"/>
+  <rect x="360" y="186" width="132" height="34" rx="3" fill="var(--pos)" opacity=".6"/>
+
+  <g font-family="system-ui,sans-serif" font-size="12.5" fill="var(--text)">
+    <text x="350" y="86"  text-anchor="end">Measured at the day-1 close</text>
+    <text x="370" y="146" text-anchor="start">Measured at the July low</text>
+    <text x="350" y="206" text-anchor="end">Measured today</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="10.5" fill="var(--muted)">
+    <text x="350" y="102" text-anchor="end">$160.95</text>
+    <text x="370" y="162" text-anchor="start">$108.37</text>
+    <text x="350" y="222" text-anchor="end">$149.74</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="14" font-weight="700">
+    <text x="600" y="88"  fill="var(--pos)" text-anchor="start">+$16.6B</text>
+    <text x="114" y="148" fill="var(--neg)" text-anchor="end">−$17.0B</text>
+    <text x="500" y="208" fill="var(--pos)" text-anchor="start">+$9.4B</text>
+  </g>
+  <text x="200" y="272" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--neg)" text-anchor="middle" font-weight="600">← company charged too much</text>
+  <text x="530" y="272" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--pos)" text-anchor="middle" font-weight="600">company charged too little →</text>
+  <text x="360" y="292" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">The same question, asked on three different days</text>
+</svg>
+<figcaption><b>Figure 2.</b> All three bars are <span class="tag d">derived</span>: the gap between the traded price and the $135 offer, times 638.9 million shares. A measure that swings from +$16.6 billion to −$17.0 billion in seven weeks is describing the market's mood, not the bankers' skill.</figcaption>
+</figure>
+
+<h2>4. Test three — the day the shares stopped being scarce</h2>
+
+<p>If the June price was only high because shares were rare, there is an obvious way to find out: wait until they stop being rare.</p>
+
+<p>That happened on <strong>August 6</strong>, when about <strong>911.5 million shares</strong> came unlocked — roughly doubling the number that could be traded. The expectation was ugly. Doubling the supply of anything usually drops its price, and the stock had already fallen from $225.64 to a low of $104.83 in the weeks before.</p>
+
+<div class="callout">
+<p><strong>It did not break.</strong> The stock rose about 6% on the day the shares were unlocked, and has climbed roughly 19% in the four weeks since. It now trades at $149.74 — above the $135 offer, and the highest since July. The extra supply arrived and the market absorbed it.</p>
+</div>
+
+<p>That is the strongest evidence in this note. A price propped up only by scarcity does not survive the end of scarcity. This one did.</p>
+
+<figure>
+<svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of the SpaceX share price from the June offer at 135 dollars through a peak of 225.64, a low of 108.37, the August 6 unlock, and 149.74 on September 4">
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="100" y1="274" x2="690" y2="274"/><line x1="100" y1="194" x2="690" y2="194"/>
+    <line x1="100" y1="114" x2="690" y2="114"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end">
+    <text x="92" y="278">$100</text><text x="92" y="198">$150</text><text x="92" y="118">$200</text>
+  </g>
+
+  <line x1="100" y1="218" x2="690" y2="218" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="686" y="212" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--warn)" text-anchor="end" font-weight="600">$135 — the price the bankers picked</text>
+
+  <line x1="480" y1="52" x2="480" y2="290" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="480" y="46" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--text-h)" text-anchor="middle" font-weight="600">Aug 6 — 911m shares unlocked</text>
+
+  <polyline points="100,176 128,73 438,261 480,247 690,194" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+  <g fill="var(--accent)">
+    <circle cx="100" cy="176" r="5"/><circle cx="128" cy="73" r="5"/>
+    <circle cx="438" cy="261" r="5"/><circle cx="690" cy="194" r="6"/>
+  </g>
+
+  <g font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">
+    <text x="108" y="168">$160.95</text>
+    <text x="140" y="66">$225.64</text>
+    <text x="430" y="280" text-anchor="end">$108.37</text>
+    <text x="686" y="186" text-anchor="end">$149.74</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="10.5" fill="var(--muted)">
+    <text x="108" y="153">day-1 close</text>
+    <text x="140" y="51">peak, Jun 16</text>
+    <text x="430" y="295" text-anchor="end">low, Jul 31</text>
+    <text x="686" y="171" text-anchor="end">Sep 4</text>
+  </g>
+
+  <line x1="100" y1="310" x2="690" y2="310" stroke="var(--border)" stroke-width="1"/>
+  <g font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">
+    <text x="100" y="328">Jun 12</text><text x="290" y="328">Jul</text>
+    <text x="480" y="328">Aug 6</text><text x="670" y="328">Sep 4</text>
+  </g>
+  <text x="395" y="352" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">Selected closing prices — not every day is drawn</text>
+</svg>
+<figcaption><b>Figure 3.</b> Four dated prices joined by straight lines; the path between them is not drawn from data. The orange line is the offer price. Three months, a 67% spike, a 22% fall below the offer, and a doubling of tradable shares later, the stock sits 11% above where it was sold.</figcaption>
+</figure>
+
+<h2>5. What this does not excuse</h2>
+
+<p>Two honest points against the verdict.</p>
+
+<p><strong>Anyone who bought the excitement lost money.</strong> Buy at the $225.64 peak and you are down 34%. For about seven weeks the stock traded below $135, meaning the people who bought in the IPO were underwater too. "Priced right" describes the bankers' job, not every buyer's outcome.</p>
+
+<p><strong>And $16.6 billion is still a real transfer.</strong> Being normal is not the same as being free. Roughly a fifth of what SpaceX raised went to whoever was allocated shares at $135 rather than to the company. That is how the system works, and it is worth noticing that "how the system works" costs sellers about 20% every time.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> The deal and what happened next. Offer and proceeds figures are as reported; the comparisons to the $135 offer price are <span class="tag d">derived</span>.</caption>
+<thead><tr><th>Measure</th><th>Value</th><th>vs the $135 offer</th></tr></thead>
+<tbody>
+<tr><td>Shares sold (with the extra allotment)</td><td class="n">638.9M</td><td class="n">—</td></tr>
+<tr><td>Money raised</td><td class="n">$85.7B</td><td class="n">largest ever</td></tr>
+<tr><td>Free float at listing</td><td class="n">≈5%</td><td class="n">—</td></tr>
+<tr><td>Day-1 close, Jun 12</td><td class="n">$160.95</td><td class="n pos">+19.2%</td></tr>
+<tr><td>Peak, Jun 16</td><td class="n">$225.64</td><td class="n pos">+67.1%</td></tr>
+<tr><td>Low close, Jul 31</td><td class="n">$108.37</td><td class="n neg">−19.7%</td></tr>
+<tr><td>Shares unlocked, Aug 6</td><td class="n">911.5M</td><td class="n pos">stock +6% that day</td></tr>
+<tr class="total"><td>Price on Sep 4</td><td class="n">$149.74</td><td class="n pos">+10.9%</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>6. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures, do the arithmetic and help draft this note. Anything I worked out myself, rather than read off a report, is marked <span class="tag d">derived</span> — that covers all the money-left-on-the-table figures and every comparison to the $135 offer price. The share price history is from market data providers and I have used selected closing prices rather than a full daily series, which Figure 3 states on its face. The 1980–2025 IPO averages come from Jay Ritter's long-running dataset at the University of Florida, reported second-hand rather than read from the source file. The argument, and any mistake in it, is mine.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.cnbc.com/2026/06/12/spacex-ipo-spcx-live-updates.html">SpaceX IPO takeaways: SPCX closes at $161, jumping 19% after record debut</a> — CNBC, June 12, 2026</li>
+<li><a href="https://www.cnbc.com/2026/06/15/spacex-ipo-spcx-greenshoe-overallotment.html">SpaceX IPO raises total of $85.7 billion as underwriters exercise the overallotment option</a> — CNBC, June 15, 2026</li>
+<li><a href="https://en.wikipedia.org/wiki/Initial_public_offering_of_SpaceX">Initial public offering of SpaceX</a> — Wikipedia (share counts, float and lock-up terms)</li>
+<li><a href="https://www.fool.com/investing/2026/08/05/spacexs-lockup-expires-on-aug-6-heres-why-9115-mil/">SpaceX's lock-up expires on Aug. 6: why 911.5 million insider shares could hit the market</a> — The Motley Fool</li>
+<li><a href="https://www.cnn.com/2026/08/06/tech/spacex-stock-elon-musk">SpaceX rises 6% after more than 900 million shares are unlocked</a> — CNN Business, August 6, 2026</li>
+<li><a href="https://tradingeconomics.com/spcx:us">SpaceX (SPCX) live quote and historical chart</a> — Trading Economics (September 4 price and 52-week range)</li>
+<li><a href="https://site.warrington.ufl.edu/ritter/files/IPOs-Underpricing.pdf">IPO underpricing statistics, 1980–2025</a> — Jay Ritter, University of Florida</li>
+<li><a href="https://ibinterviewquestions.com/guides/equity-capital-markets/ipo-underpricing-and-money-left-on-the-table">IPO underpricing and money left on the table</a> — ECM Guide (definition of the measure)</li>
+</ol>
+<p style="margin-top:18px">This page links to original articles and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>

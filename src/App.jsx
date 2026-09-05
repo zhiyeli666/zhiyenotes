@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-09-05',
+    ticker: 'SPCX',
+    title: 'The Price Was Right',
+    href: '/research/spacex-ipo-pricing-2026',
+    desc: 'SpaceX sold shares at $135 and they closed the first day at $161, so people say the bankers left $16.6 billion on the table. But the average first-day jump across 9,343 US IPOs since 1980 is 19.0%, and SpaceX was 19.2% — and that number was measured on a day when only 5% of the company could be traded.',
+  },
+  {
     date: '2026-08-29',
     ticker: 'NVDA',
     title: 'Losing Share, Raising Prices',
