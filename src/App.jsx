@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-09-12',
+    ticker: 'AAPL',
+    title: 'What $877 Billion Bought',
+    href: '/research/apple-buybacks-cook-2026',
+    desc: 'Tim Cook spent $877 billion buying back Apple shares, and people say that is what lifted the stock. Split the 15-year rise into its only three possible causes and buybacks come last: profit growth did 51% of it, investors paying a higher multiple did 31%, and the buybacks did 18%.',
+  },
+  {
     date: '2026-09-05',
     ticker: 'SPCX',
     title: 'The Price Was Right',

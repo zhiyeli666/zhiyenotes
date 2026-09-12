@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What $877 Billion Bought</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 4</p>
+<h1>What $877 Billion Bought</h1>
+<p class="lede">Tim Cook spent $877 billion buying back Apple's own shares — more than almost any company on earth is worth. People say that is what lifted the stock. It bought less than a fifth of it.</p>
+<p class="byline">Zhiye's Market Notes · September 12, 2026 · Data through September 11</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">False. Buybacks were the smallest of the three things that lifted Apple — and the one that cost the most.</p>
+<p>Tim Cook ran Apple from August 2011 to September 1 this year. Over those fifteen years the share price rose about <strong>2,230%</strong>, or roughly <strong>24 times</strong>. That gain splits three ways, and buybacks come last:</p>
+<p><strong>Profit growth did about half of it (51%).</strong> Apple earned $25.9 billion in 2011 and around $130 billion now — five times as much. <strong>Investors paying more for each dollar of profit did about a third (31%).</strong> The price-to-earnings ratio went from 13.4 to 36.1. <strong>Buybacks did about a fifth (18%).</strong> The share count fell from roughly 26 billion to 14.6 billion, so each surviving share owns about 78% more of the company. <span class="tag d">derived</span></p>
+<p>The striking part is the middle number. Investors simply changing their minds about what Apple is worth — which cost nobody anything — moved the stock almost twice as much as $877 billion of real cash did.</p>
+</div>
+
+<h2>1. The claim, and the one formula that settles it</h2>
+
+<p>"Apple's rise was really just buybacks" is said constantly, and it is the kind of claim that sounds too clever to check. It is actually one of the easiest claims in investing to check, because a share price is made of exactly three things.</p>
+
+<div class="callout">
+<p><strong>Share price = (profit ÷ number of shares) × the multiple people will pay</strong></p>
+<p>So a share price can only rise for three reasons: the company earns more, the shares are divided among fewer people, or people decide to pay more for each dollar of profit. Nothing else. Measure all three and there is no room left for opinion.</p>
+</div>
+
+<p>Buybacks act on the middle one only. A company buys its own shares and cancels them, so the same profit is split fewer ways. It is real — but it is one of three levers, and this note measures all three.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> Apple at the start and end of Cook's fifteen years. Market value, profit, share count and buyback total are as reported. The 2011 multiple and the current profit figure are <span class="tag d">derived</span> — see the note at the end.</caption>
+<thead><tr><th>Measure</th><th>August 2011</th><th>September 2026</th><th>Change</th></tr></thead>
+<tbody>
+<tr><td>Market value</td><td class="n">$347B</td><td class="n">$4.7T</td><td class="n pos">13.5×</td></tr>
+<tr><td>Yearly profit</td><td class="n">$25.9B</td><td class="n">~$130B</td><td class="n pos">5.0×</td></tr>
+<tr><td>Yearly revenue</td><td class="n">$108B</td><td class="n">$416B</td><td class="n pos">3.9×</td></tr>
+<tr><td>Shares outstanding</td><td class="n">~26.0B</td><td class="n">14.6B</td><td class="n neg">−44%</td></tr>
+<tr><td>Price-to-earnings multiple</td><td class="n">13.4 <span class="tag d">derived</span></td><td class="n">36.1</td><td class="n pos">2.7×</td></tr>
+<tr class="total"><td>Share price</td><td class="n">—</td><td class="n">—</td><td class="n pos">about 24×</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>2. The three levers, multiplied</h2>
+
+<p>Because these three things multiply rather than add, the check is simple: multiply them and see whether you land on the real answer.</p>
+
+<figure>
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three factors multiplied together: profit five times, multiple 2.7 times, fewer shares 1.78 times, equals about 24 times">
+  <rect x="24"  y="56" width="158" height="104" rx="12" fill="var(--pos)" opacity=".12" stroke="var(--pos)" stroke-width="2"/>
+  <rect x="216" y="56" width="158" height="104" rx="12" fill="var(--accent)" opacity=".12" stroke="var(--accent)" stroke-width="2"/>
+  <rect x="408" y="56" width="158" height="104" rx="12" fill="var(--warn)" opacity=".12" stroke="var(--warn)" stroke-width="2"/>
+  <rect x="600" y="56" width="96"  height="104" rx="12" fill="var(--text-h)" opacity=".07" stroke="var(--text-h)" stroke-width="2"/>
+
+  <g font-family="ui-monospace,Consolas,monospace" font-size="32" font-weight="700" text-anchor="middle">
+    <text x="103" y="112" fill="var(--pos)">5.0×</text>
+    <text x="295" y="112" fill="var(--accent)">2.7×</text>
+    <text x="487" y="112" fill="var(--warn)">1.78×</text>
+    <text x="648" y="112" fill="var(--text-h)">24×</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="12.5" fill="var(--text)" text-anchor="middle">
+    <text x="103" y="138">more profit</text>
+    <text x="295" y="138">a higher multiple</text>
+    <text x="487" y="138">fewer shares</text>
+    <text x="648" y="138">the stock</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="10.5" fill="var(--muted)" text-anchor="middle">
+    <text x="103" y="153">$25.9B → $130B</text>
+    <text x="295" y="153">13.4 → 36.1</text>
+    <text x="487" y="153">26.0B → 14.6B shares</text>
+    <text x="648" y="153">+2,230%</text>
+  </g>
+
+  <g font-family="ui-monospace,Consolas,monospace" font-size="26" fill="var(--muted)" text-anchor="middle">
+    <text x="199" y="117">×</text><text x="391" y="117">×</text><text x="583" y="117">=</text>
+  </g>
+
+  <text x="360" y="36" font-family="system-ui,sans-serif" font-size="13" fill="var(--text)" text-anchor="middle">A share price can only move for three reasons. Here they are.</text>
+  <text x="360" y="196" font-family="system-ui,sans-serif" font-size="12.5" fill="var(--muted)" text-anchor="middle">5.0 × 2.7 × 1.78 = 24.1 — which is the gain that actually happened</text>
+  <text x="360" y="228" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">Buybacks are the orange box, and only the orange box</text>
+</svg>
+<figcaption><b>Figure 1.</b> The three factors multiply to 24.1, against a reported price gain of about 2,230% — about 23 times. The small gap is rounding and the exact start and end dates. Getting this close is the sign that nothing important has been left out.</figcaption>
+</figure>
+
+<p>That last point matters. If some fourth force had secretly driven Apple's stock, these three numbers would not multiply to the right answer. They do. So the whole rise is accounted for, and now it only remains to say how the credit divides.</p>
+
+<h2>3. Splitting the credit</h2>
+
+<p>Multiplied things cannot be split by simply adding percentages, so the standard method is to compare how much each factor <em>compounds</em> — technically, to compare their logarithms. Done that way, the 24-times gain divides like this:</p>
+
+<figure>
+<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart showing profit growth contributed 51 percent of Apple's gain, a higher multiple 31 percent, and buybacks 18 percent">
+  <line x1="250" y1="40" x2="250" y2="222" stroke="var(--border)" stroke-width="1"/>
+  <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 5">
+    <line x1="370" y1="40" x2="370" y2="222"/><line x1="490" y1="40" x2="490" y2="222"/><line x1="610" y1="40" x2="610" y2="222"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="250" y="240">0%</text><text x="370" y="240">20%</text><text x="490" y="240">40%</text><text x="610" y="240">60%</text>
+  </g>
+
+  <rect x="250" y="52"  width="304" height="44" rx="4" fill="var(--pos)"/>
+  <rect x="250" y="112" width="187" height="44" rx="4" fill="var(--accent)"/>
+  <rect x="250" y="172" width="109" height="44" rx="4" fill="var(--warn)"/>
+
+  <g font-family="system-ui,sans-serif" font-size="13.5" fill="var(--text)" text-anchor="end">
+    <text x="240" y="72">Profit growth</text>
+    <text x="240" y="132">A higher multiple</text>
+    <text x="240" y="192">Buybacks</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="10.5" fill="var(--muted)" text-anchor="end">
+    <text x="240" y="88">Apple earned more</text>
+    <text x="240" y="148">people paid more</text>
+    <text x="240" y="208">$877 billion spent</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="17" font-weight="700" text-anchor="start">
+    <text x="564" y="82"  fill="var(--pos)">51%</text>
+    <text x="447" y="142" fill="var(--accent)">31%</text>
+    <text x="369" y="202" fill="var(--warn)">18%</text>
+  </g>
+  <text x="400" y="30" font-family="system-ui,sans-serif" font-size="13" fill="var(--text)" text-anchor="middle">Share of Apple's 15-year rise</text>
+  <text x="400" y="268" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">The most expensive lever did the least work</text>
+</svg>
+<figcaption><b>Figure 2.</b> All three shares are <span class="tag d">derived</span> from the factors in Figure 1. Splitting a compounded return this way is standard, but it is a convention rather than a law of nature — a different method would shift these by a few points, not reverse their order.</figcaption>
+</figure>
+
+<div class="callout">
+<p><strong>So the claim is false, and not narrowly.</strong> Buybacks are third of three. They contributed roughly 18% of a rise that profit growth contributed 51% of. If Apple had bought back nothing at all and everything else had happened, the stock would still have risen about twenty times instead of twenty-four.</p>
+</div>
+
+<h2>4. The part nobody expects</h2>
+
+<p>The real surprise is not that buybacks came last. It is what came second.</p>
+
+<p>In 2011 investors paid <strong>$13.40</strong> for each dollar of Apple's yearly profit. Today they pay <strong>$36.10</strong>. Nothing about that change is a thing Apple <em>did</em> in the way that building an iPhone or repurchasing a share is a thing you do. It is a change of mind — the market deciding that Apple's profits are safer, more repeatable and more deserving of a premium than it believed in 2011, back when Apple was seen as a hit-driven gadget maker that might cool off.</p>
+
+<p>That change of mind was worth <strong>31%</strong> of the gain. The $877 billion was worth 18%. Cook's most valuable achievement may have been convincing the market what kind of company Apple is — and that shows up in the multiple, not in the cash flow statement.</p>
+
+<h2>5. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures, do the arithmetic and help draft this note. The reported figures are the market values, revenue, the $112.01 billion profit for the 2025 financial year, the 14.6 billion share count, the 36.1 multiple and the $877 billion of buybacks. Two numbers are <span class="tag d">derived</span> and worth flagging: the 2011 multiple of 13.4 comes from dividing the $347 billion market value by 2011 profit, and the "~$130 billion" current profit comes from dividing today's $4.7 trillion market value by the 36.1 multiple, which is why it is higher than the last full financial year. The 2011 share count is split-adjusted. The argument, and any mistake in it, is mine.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.apple.com/newsroom/2026/04/tim-cook-to-become-apple-executive-chairman-john-ternus-to-become-apple-ceo/">Tim Cook to become Apple Executive Chairman, John Ternus to become Apple CEO</a> — Apple Newsroom (primary source)</li>
+<li><a href="https://www.fool.com/investing/2026/09/07/tim-cook-delivered-a-2720-total-return-over-15-yea/">Tim Cook delivered a 2,720% total return over 15 years</a> — The Motley Fool, September 7, 2026</li>
+<li><a href="https://valueaddvc.com/pulse/apple-cook-era-stock-scorecard-2026">Apple stock under Tim Cook: the Cook-era scorecard</a> — Value Add Pulse (market value, revenue, price-only return)</li>
+<li><a href="https://finance.yahoo.com/markets/stocks/articles/apple-announced-largest-ever-stock-222000154.html">Apple announced its largest-ever stock buyback under Tim Cook</a> — Yahoo Finance ($877 billion total)</li>
+<li><a href="https://www.macrotrends.net/stocks/charts/AAPL/apple/shares-outstanding">Apple shares outstanding, 2012–2026</a> — MacroTrends · <a href="https://www.gurufocus.com/term/bs-share/AAPL">current share count</a> — GuruFocus</li>
+<li><a href="https://www.gurufocus.com/term/pettm/AAPL">Apple price-to-earnings ratio</a> — GuruFocus · <a href="https://www.financecharts.com/stocks/AAPL/value/pe-ratio">historical multiple</a> — FinanceCharts</li>
+<li><a href="https://companiesmarketcap.com/apple/shares-outstanding/">Apple market value and share count history</a> — CompaniesMarketCap</li>
+</ol>
+<p style="margin-top:18px">This page links to original articles and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>
