@@ -203,7 +203,7 @@ const MONTH_NAMES = [
 function groupByMonth(notes) {
   const groups = []
   for (const n of notes) {
-    const ym = String(n.key).slice(0, 7)
+    const ym = String(n.key || n.date).slice(0, 7)
     const last = groups[groups.length - 1]
     if (last && last.ym === ym) last.notes.push(n)
     else groups.push({ ym, notes: [n] })
@@ -238,11 +238,11 @@ function NotesSection({ emoji, title, notes, id }) {
             </summary>
             <div className="month-notes">
               {g.notes.map((n, i) => (
-                // Inside that newest month, the newest three are open already.
+                // Inside that newest month, only the newest entry is open.
                 <details
                   className={n.weekly ? 'note weekly' : 'note'}
                   key={n.key}
-                  open={gi === 0 && i < 3}
+                  open={gi === 0 && i === 0}
                 >
                   <summary>
                     <span className="note-date">{n.key}</span>
@@ -281,16 +281,29 @@ function ResearchSection() {
         you can check it yourself. The argument, and any mistake in it, is mine.
       </p>
       <div className="research-list">
-        {research.map((r) => (
-          <a className="research-item" key={r.href} href={r.href}>
-            <div className="research-meta">
-              <span className="note-date">{r.date}</span>
-              <span className="research-tag">{r.ticker}</span>
+        {groupByMonth(research).map((g, gi) => (
+          // Same month blocks as the other two columns: newest month open only.
+          <details className="month" key={g.ym} open={gi === 0}>
+            <summary>
+              <span className="month-name">{monthLabel(g.ym)}</span>
+              <span className="month-count">
+                {g.notes.length} {g.notes.length === 1 ? 'note' : 'notes'}
+              </span>
+            </summary>
+            <div className="month-notes">
+              {g.notes.map((r) => (
+                <a className="research-item" key={r.href} href={r.href}>
+                  <div className="research-meta">
+                    <span className="note-date">{r.date}</span>
+                    <span className="research-tag">{r.ticker}</span>
+                  </div>
+                  <h3>{r.title}</h3>
+                  <p>{r.desc}</p>
+                  <span className="research-more">Read the full note →</span>
+                </a>
+              ))}
             </div>
-            <h3>{r.title}</h3>
-            <p>{r.desc}</p>
-            <span className="research-more">Read the full note →</span>
-          </a>
+          </details>
         ))}
       </div>
     </section>
@@ -303,6 +316,13 @@ function App() {
   // just this one is displayed, full width. On a wide screen the CSS shows all
   // three side by side and ignores this entirely.
   const [openColumn, setOpenColumn] = useState(columns[0].id)
+  // Home 键：直接重新加载，这就是定义上的「最初的局面」。
+  // 试过在 SPA 内部手动复位（重挂载 + 滚回顶部），但要同时对付 React 的渲染时机、
+  // 浏览器的滚动锚定、以及动画帧节流，三样都可能让回顶失败。重载没有这些坑。
+  function goHome() {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+    window.location.reload()
+  }
 
   // How many different days are covered across both daily columns.
   const days = new Set([...marketNotes, ...diaryNotes].map((n) => n.key)).size
@@ -324,6 +344,15 @@ function App() {
 
   return (
     <main className="page">
+      {/* 左上角固定的 Home 键：回到顶部并把展开状态全部复位 */}
+      <button type="button" className="home-btn" onClick={goHome} title="Back to the top">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 11.2 12 4l9 7.2" />
+          <path d="M5.8 9.8V19a1 1 0 0 0 1 1h10.4a1 1 0 0 0 1-1V9.8" />
+        </svg>
+        Home
+      </button>
+
       {/* Top: site title */}
       <header className="hero">
         <h1>Zhiye's Notes</h1>

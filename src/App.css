@@ -22,6 +22,64 @@ html {
   margin-right: auto;
 }
 
+/* 左上角的 Home 键：固定不动，点一下回到最初的样子 */
+.home-btn {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px 9px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  background: var(--social-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.home-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.home-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.home-btn:active {
+  transform: translateY(0);
+}
+
+/* 窄屏上只留图标，省地方 */
+@media (max-width: 720px) {
+  .home-btn {
+    top: 12px;
+    left: 12px;
+    padding: 9px;
+    font-size: 0;
+    gap: 0;
+  }
+  .home-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
 /* 顶部标题区 */
 .hero {
   padding: 32px 0 40px;
@@ -247,6 +305,8 @@ html {
 .notes-list {
   display: grid;
   gap: 0;
+  /* 折叠月份会让页面骤然变短，滚动锚定会把 Home 键的回顶拽回去，这里关掉 */
+  overflow-anchor: none;
 }
 
 /* 按月分组：每个月份是一个可折叠的块，只有最新的一个月默认展开 */
@@ -316,6 +376,12 @@ html {
 
 .research-list {
   display: grid;
+  gap: 0;
+  overflow-anchor: none;
+}
+
+/* 研究卡片比笔记卡片大，月份里留宽一点 */
+.research-list .month-notes {
   gap: 14px;
 }
 
