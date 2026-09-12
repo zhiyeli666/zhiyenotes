@@ -64,14 +64,12 @@ const research = [
 // short label used on that switcher, where there is no room for the full name.
 const columns = [
   {
-    emoji: '📰',
     id: 'market-notes',
     title: 'Daily Market Notes',
     tab: 'Notes',
     desc: 'Every day I read one real English financial article and write my own reflection — practicing English while learning how markets work.',
   },
   {
-    emoji: '📈',
     id: 'trading-journal',
     title: 'Virtual Trading Journal',
     tab: 'Journal',
@@ -80,7 +78,6 @@ const columns = [
   ...(research.length
     ? [
         {
-          emoji: '🔬',
           id: 'stock-analysis',
           title: 'Stock Analysis',
           tab: 'Research',
@@ -193,6 +190,51 @@ const mdComponents = {
 
 // One section = a heading + a stack of collapsible note cards.
 // The `id` lets the cards above link straight down to this section.
+// 站点 logo：Z 字母标。同时用在 Home 键和 favicon.svg 上。
+function ZMark({ size = 18 }) {
+  return (
+    <svg className="zmark" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+      <defs>
+        <linearGradient id="zmark-g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#4f8dfb" />
+          <stop offset="0.55" stopColor="#1d4ed8" />
+          <stop offset="1" stopColor="#4c1fb8" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="11" fill="url(#zmark-g)" />
+      <path fill="#fff" d="M13.4 11.6h21.2v4.05L19.9 32.4h15.1v4.0H12.2v-4.05L26.9 15.6H13.4z" />
+      <path fill="#fff" d="M13.4 11.6h21.2v2.5H13.4zM12.2 33.9h22.8v2.5H12.2z" />
+    </svg>
+  )
+}
+
+// 每张介绍卡片顶上的贴纸。形状按栏目走，颜色由 CSS 的 tone class 控制。
+function CardBadge({ id }) {
+  if (id === 'trading-journal') {
+    return (
+      <svg viewBox="0 0 60 60" aria-hidden="true">
+        <rect x="6" y="6" width="48" height="48" rx="14" />
+        <path className="glyph" d="M17 38l9-10 7 6 11-13" />
+      </svg>
+    )
+  }
+  if (id === 'stock-analysis') {
+    return (
+      <svg viewBox="0 0 60 60" aria-hidden="true">
+        <circle cx="30" cy="30" r="24" />
+        <circle className="glyph" cx="27" cy="27" r="9" />
+        <path className="glyph" d="M34 34l8 8" />
+      </svg>
+    )
+  }
+  return (
+    <svg viewBox="0 0 60 60" aria-hidden="true">
+      <circle cx="30" cy="30" r="24" />
+      <path className="glyph" d="M20 24h20M20 31h20M20 38h12" />
+    </svg>
+  )
+}
+
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
@@ -217,11 +259,11 @@ function monthLabel(ym) {
   return name ? name + ' ' + y : ym
 }
 
-function NotesSection({ emoji, title, notes, id }) {
+function NotesSection({ title, notes, id }) {
   return (
     <section className="notes-section" id={id}>
       <h2 className="notes-heading">
-        {emoji} {title}
+        {title}
       </h2>
       <p className="notes-hint">
         {notes.length} entries · click any row to open it
@@ -268,7 +310,7 @@ function NotesSection({ emoji, title, notes, id }) {
 function ResearchSection() {
   return (
     <section className="research-section" id="stock-analysis">
-      <h2 className="notes-heading">🔬 Stock Analysis</h2>
+      <h2 className="notes-heading">Stock Analysis</h2>
       <p className="notes-hint">
         {research.length} {research.length === 1 ? 'note' : 'notes'} · click to
         read the full paper
@@ -346,10 +388,7 @@ function App() {
     <main className="page">
       {/* 左上角固定的 Home 键：回到顶部并把展开状态全部复位 */}
       <button type="button" className="home-btn" onClick={goHome} title="Back to the top">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M3 11.2 12 4l9 7.2" />
-          <path d="M5.8 9.8V19a1 1 0 0 0 1 1h10.4a1 1 0 0 0 1-1V9.8" />
-        </svg>
+        <ZMark />
         Home
       </button>
 
@@ -385,7 +424,12 @@ function App() {
             href={`#${c.id}`}
             onClick={() => setOpenColumn(c.id)}
           >
-            <div className="card-emoji">{c.emoji}</div>
+            <div className={`card-mesh tone-${c.id}`} aria-hidden="true">
+              <i />
+            </div>
+            <div className={`card-badge tone-${c.id}`}>
+              <CardBadge id={c.id} />
+            </div>
             <h2>{c.title}</h2>
             <p className="card-desc">{c.desc}</p>
           </a>
@@ -405,7 +449,7 @@ function App() {
             className={openColumn === c.id ? 'column-tab open' : 'column-tab'}
             onClick={() => setOpenColumn(c.id)}
           >
-            <span aria-hidden="true">{c.emoji}</span> {c.tab}
+            {c.tab}
           </button>
         ))}
       </div>
@@ -416,13 +460,11 @@ function App() {
           standalone research pages and only appears once there is a note. */}
       <div className="notes-columns" data-open={openColumn}>
         <NotesSection
-          emoji="📰"
           title="Daily Market Notes"
           notes={marketNotes}
           id="market-notes"
         />
         <NotesSection
-          emoji="📈"
           title="Virtual Trading Journal"
           notes={diaryNotes}
           id="trading-journal"

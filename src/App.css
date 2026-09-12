@@ -44,14 +44,11 @@ html {
     transform 0.15s ease;
 }
 
-.home-btn svg {
-  width: 15px;
-  height: 15px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.9;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.home-btn .zmark {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .home-btn:hover {
@@ -183,12 +180,88 @@ html {
   border-color: var(--accent-border); /* 悬停时给点“可点击”的提示 */
 }
 
-.card-emoji {
-  font-size: 32px;
+/* 卡片顶部的 mesh 渐变色带：三坨糊开的色块，像失焦的照片 */
+.card-mesh {
+  position: relative;
+  height: 84px;
+  margin: -28px -24px 0;
+  overflow: hidden;
+  border-radius: 15px 15px 0 0;
 }
 
+.card-mesh::before,
+.card-mesh::after,
+.card-mesh i {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(26px);
+  opacity: 0.9;
+}
+
+.card-mesh::before {
+  width: 150px;
+  height: 150px;
+  left: -30px;
+  top: -52px;
+}
+
+.card-mesh::after {
+  width: 130px;
+  height: 130px;
+  right: -22px;
+  top: -32px;
+}
+
+.card-mesh i {
+  width: 120px;
+  height: 120px;
+  left: 40%;
+  top: 20px;
+}
+
+.tone-market-notes.card-mesh::before { background: #5b8def; }
+.tone-market-notes.card-mesh::after  { background: #a855f7; }
+.tone-market-notes.card-mesh i       { background: #22d3ee; }
+
+.tone-trading-journal.card-mesh::before { background: #34d399; }
+.tone-trading-journal.card-mesh::after  { background: #0ea5e9; }
+.tone-trading-journal.card-mesh i       { background: #a3e635; }
+
+.tone-stock-analysis.card-mesh::before { background: #fb923c; }
+.tone-stock-analysis.card-mesh::after  { background: #e11d48; }
+.tone-stock-analysis.card-mesh i       { background: #fbbf24; }
+
+/* 压在色带上的几何贴纸：实色 + 白描边 + 投影 + 轻微旋转 */
+.card-badge {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0;
+  transform: rotate(-5deg);
+  filter: drop-shadow(0 4px 9px rgba(15, 23, 42, 0.2));
+}
+
+.card-badge svg {
+  width: 100%;
+  height: 100%;
+  stroke: #fff;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card-badge svg .glyph {
+  fill: none;
+  stroke-width: 3.6;
+}
+
+.tone-market-notes.card-badge svg    { fill: #2563eb; }
+.tone-trading-journal.card-badge svg { fill: #16a34a; }
+.tone-stock-analysis.card-badge svg  { fill: #ea580c; }
+
 .card h2 {
-  margin: 12px 0 4px;
+  margin: 14px 0 4px;
 }
 
 .card-desc {
