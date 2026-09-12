@@ -37,15 +37,18 @@ html {
 
 .epigraph p {
   margin: 0;
-  font-size: 19px;
-  line-height: 1.65;
+  font-family: var(--heading);
+  font-size: 21px;
+  line-height: 1.6;
   font-style: italic;
+  letter-spacing: 0.2px;
   color: var(--text);
 }
 
 .epigraph cite {
-  display: block;
-  margin-top: 14px;
+  display: inline;
+  margin-left: 6px;
+  white-space: nowrap;
   font-size: 13px;
   font-style: normal;
   letter-spacing: 2.4px;

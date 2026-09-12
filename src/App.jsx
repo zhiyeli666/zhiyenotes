@@ -294,8 +294,8 @@ function App() {
           <p>
             &ldquo;Be fearful when others are greedy, and greedy when others
             are fearful.&rdquo;
+            <cite>Warren Buffett</cite>
           </p>
-          <cite>Warren Buffett</cite>
         </blockquote>
 
         <div className="stats">
