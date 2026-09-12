@@ -27,19 +27,34 @@ html {
   padding: 32px 0 40px;
 }
 
-.subtitle {
-  margin-top: 10px;
-  font-size: 15px;
+/* 标题下的引言 */
+.epigraph {
+  margin: 20px auto 0;
+  max-width: 540px;
+  padding: 0;
+  border: 0;
+}
+
+.epigraph p {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.65;
+  font-style: italic;
+  color: var(--text);
+}
+
+.epigraph cite {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  font-style: normal;
   letter-spacing: 2.4px;
   text-transform: uppercase;
   color: var(--accent);
 }
 
-.tagline {
-  margin-top: 20px;
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--text);
+.epigraph cite::before {
+  content: "— ";
 }
 
 /* 数据条：几篇笔记 / 几天记录 */

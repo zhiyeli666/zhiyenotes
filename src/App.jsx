@@ -289,12 +289,14 @@ function App() {
     <main className="page">
       {/* Top: site title */}
       <header className="hero">
-        <h1>Zhiye's Market Notes</h1>
-        <p className="subtitle">Reading &amp; Writing About Markets in English</p>
-        <p className="tagline">
-          A teenager's public log of reading real financial news and thinking
-          out loud about markets.
-        </p>
+        <h1>Zhiye's Notes</h1>
+        <blockquote className="epigraph">
+          <p>
+            &ldquo;Be fearful when others are greedy, and greedy when others
+            are fearful.&rdquo;
+          </p>
+          <cite>Warren Buffett</cite>
+        </blockquote>
 
         <div className="stats">
           {stats.map((s) => (
