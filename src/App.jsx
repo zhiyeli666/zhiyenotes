@@ -193,6 +193,30 @@ const mdComponents = {
 
 // One section = a heading + a stack of collapsible note cards.
 // The `id` lets the cards above link straight down to this section.
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+
+// 把按日期倒序排好的笔记按月份分成一组一组。
+// 依赖输入已经是有序的，所以只要相邻同月就往同一组里放。
+function groupByMonth(notes) {
+  const groups = []
+  for (const n of notes) {
+    const ym = String(n.key).slice(0, 7)
+    const last = groups[groups.length - 1]
+    if (last && last.ym === ym) last.notes.push(n)
+    else groups.push({ ym, notes: [n] })
+  }
+  return groups
+}
+
+function monthLabel(ym) {
+  const [y, m] = ym.split('-')
+  const name = MONTH_NAMES[Number(m) - 1]
+  return name ? name + ' ' + y : ym
+}
+
 function NotesSection({ emoji, title, notes, id }) {
   return (
     <section className="notes-section" id={id}>
@@ -203,21 +227,34 @@ function NotesSection({ emoji, title, notes, id }) {
         {notes.length} entries · click any row to open it
       </p>
       <div className="notes-list">
-        {notes.map((n, i) => (
-          // The newest three are open already; the rest start collapsed.
-          <details
-            className={n.weekly ? 'note weekly' : 'note'}
-            key={n.key}
-            open={i < 3}
-          >
+        {groupByMonth(notes).map((g, gi) => (
+          // Only the newest month is expanded; older months start collapsed.
+          <details className="month" key={g.ym} open={gi === 0}>
             <summary>
-              <span className="note-date">{n.key}</span>
-              <span className="note-title">{n.title}</span>
+              <span className="month-name">{monthLabel(g.ym)}</span>
+              <span className="month-count">
+                {g.notes.length} {g.notes.length === 1 ? 'entry' : 'entries'}
+              </span>
             </summary>
-            <div className="note-body">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
-                {n.body}
-              </ReactMarkdown>
+            <div className="month-notes">
+              {g.notes.map((n, i) => (
+                // Inside that newest month, the newest three are open already.
+                <details
+                  className={n.weekly ? 'note weekly' : 'note'}
+                  key={n.key}
+                  open={gi === 0 && i < 3}
+                >
+                  <summary>
+                    <span className="note-date">{n.key}</span>
+                    <span className="note-title">{n.title}</span>
+                  </summary>
+                  <div className="note-body">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+                      {n.body}
+                    </ReactMarkdown>
+                  </div>
+                </details>
+              ))}
             </div>
           </details>
         ))}

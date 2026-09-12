@@ -246,7 +246,62 @@ html {
 
 .notes-list {
   display: grid;
+  gap: 0;
+}
+
+/* 按月分组：每个月份是一个可折叠的块，只有最新的一个月默认展开 */
+.month {
+  border-top: 1px solid var(--border);
+}
+
+.month:first-child {
+  border-top: 0;
+}
+
+.month > summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 16px 4px 14px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.month > summary::-webkit-details-marker {
+  display: none;
+}
+
+.month > summary::after {
+  content: '＋';
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.month[open] > summary::after {
+  content: '－';
+}
+
+.month-name {
+  font-family: var(--heading);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.month-count {
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.month-notes {
+  display: grid;
   gap: 10px;
+  padding: 2px 0 20px;
 }
 
 /* 深度研究栏目（Stock Analysis）
