@@ -66,12 +66,14 @@ const columns = [
   {
     id: 'market-notes',
     title: 'Daily Market Notes',
+    photo: '/photos/notes.jpg',
     tab: 'Notes',
     desc: 'Every day I read one real English financial article and write my own reflection — practicing English while learning how markets work.',
   },
   {
     id: 'trading-journal',
     title: 'Virtual Trading Journal',
+    photo: '/photos/journal.jpg',
     tab: 'Journal',
     desc: 'A journal of imaginary trades using virtual money only, starting from $1,000,000 in virtual capital. No real trading — just practicing judgment.',
   },
@@ -80,6 +82,7 @@ const columns = [
         {
           id: 'stock-analysis',
           title: 'Stock Analysis',
+          photo: '/photos/research.jpg',
           tab: 'Research',
           desc: 'Longer research notes that take one company apart in detail — sourced, with the arithmetic shown. Written with AI assistance.',
         },
@@ -204,33 +207,6 @@ function ZMark({ size = 18 }) {
       <rect width="48" height="48" rx="11" fill="url(#zmark-g)" />
       <path fill="#fff" d="M13.4 11.6h21.2v4.05L19.9 32.4h15.1v4.0H12.2v-4.05L26.9 15.6H13.4z" />
       <path fill="#fff" d="M13.4 11.6h21.2v2.5H13.4zM12.2 33.9h22.8v2.5H12.2z" />
-    </svg>
-  )
-}
-
-// 每张介绍卡片顶上的贴纸。形状按栏目走，颜色由 CSS 的 tone class 控制。
-function CardBadge({ id }) {
-  if (id === 'trading-journal') {
-    return (
-      <svg viewBox="0 0 60 60" aria-hidden="true">
-        <rect x="6" y="6" width="48" height="48" rx="14" />
-        <path className="glyph" d="M17 38l9-10 7 6 11-13" />
-      </svg>
-    )
-  }
-  if (id === 'stock-analysis') {
-    return (
-      <svg viewBox="0 0 60 60" aria-hidden="true">
-        <circle cx="30" cy="30" r="24" />
-        <circle className="glyph" cx="27" cy="27" r="9" />
-        <path className="glyph" d="M34 34l8 8" />
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox="0 0 60 60" aria-hidden="true">
-      <circle cx="30" cy="30" r="24" />
-      <path className="glyph" d="M20 24h20M20 31h20M20 38h12" />
     </svg>
   )
 }
@@ -424,12 +400,7 @@ function App() {
             href={`#${c.id}`}
             onClick={() => setOpenColumn(c.id)}
           >
-            <div className={`card-mesh tone-${c.id}`} aria-hidden="true">
-              <i />
-            </div>
-            <div className={`card-badge tone-${c.id}`}>
-              <CardBadge id={c.id} />
-            </div>
+            <img className="card-photo" src={c.photo} alt="" />
             <h2>{c.title}</h2>
             <p className="card-desc">{c.desc}</p>
           </a>
