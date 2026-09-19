@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Car Company, Priced as Something Else</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 5</p>
+<h1>A Car Company, Priced as Something Else</h1>
+<p class="lede">Everyone now says Tesla is an AI and robotics company, not a car maker. Its own accounts say otherwise: 73% of what it earns comes from selling cars. The odd part is that only about a third of what it costs does.</p>
+<p class="byline">Zhiye's Notes · September 18, 2026 · Data through September 17</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">False about the business, true about the stock. Tesla earns like a car company and is priced like something that does not exist yet.</p>
+<p>In the last reported quarter, <strong>73% of Tesla's revenue came from selling cars</strong>. Energy was 11% and services 16%. Robotaxi revenue was not broken out at all, and the first Optimus robots being built are for collecting training data, not for customers. As a business, the answer is not close.</p>
+<p>As a stock it is the reverse. Outside estimates put <strong>Robotaxi at about 45% of Tesla's value and Optimus at about 19%</strong> — roughly two thirds of a $1.4 trillion company resting on two businesses with no disclosed sales.</p>
+<p>And there is a clean way to show that nobody can actually measure that two thirds. Right now the lowest analyst target for Tesla is <strong>$24.86</strong> and the highest is <strong>$505</strong>. That is a <strong>twenty-fold</strong> gap between professionals looking at the same company on the same day.</p>
+</div>
+
+<h2>1. The claim, written so it can be wrong</h2>
+
+<p>"Tesla is not a car company any more" has become the standard thing to say about it. Sometimes it is said as praise and sometimes as a warning, but it is always said as though it were settled fact.</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> Tesla has become an artificial intelligence and robotics company. The car business is now the smaller, older part of what it does, and judging Tesla by car sales misses the point.</p>
+</div>
+
+<p>There are two completely different things this could mean, and mixing them up is where the confusion lives. It could mean <em>Tesla's business</em> is mostly not cars. Or it could mean <em>Tesla's share price</em> is mostly not about cars. Those have different answers, so this note measures both.</p>
+
+<h2>2. Where the money comes from</h2>
+
+<p>Tesla reports its revenue in three parts, so this takes about a minute to settle. In the quarter ending June 2026, out of $28.24 billion of revenue:</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> Tesla's reported revenue by segment, quarter ending June 2026. Percentages are <span class="tag d">derived</span>. Robotaxi has no line of its own; it sits inside services and was not given a figure.</caption>
+<thead><tr><th>Segment</th><th>Revenue</th><th>Share of total</th></tr></thead>
+<tbody>
+<tr class="total"><td>Automotive — selling cars</td><td class="n">$20.52B</td><td class="n">73%</td></tr>
+<tr><td>Services and other</td><td class="n">$4.58B</td><td class="n">16%</td></tr>
+<tr><td>Energy generation and storage</td><td class="n">$3.14B</td><td class="n">11%</td></tr>
+<tr><td>Robotaxi</td><td class="n">not disclosed</td><td class="n">—</td></tr>
+<tr><td>Optimus</td><td class="n">$0</td><td class="n">builds are for training data</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Nearly three quarters of the money still comes from putting cars on trucks and shipping them to people. The two businesses the story is about — robotaxis and humanoid robots — contribute so little that one is not reported separately and the other has not sold a unit. A few Cybercabs are carrying paying passengers in Austin, which is real but tiny.</p>
+
+<p>So on the business question the claim is simply false, and it is not a close or arguable false. Tesla is a car company that is trying to become something else.</p>
+
+<h2>3. Where the price comes from</h2>
+
+<p>Now the same question asked of the share price, which is a different question with an opposite answer.</p>
+
+<p>Tesla is worth about <strong>$1.4 trillion</strong>. Outside analysts who split that value into pieces put roughly <strong>45% on Robotaxi and 19% on Optimus</strong>. Everything else — every car, every battery, every service centre, the whole 73% that actually earns the money — is the remaining third.</p>
+
+<figure>
+<svg viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two stacked bars comparing where Tesla's revenue comes from with where its value is said to come from">
+  <text x="90" y="52" font-family="system-ui,sans-serif" font-size="13.5" fill="var(--text)" font-weight="600">Where the revenue comes from</text>
+  <rect x="90"  y="64" width="409" height="54" fill="#1d4ed8"/>
+  <rect x="499" y="64" width="90"  height="54" fill="#6b93e8"/>
+  <rect x="589" y="64" width="61"  height="54" fill="#a9c2f0"/>
+  <text x="294" y="97" font-family="system-ui,sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Cars 73%</text>
+  <text x="544" y="136" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">services 16%</text>
+  <text x="620" y="150" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">energy 11%</text>
+  <line x1="544" y1="122" x2="544" y2="128" stroke="var(--muted)" stroke-width="1"/>
+  <line x1="620" y1="122" x2="620" y2="142" stroke="var(--muted)" stroke-width="1"/>
+
+  <text x="90" y="192" font-family="system-ui,sans-serif" font-size="13.5" fill="var(--text)" font-weight="600">Where the value is said to come from</text>
+  <rect x="90"  y="204" width="252" height="54" fill="#b45309"/>
+  <rect x="342" y="204" width="106" height="54" fill="#b45309"/>
+  <rect x="448" y="204" width="202" height="54" fill="#1d4ed8"/>
+  <line x1="342" y1="204" x2="342" y2="258" stroke="var(--panel)" stroke-width="2.5"/>
+  <text x="216" y="237" font-family="system-ui,sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Robotaxi 45%</text>
+  <text x="395" y="237" font-family="system-ui,sans-serif" font-size="12.5" fill="#fff" text-anchor="middle" font-weight="700">Optimus 19%</text>
+  <text x="549" y="237" font-family="system-ui,sans-serif" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">everything else 36%</text>
+
+  <text x="216" y="282" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--warn)" text-anchor="middle" font-weight="600">no disclosed revenue</text>
+  <text x="395" y="296" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--warn)" text-anchor="middle" font-weight="600">nothing sold yet</text>
+  <line x1="216" y1="262" x2="216" y2="270" stroke="var(--warn)" stroke-width="1"/>
+  <line x1="395" y1="262" x2="395" y2="284" stroke="var(--warn)" stroke-width="1"/>
+  <text x="549" y="282" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--accent)" text-anchor="middle" font-weight="600">the part that earns 100% of the money</text>
+  <line x1="549" y1="262" x2="549" y2="270" stroke="var(--accent)" stroke-width="1"/>
+
+  <text x="370" y="322" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">The blue block moves from almost everything to about a third</text>
+</svg>
+<figcaption><b>Figure 1.</b> The top bar is Tesla's own reported revenue. The bottom bar is not — it is an outside estimate of how the value divides, and estimates like it vary a lot between firms. Treat the top bar as fact and the bottom bar as the market's best guess at itself.</figcaption>
+</figure>
+
+<p>Two thirds of $1.4 trillion is about <strong>$900 billion</strong> <span class="tag d">derived</span>, assigned to a taxi service that does not report revenue and a robot that has not been sold. That figure is larger than all but a handful of companies on earth are worth in total.</p>
+
+<h2>4. How we know nobody can measure it</h2>
+
+<p>An estimate like "45% Robotaxi" invites an obvious question: how confident is anyone in that? There is a neat way to answer it without arguing about anybody's model.</p>
+
+<p>Twenty-five Wall Street analysts publish a target price for Tesla. The average is <strong>$388.85</strong>, close to today's $366. But averages hide everything here. The lowest target is <strong>$24.86</strong>. The highest is <strong>$505</strong>, and one firm carries $600.</p>
+
+<figure>
+<svg viewBox="0 0 720 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A number line showing analyst price targets for Tesla ranging from 24.86 dollars to 505 dollars with the current price at 366">
+  <line x1="80" y1="150" x2="680" y2="150" stroke="var(--border)" stroke-width="2"/>
+  <g stroke="var(--border)" stroke-width="1">
+    <line x1="80"  y1="145" x2="80"  y2="158"/><line x1="180" y1="145" x2="180" y2="158"/>
+    <line x1="280" y1="145" x2="280" y2="158"/><line x1="380" y1="145" x2="380" y2="158"/>
+    <line x1="480" y1="145" x2="480" y2="158"/><line x1="580" y1="145" x2="580" y2="158"/>
+    <line x1="680" y1="145" x2="680" y2="158"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="80" y="174">$0</text><text x="180" y="174">$100</text><text x="280" y="174">$200</text>
+    <text x="380" y="174">$300</text><text x="480" y="174">$400</text><text x="580" y="174">$500</text><text x="680" y="174">$600</text>
+  </g>
+
+  <rect x="105" y="136" width="480" height="8" rx="4" fill="var(--warn)" opacity=".35"/>
+
+  <circle cx="105" cy="140" r="7" fill="var(--neg)"/>
+  <circle cx="585" cy="140" r="7" fill="var(--pos)"/>
+  <circle cx="446" cy="140" r="8" fill="var(--accent)"/>
+
+  <g font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700">
+    <text x="105" y="118" fill="var(--neg)" text-anchor="middle">$24.86</text>
+    <text x="585" y="118" fill="var(--pos)" text-anchor="middle">$505</text>
+    <text x="446" y="88"  fill="var(--accent)" text-anchor="middle">$366</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="105" y="102">lowest target</text>
+    <text x="585" y="102">highest target</text>
+    <text x="446" y="72" fill="var(--accent)">today&#39;s price</text>
+  </g>
+  <line x1="446" y1="94" x2="446" y2="132" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <text x="345" y="212" font-family="var(--heading),Georgia,serif" font-size="22" fill="var(--text-h)" text-anchor="middle" font-weight="700">a twenty-fold disagreement</text>
+  <text x="345" y="236" font-family="system-ui,sans-serif" font-size="12.5" fill="var(--muted)" text-anchor="middle">25 professionals · same company · same day</text>
+  <text x="360" y="260" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" font-style="italic">Ratings split 11 buy · 12 hold · 2 sell</text>
+</svg>
+<figcaption><b>Figure 2.</b> Targets are 12-month forecasts collected over the past three months, so the range mixes slightly different dates. That does not explain a gap this size. For a company whose earnings can be measured, the spread between the most and least optimistic analyst is usually well under two to one.</figcaption>
+</figure>
+
+<div class="callout">
+<p><strong>The spread is the measurement.</strong> When analysts land within a narrow band, it means the business can be counted and they are arguing about small things. A twenty-fold gap means they are not really valuing a business at all — they are voting on whether a story will come true. One side is pricing a car maker with thin margins. The other is pricing the largest robotics company in history. Both are looking at the same accounts.</p>
+</div>
+
+<h2>5. What the two answers add up to</h2>
+
+<p>Put the two halves together and the picture is clear and slightly uncomfortable.</p>
+
+<p>Tesla is a car company. That is what its accounts say, at 73%, and it is not a marginal call. It is also a car company whose profits from cars are currently thin — the operating margin fell to 1.4% last quarter as it poured money into the other things, with capital spending above $25 billion this year, roughly three times its historic level.</p>
+
+<p>And the share price is not really about any of that. It is a price for Robotaxi and Optimus working, attached to a car business that is paying the bills in the meantime. Which means the question that decides whether $366 is cheap or expensive is not "how many cars will Tesla sell". It is "will a robotaxi network and a humanoid robot become real businesses" — and the honest state of the evidence on that is a range from $24.86 to $505.</p>
+
+<h2>6. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures and help draft this note. The segment revenues, the market value, the price targets and the ratings split are as reported; the percentages of revenue and the "$900 billion" figure are <span class="tag d">derived</span>. The 45% and 19% value split is an outside analyst estimate rather than anything Tesla publishes, and different firms produce very different splits — it is the softest number here and Figure 1 labels it as such. Tesla's market value was quoted between $1.41 and $1.45 trillion over September 16–17, and this note uses about $1.4 trillion. The argument, and any mistake in it, is mine.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0001318605/000162828026049270/tsla-20260630.htm">Tesla Form 10-Q, quarter ended June 30, 2026</a> — segment revenue (primary source)</li>
+<li><a href="https://www.cnbc.com/2026/07/22/tesla-tsla-q2-2026-earnings-report.html">Tesla (TSLA) Q2 2026 earnings report</a> — CNBC, July 22, 2026</li>
+<li><a href="https://www.investing.com/news/transcripts/earnings-call-transcript-tesla-q2-2026-revenue-beats-eps-misses-as-stock-falls-93CH-4807216">Tesla Q2 2026 earnings call transcript</a> — Investing.com (Optimus builds for training data; no Robotaxi revenue figure)</li>
+<li><a href="https://www.fool.com/investing/2026/09/15/where-teslas-robotaxi-rollout-stands-today-and-wha/">Where Tesla's robotaxi rollout stands today</a> — The Motley Fool, September 15, 2026</li>
+<li><a href="https://www.tipranks.com/stocks/tsla/forecast">Tesla analyst price targets and ratings</a> — TipRanks · <a href="https://stockanalysis.com/stocks/tsla/forecast/">forecast summary</a> — StockAnalysis</li>
+<li><a href="https://companiesmarketcap.com/tesla/marketcap/">Tesla market capitalisation</a> — CompaniesMarketCap</li>
+<li><a href="https://www.kalkine.com/news/premium/tesla-tsla-stock-analysis-2026-robotaxi-optimus-and-the-ai-pivot-reshaping-the-ev-giant">Tesla 2026: Robotaxi, Optimus and the AI pivot</a> — Kalkine (the 45% / 19% value split estimate)</li>
+</ol>
+<p style="margin-top:18px">This page links to original articles and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>

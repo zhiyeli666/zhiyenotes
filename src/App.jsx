@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-09-18',
+    ticker: 'TSLA',
+    title: 'A Car Company, Priced as Something Else',
+    href: '/research/tesla-car-company-2026',
+    desc: 'Everyone says Tesla is an AI and robotics company now, not a car maker. Its own accounts disagree: 73% of revenue still comes from selling cars, and Robotaxi sales are not reported at all. The stock is the other way round — outside estimates rest about two thirds of a $1.4 trillion company on Robotaxi and Optimus, and analyst targets run from $24.86 to $505 on the same day.',
+  },
+  {
     date: '2026-09-12',
     ticker: 'AAPL',
     title: 'What $877 Billion Bought',
