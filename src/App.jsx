@@ -31,7 +31,7 @@ const research = [
   {
     date: '2026-09-25',
     ticker: 'SNDK · MU',
-    title: "The Rubber Band That Wasn't",
+    title: 'Why the Gap Never Closed',
     href: '/research/sandisk-micron-pair-2026',
     desc: "SanDisk and Micron move in the same direction on 73% of days, so a popular trade is to bet against SanDisk whenever it runs ahead and buy Micron, waiting for the gap to close. It never closed: $100 in each became $3,738 and $1,128, and the trade lost money in all 12 versions tested. The gap was not a mistake — SanDisk's profits simply grew faster.",
   },
