@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why the Gap Came Back</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+:root{--sndk:#c2410c; --mu:#1d4ed8}
+@media (prefers-color-scheme:dark){ :root{--sndk:#e0691f; --mu:#5b8def} }
+.legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--text-h);margin:0 0 10px 4px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px}
+.legend i.dot{width:10px;height:10px;border-radius:50%}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 6</p>
+<h1>Why the Gap Came Back</h1>
+<p class="lede">SanDisk and Micron both make memory chips, and both have soared on the AI boom. A popular way to trade them is as a pair: when SanDisk runs too far ahead, bet against it and buy Micron, and wait for the gap to close. Over the last six months, the gap kept closing.</p>
+<p class="byline">Zhiye's Notes · September 26, 2026 · Prices from April 1 to September 23</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">True. Since April the two stocks have moved together, the gap between them kept coming back, and betting on it closing made money in all 12 versions tested.</p>
+<p>They moved in the <strong>same direction on 97 of 121 trading days</strong>. $100 put into each at the end of March is now <strong>$286 in SanDisk and $317 in Micron</strong> <span class="tag d">derived</span> — close together, after the lead changed hands <strong>13 times</strong>.</p>
+<p>The standard version of the trade placed one bet, and it made <strong>$22</strong> on $100 a side in five weeks — during which both stocks went up by more than 60%. All 12 versions tested came out ahead, by <strong>$446</strong> in total <span class="tag d">derived</span>.</p>
+<p>The reason is what held the two together: profit. At the end of March, SanDisk cost <strong>$25.60 for each $1 of yearly profit</strong> and Micron cost <strong>$6.90</strong>. Today it is <strong>$11.60 and $10.70</strong> <span class="tag d">derived</span>. When one stock's price runs far ahead of its profits, the gap does not last.</p>
+</div>
+
+<h2>1. The claim, written so it can be wrong</h2>
+
+<p>A normal stock bet is about direction: you buy because you think the price will go up. A <strong>pair trade</strong> is a bet on the <em>gap</em> between two stocks instead. You buy the one that looks too cheap and "short" the one that looks too expensive. Shorting means betting a stock will fall: you borrow shares, sell them, and buy them back later. If the price goes up instead, you lose.</p>
+
+<p>The appeal is that you do not have to guess where the market is heading. If both stocks fall, your short makes money and your purchase loses it. If both rise, the opposite. All that matters is whether the gap closes.</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> SanDisk and Micron are both AI memory stocks and they move together. When SanDisk runs too far ahead of Micron, bet against SanDisk and buy the same dollar amount of Micron. The two will drift back together and the bet will pay, whatever the market does.</p>
+</div>
+
+<p>This note tests it over the six months from April 1 to September 23, 2026, broken into three predictions that can each be checked:</p>
+
+<ul class="tight">
+<li><strong>Prediction 1:</strong> the two stocks move together from day to day.</li>
+<li><strong>Prediction 2:</strong> when one gets ahead, the gap closes again.</li>
+<li><strong>Prediction 3:</strong> so betting on the gap closing makes money.</li>
+</ul>
+
+<h2>2. Do they move together? Yes</h2>
+
+<p>There were 121 trading days from April 1 to September 23. On <strong>97</strong> of them the two stocks moved in the same direction — both up on 54 days, both down on 43. That is 80% of the time <span class="tag d">derived</span>.</p>
+
+<p>Another way to measure this is a number called correlation, which runs from 0 (no link at all) to 1 (perfectly in step). For the two stocks' daily moves it is <strong>0.83</strong> <span class="tag d">derived</span>. That is a very strong link.</p>
+
+<p>SanDisk is the jumpier of the two. On a typical day it moved <strong>5.7%</strong> and Micron moved <strong>4.4%</strong> <span class="tag d">derived</span>. But the bigger swings went both ways — up and down — so they kept cancelling out. Prediction 1 is true.</p>
+
+<h2>3. Does the gap come back? Yes</h2>
+
+<p>Figure 1 shows what $100 put into each stock at the close on March 31, 2026 would be worth each day since.</p>
+
+<figure>
+<div class="legend"><span><i style="background:var(--sndk)"></i>SanDisk</span><span><i style="background:var(--mu)"></i>Micron</span></div>
+<svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart: 100 dollars in SanDisk and in Micron from April to September 2026; the two lines cross many times and end at 286 and 317 dollars">
+  <g stroke="var(--border)" stroke-width="1">
+    <line x1="70" y1="290" x2="640" y2="290"/><line x1="70" y1="227.5" x2="640" y2="227.5"/>
+    <line x1="70" y1="165" x2="640" y2="165"/><line x1="70" y1="102.5" x2="640" y2="102.5"/><line x1="70" y1="40" x2="640" y2="40"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end">
+    <text x="62" y="294">$0</text><text x="62" y="231.5">$100</text><text x="62" y="169">$200</text>
+    <text x="62" y="106.5">$300</text><text x="62" y="44">$400</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="73.2" y="310">Apr</text><text x="170.4" y="310">May</text><text x="270.8" y="310">Jun</text>
+    <text x="368" y="310">Jul</text><text x="468.4" y="310">Aug</text><text x="568.8" y="310">Sep</text>
+  </g>
+  <path fill="none" stroke="var(--mu)" stroke-width="2" stroke-linejoin="round" d="M70.0,227.5 L73.2,221.9 L76.5,222.2 L89.4,220.1 L92.7,220.1 L95.9,214.8 L99.1,212.0 L102.4,212.2 L112.1,211.1 L115.3,203.9 L118.6,205.6 L121.8,205.4 L125.1,205.8 L134.8,207.0 L138.0,206.9 L141.2,199.8 L144.5,200.9 L147.7,198.1 L157.4,193.0 L160.7,196.7 L163.9,194.1 L167.2,194.3 L170.4,189.7 L180.1,183.4 L183.4,171.6 L186.6,166.7 L189.8,170.4 L193.1,151.8 L202.8,142.9 L206.0,148.2 L209.3,141.3 L212.5,146.4 L215.7,155.9 L225.5,163.9 L228.7,160.7 L231.9,154.6 L235.2,149.0 L238.4,151.1 L251.4,124.3 L254.6,118.2 L257.8,119.1 L261.1,110.4 L270.8,98.4 L274.0,93.1 L277.3,90.3 L280.5,105.7 L283.8,130.2 L293.5,114.4 L296.7,116.9 L299.9,125.0 L303.2,105.8 L306.4,108.4 L316.1,88.7 L319.4,101.2 L322.6,97.0 L325.9,80.2 L338.8,65.9 L342.0,95.4 L345.3,96.0 L348.5,65.5 L351.8,80.5 L361.5,78.1 L364.7,76.5 L368.0,99.0 L371.2,109.5 L384.1,107.8 L387.4,116.4 L390.6,114.4 L393.9,106.5 L397.1,108.8 L406.8,116.6 L410.1,108.1 L413.3,122.7 L416.5,132.1 L419.8,132.9 L429.5,129.9 L432.7,110.4 L436.0,112.5 L439.2,106.8 L442.4,119.6 L452.2,123.4 L455.4,138.2 L458.6,153.3 L461.9,128.2 L465.1,137.7 L474.8,136.5 L478.1,124.8 L481.3,124.7 L484.5,126.9 L487.8,127.6 L497.5,130.7 L500.7,129.3 L504.0,121.4 L507.2,114.3 L510.5,110.2 L520.2,102.8 L523.4,115.9 L526.6,116.6 L529.9,109.7 L533.1,111.1 L542.8,121.5 L546.1,117.4 L549.3,116.4 L552.6,116.9 L555.8,117.4 L565.5,112.6 L568.8,117.3 L572.0,113.1 L575.2,112.7 L578.5,101.9 L591.4,104.9 L594.7,99.8 L597.9,109.2 L601.1,109.6 L610.9,119.0 L614.1,118.4 L617.3,118.6 L620.6,109.1 L623.8,102.0 L633.5,96.8 L636.8,87.2 L640.0,91.7"/>
+  <path fill="none" stroke="var(--sndk)" stroke-width="2" stroke-linejoin="round" d="M70.0,227.5 L73.2,221.9 L76.5,221.0 L89.4,218.7 L92.7,220.1 L95.9,213.2 L99.1,206.2 L102.4,206.2 L112.1,196.3 L115.3,197.1 L118.6,202.3 L121.8,199.5 L125.1,199.4 L134.8,200.2 L138.0,201.1 L141.2,193.7 L144.5,198.3 L147.7,192.6 L157.4,184.7 L160.7,191.4 L163.9,185.3 L167.2,182.1 L170.4,173.2 L180.1,166.5 L183.4,151.7 L186.6,151.3 L189.8,158.2 L193.1,136.3 L202.8,137.8 L206.0,147.2 L209.3,147.6 L212.5,154.0 L215.7,151.5 L225.5,158.9 L228.7,153.9 L231.9,153.0 L235.2,138.3 L238.4,144.5 L251.4,133.6 L254.6,133.6 L257.8,128.5 L261.1,123.3 L270.8,116.7 L274.0,121.2 L277.3,109.8 L280.5,116.9 L283.8,136.6 L293.5,128.5 L296.7,128.0 L299.9,128.4 L303.2,104.9 L306.4,95.2 L316.1,82.6 L319.4,94.1 L322.6,97.3 L325.9,75.1 L338.8,66.3 L342.0,96.8 L345.3,101.7 L348.5,60.3 L351.8,84.3 L361.5,88.3 L364.7,66.3 L368.0,90.1 L371.2,118.3 L384.1,118.4 L387.4,130.9 L390.6,120.1 L393.9,107.2 L397.1,101.5 L406.8,125.3 L410.1,117.1 L413.3,131.1 L416.5,151.2 L419.8,156.7 L429.5,153.2 L432.7,133.6 L436.0,132.7 L439.2,131.6 L442.4,148.7 L452.2,164.3 L455.4,182.2 L458.6,190.1 L461.9,164.1 L465.1,170.5 L474.8,163.3 L478.1,149.6 L481.3,157.1 L484.5,166.2 L487.8,170.8 L497.5,168.2 L500.7,165.0 L504.0,157.8 L507.2,139.7 L510.5,128.6 L520.2,114.2 L523.4,130.1 L526.6,135.7 L529.9,132.5 L533.1,133.0 L542.8,143.1 L546.1,144.3 L549.3,142.5 L552.6,143.9 L555.8,143.9 L565.5,135.9 L568.8,138.8 L572.0,137.2 L575.2,137.0 L578.5,118.8 L591.4,119.0 L594.7,116.5 L597.9,123.5 L601.1,129.3 L610.9,137.3 L614.1,139.4 L617.3,140.5 L620.6,131.2 L623.8,113.7 L633.5,116.2 L636.8,104.4 L640.0,111.3"/>
+  <circle cx="640" cy="111.3" r="4.5" fill="var(--sndk)" stroke="var(--panel)" stroke-width="2"><title>SanDisk: $100 became $286</title></circle>
+  <circle cx="640" cy="91.7" r="4.5" fill="var(--mu)" stroke="var(--panel)" stroke-width="2"><title>Micron: $100 became $317</title></circle>
+  <g font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)">
+    <text x="650" y="88">Micron <tspan font-family="ui-monospace,Consolas,monospace" font-weight="700">$317</tspan></text>
+    <text x="650" y="121">SanDisk <tspan font-family="ui-monospace,Consolas,monospace" font-weight="700">$286</tspan></text>
+  </g>
+</svg>
+<figcaption><b>Figure 1.</b> Value of $100 put into each stock at the close on March 31, 2026, one point per trading day. Micron includes its small dividend. Values are <span class="tag d">derived</span> from daily closing prices.</figcaption>
+</figure>
+
+<p>The two lines wrap around each other the whole way. Both more than tripled by late June, both fell back hard in July, and both climbed again after that. By September 23 they were only $31 apart.</p>
+
+<p>To see the gap on its own, divide SanDisk's $100 by Micron's $100. When the answer is 1, both have grown by the same amount. Above 1, SanDisk is ahead; below 1, Micron is. Figure 2 tracks that number.</p>
+
+<figure>
+<div class="legend"><span><i style="background:var(--text-h)"></i>The gap: SanDisk's growth ÷ Micron's growth</span><span><i class="dot" style="border:2px solid var(--text-h);background:transparent"></i>bet placed</span><span><i class="dot" style="background:var(--pos)"></i>bet closed</span></div>
+<svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of the gap between SanDisk and Micron from April to September 2026, crossing the level of 1 thirteen times, with one winning bet marked">
+  <g stroke="var(--border)" stroke-width="1">
+    <line x1="70" y1="290" x2="640" y2="290"/><line x1="70" y1="254.3" x2="640" y2="254.3"/><line x1="70" y1="218.6" x2="640" y2="218.6"/>
+    <line x1="70" y1="182.9" x2="640" y2="182.9"/><line x1="70" y1="111.4" x2="640" y2="111.4"/><line x1="70" y1="75.7" x2="640" y2="75.7"/><line x1="70" y1="40" x2="640" y2="40"/>
+  </g>
+  <line x1="70" y1="147.1" x2="640" y2="147.1" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end">
+    <text x="62" y="294">0.6×</text><text x="62" y="258.3">0.7×</text><text x="62" y="222.6">0.8×</text><text x="62" y="186.9">0.9×</text>
+    <text x="62" y="151.1">1×</text><text x="62" y="115.4">1.1×</text><text x="62" y="79.7">1.2×</text><text x="62" y="44">1.3×</text>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="73.2" y="310">Apr</text><text x="170.4" y="310">May</text><text x="270.8" y="310">Jun</text>
+    <text x="368" y="310">Jul</text><text x="468.4" y="310">Aug</text><text x="568.8" y="310">Sep</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)">
+    <text x="636" y="62" text-anchor="end">↑ SanDisk ahead</text>
+    <text x="636" y="278" text-anchor="end">↓ Micron ahead</text>
+  </g>
+  <path fill="none" stroke="var(--text-h)" stroke-width="2" stroke-linejoin="round" d="M70.0,147.1 L73.2,146.7 L76.5,140.5 L89.4,140.0 L92.7,146.8 L95.9,139.7 L99.1,120.6 L102.4,119.7 L112.1,80.2 L115.3,119.1 L118.6,133.1 L121.8,122.4 L125.1,119.9 L134.8,117.6 L138.0,122.5 L141.2,122.9 L144.5,136.7 L147.7,125.8 L157.4,116.8 L160.7,126.8 L163.9,114.5 L167.2,101.6 L170.4,88.5 L180.1,90.5 L183.4,87.1 L186.6,102.6 L189.8,110.8 L193.1,107.0 L202.8,134.8 L206.0,144.6 L209.3,162.3 L212.5,165.9 L215.7,135.4 L225.5,132.8 L228.7,128.3 L231.9,143.0 L235.2,120.0 L238.4,130.4 L251.4,167.3 L254.6,179.1 L257.8,166.7 L261.1,172.8 L270.8,181.2 L274.0,198.0 L277.3,182.1 L280.5,168.8 L283.8,161.5 L293.5,175.8 L296.7,170.2 L299.9,154.4 L303.2,145.5 L306.4,121.2 L316.1,136.4 L319.4,133.8 L322.6,147.7 L325.9,138.4 L338.8,147.8 L342.0,149.7 L345.3,157.5 L348.5,138.9 L351.8,153.6 L361.5,164.3 L364.7,130.2 L368.0,130.4 L371.2,164.6 L384.1,167.9 L387.4,176.9 L390.6,158.6 L393.9,148.5 L397.1,132.8 L406.8,165.1 L410.1,164.8 L413.3,165.2 L416.5,190.2 L419.8,201.3 L429.5,199.1 L432.7,193.4 L436.0,187.8 L439.2,195.5 L442.4,208.1 L452.2,234.7 L455.4,250.6 L458.6,243.3 L461.9,226.4 L465.1,224.0 L474.8,209.4 L478.1,200.6 L481.3,217.2 L484.5,233.2 L487.8,242.0 L497.5,231.3 L500.7,226.4 L504.0,224.2 L507.2,198.8 L510.5,183.6 L520.2,168.9 L523.4,176.1 L526.6,186.4 L529.9,192.4 L533.1,190.8 L542.8,192.9 L546.1,202.9 L549.3,200.9 L552.6,202.8 L555.8,202.0 L565.5,194.0 L568.8,191.7 L572.0,195.8 L575.2,196.1 L578.5,179.3 L591.4,174.4 L594.7,178.4 L597.9,175.5 L601.1,186.3 L610.9,185.4 L614.1,190.9 L617.3,192.8 L620.6,190.7 L623.8,169.3 L633.5,183.0 L636.8,177.4 L640.0,182.5"/>
+  <g stroke-width="2.5">
+    <circle cx="99.1" cy="120.6" r="6" fill="var(--panel)" stroke="var(--text-h)"><title>Bet placed Apr 9, 2026 — gap 1.07×</title></circle>
+    <circle cx="212.5" cy="165.9" r="6" fill="var(--pos)" stroke="var(--panel)"><title>Bet closed May 14, 2026 — gap 0.95×, made $22</title></circle>
+  </g>
+  <text x="204" y="190" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="var(--pos)" text-anchor="end">Bet: made $22</text>
+  <g font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">
+    <text x="112" y="66">peak 1.19×</text>
+    <text x="455.4" y="270">low 0.71×</text>
+  </g>
+  <g font-family="system-ui,sans-serif" fill="var(--text-h)">
+    <text x="650" y="179" font-size="12.5" font-weight="600">now</text>
+    <text x="650" y="195" font-size="13" font-family="ui-monospace,Consolas,monospace" font-weight="700">0.90×</text>
+  </g>
+</svg>
+<figcaption><b>Figure 2.</b> The gap is SanDisk's growth since March 31, 2026 divided by Micron's, one point per trading day <span class="tag d">derived</span>. The dashed line at 1× means both have grown the same. The markers show the one bet placed by the standard rule in Section 4, per $100 on each side.</figcaption>
+</figure>
+
+<p>The gap never runs away. SanDisk got <strong>19% ahead</strong> on April 13 and it came back. SanDisk fell <strong>29% behind</strong> on July 28 and that came back too. The line crossed the 1× level <strong>13 times</strong> in six months <span class="tag d">derived</span>. Prediction 2 is true.</p>
+
+<h2>4. Testing the bet</h2>
+
+<p>A gap that keeps coming back is exactly what a pair trader wants. To check whether that was enough to make money, I tested the trade directly, using the rule pair traders usually start with:</p>
+
+<div class="callout">
+<p><strong>The rule.</strong> Each day, compare the gap with its average over the last 60 trading days (about three months). If the gap is much higher than that average — further than it normally strays — bet $100 against SanDisk and put $100 into Micron. Close both bets when the gap falls back to its three-month average.</p>
+</div>
+
+<p>Between April and September the rule fired once, and the bet made money.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> The bet placed by the standard rule. "Result" is the combined gain or loss on $100 against SanDisk and $100 in Micron. "Worst point" is how far down the bet was on its worst day before it closed (May 5). All figures <span class="tag d">derived</span>.</caption>
+<thead><tr><th>Open → close</th><th>SanDisk</th><th>Micron</th><th>Result</th><th>Worst point</th></tr></thead>
+<tbody>
+<tr class="total"><td>Apr 9 → May 14, 2026</td><td class="n">+62%</td><td class="n">+84%</td><td class="n pos">+$22</td><td class="n neg">−$13</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>This bet shows the whole idea of a pair trade in one line. Both stocks shot up. The $100 bet against SanDisk lost $62, because SanDisk rose 62%. But the $100 in Micron made $84, because Micron rose 84%. Nobody had to guess that memory stocks were about to soar. The only thing that mattered was that SanDisk had run ahead and Micron was about to catch up.</p>
+
+<p>One bet is not much to judge by, so I ran the trade 12 ways: looking back over 20, 60 or 120 days; calling the gap "too wide" at two different distances; and either only betting against SanDisk, as the claim says, or also taking the opposite bet whenever SanDisk fell unusually far behind.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 2.</b> Every version of the trade tested, with bets placed from April 1 to September 23, 2026. "Too wide" is measured in the gap's normal day-to-day spread; 2 is stricter than 1.5. Totals add up every bet at $100 a side. In the 20-day versions one bet was still open on September 23 and is valued at that day's close. All figures <span class="tag d">derived</span>.</caption>
+<thead><tr><th>Look back</th><th>"Too wide" at</th><th>Bets taken</th><th>Bets</th><th>Won</th><th>Total</th></tr></thead>
+<tbody>
+<tr><td>20 days</td><td class="n">1.5</td><td>against SanDisk only</td><td class="n">4</td><td class="n">3</td><td class="n pos">+$12</td></tr>
+<tr><td>20 days</td><td class="n">1.5</td><td>both ways</td><td class="n">8</td><td class="n">6</td><td class="n pos">+$29</td></tr>
+<tr><td>20 days</td><td class="n">2</td><td>against SanDisk only</td><td class="n">3</td><td class="n">3</td><td class="n pos">+$34</td></tr>
+<tr><td>20 days</td><td class="n">2</td><td>both ways</td><td class="n">6</td><td class="n">5</td><td class="n pos">+$42</td></tr>
+<tr><td>60 days</td><td class="n">1.5</td><td>against SanDisk only</td><td class="n">1</td><td class="n">1</td><td class="n pos">+$11</td></tr>
+<tr><td>60 days</td><td class="n">1.5</td><td>both ways</td><td class="n">3</td><td class="n">3</td><td class="n pos">+$34</td></tr>
+<tr class="total"><td>60 days</td><td class="n">2</td><td>against SanDisk only</td><td class="n">1</td><td class="n">1</td><td class="n pos">+$22</td></tr>
+<tr><td>60 days</td><td class="n">2</td><td>both ways</td><td class="n">2</td><td class="n">2</td><td class="n pos">+$34</td></tr>
+<tr><td>120 days</td><td class="n">1.5</td><td>against SanDisk only</td><td class="n">1</td><td class="n">1</td><td class="n pos">+$28</td></tr>
+<tr><td>120 days</td><td class="n">1.5</td><td>both ways</td><td class="n">2</td><td class="n">2</td><td class="n pos">+$56</td></tr>
+<tr><td>120 days</td><td class="n">2</td><td>against SanDisk only</td><td class="n">1</td><td class="n">1</td><td class="n pos">+$52</td></tr>
+<tr><td>120 days</td><td class="n">2</td><td>both ways</td><td class="n">2</td><td class="n">2</td><td class="n pos">+$92</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Twelve out of twelve came out ahead. The highlighted row is the standard rule from Table 1. Across all 12 versions there were 34 bets, and 30 of them won <span class="tag d">derived</span>. The "both ways" versions did better than the "against SanDisk only" ones every time, because the gap came back from both sides: bets that SanDisk would catch up after falling behind in July paid off too.</p>
+
+<div class="callout">
+<p><strong>Why "both ways" matters.</strong> The claim only talks about betting against SanDisk when it runs ahead. But in July it was Micron that ran ahead, and SanDisk fell 29% behind at the low point. A trader who also bet on SanDisk catching up made money on that swing as well. The rubber band pulls in both directions.</p>
+</div>
+
+<p>Prediction 3 is true.</p>
+
+<h2>5. What held them together</h2>
+
+<p>A pair trade needs a rubber band — something that pulls the two prices back together when they drift apart. For SanDisk and Micron, that something is profit.</p>
+
+<p>The fairest way to compare two share prices is to ask how much you pay for each dollar of profit. Take a company's latest quarterly profit per share, multiply by four for a full year, and divide the share price by it. Here is that sum with what investors could see on March 31, and again today:</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 3.</b> Share prices at the close on each date, and each company's latest reported quarter at that time. On March 31 that was SanDisk's quarter ended January 2 and Micron's quarter ended February 26. Today it is SanDisk's quarter ended July 3 and Micron's ended May 28. Profit per share is the adjusted (non-GAAP) figure each company reports. The last two rows are <span class="tag d">derived</span>.</caption>
+<thead><tr><th></th><th>SanDisk Mar 31</th><th>SanDisk now</th><th>Micron Mar 31</th><th>Micron now</th></tr></thead>
+<tbody>
+<tr><td>Share price</td><td class="n">$635.34</td><td class="n">$1,816.57</td><td class="n">$337.84</td><td class="n">$1,071.88</td></tr>
+<tr><td>Kept from each $1 of sales after making the chips</td><td class="n">51¢</td><td class="n">85¢</td><td class="n">74¢</td><td class="n">85¢</td></tr>
+<tr><td>Latest quarter's profit per share</td><td class="n">$6.20</td><td class="n">$39.25</td><td class="n">$12.20</td><td class="n">$25.11</td></tr>
+<tr><td>Times four, for a year</td><td class="n">$24.80</td><td class="n">$157.00</td><td class="n">$48.80</td><td class="n">$100.44</td></tr>
+<tr class="total"><td>Price for each $1 of yearly profit</td><td class="n">$25.60</td><td class="n">$11.60</td><td class="n">$6.90</td><td class="n">$10.70</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>On March 31, a dollar of SanDisk's profit cost almost <strong>four times</strong> as much as a dollar of Micron's. That was the stretched rubber band. SanDisk's price had raced ahead of what it was actually earning, because investors expected its profits to jump.</p>
+
+<p>Then they did. SanDisk's profit per share went from $6.20 to $23.41 to $39.25 in two quarters — more than six times higher. Micron's roughly doubled, from $12.20 to $25.11. Meanwhile Micron's share price, which had been the cheap one, rose a little faster than SanDisk's. Both moves pulled in the same direction, and today the two cost almost exactly the same per dollar of profit.</p>
+
+<figure>
+<div class="legend"><span><i class="dot" style="background:var(--sndk)"></i>SanDisk</span><span><i class="dot" style="background:var(--mu)"></i>Micron</span><span><i class="dot" style="border:2px solid var(--muted);background:transparent"></i>March 31</span><span><i class="dot" style="background:var(--muted)"></i>now</span></div>
+<svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Price for each dollar of yearly profit: SanDisk fell from 25.60 to 11.60 dollars while Micron rose from 6.90 to 10.70 dollars, meeting in the middle">
+  <g stroke="var(--border)" stroke-width="1">
+    <line x1="180" y1="30" x2="180" y2="190"/><line x1="340" y1="30" x2="340" y2="190"/><line x1="500" y1="30" x2="500" y2="190"/><line x1="660" y1="30" x2="660" y2="190"/>
+  </g>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+    <text x="180" y="208">$0</text><text x="340" y="208">$10</text><text x="500" y="208">$20</text><text x="660" y="208">$30</text>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="var(--text-h)" text-anchor="end">
+    <text x="164" y="80">SanDisk</text><text x="164" y="150">Micron</text>
+  </g>
+  <line x1="365.6" y1="75" x2="589.9" y2="75" stroke="var(--sndk)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="290.7" y1="145" x2="350.7" y2="145" stroke="var(--mu)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="589.9" cy="75" r="7" fill="var(--panel)" stroke="var(--sndk)" stroke-width="2.5"><title>SanDisk on March 31: $25.60 per $1 of yearly profit</title></circle>
+  <circle cx="365.6" cy="75" r="7" fill="var(--sndk)" stroke="var(--panel)" stroke-width="2"><title>SanDisk now: $11.60 per $1 of yearly profit</title></circle>
+  <circle cx="290.7" cy="145" r="7" fill="var(--panel)" stroke="var(--mu)" stroke-width="2.5"><title>Micron on March 31: $6.90 per $1 of yearly profit</title></circle>
+  <circle cx="350.7" cy="145" r="7" fill="var(--mu)" stroke="var(--panel)" stroke-width="2"><title>Micron now: $10.70 per $1 of yearly profit</title></circle>
+  <g font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">
+    <text x="589.9" y="58">$25.60</text><text x="365.6" y="58">$11.60</text>
+    <text x="290.7" y="128">$6.90</text><text x="350.7" y="128">$10.70</text>
+  </g>
+  <text x="478" y="100" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">SanDisk got cheaper as its profits caught up</text>
+  <text x="320" y="172" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">Micron got dearer</text>
+</svg>
+<figcaption><b>Figure 3.</b> Share price divided by the latest quarter's profit per share times four, on March 31, 2026 and on September 23, 2026 — the bottom row of Table 3. The two companies met in the middle.</figcaption>
+</figure>
+
+<p>The businesses themselves came together too. In the quarters that were public on March 31, SanDisk kept 51¢ of every $1 of sales after paying to make its chips, and Micron kept 74¢. In the latest quarters both keep exactly <strong>84.6¢</strong>. Two companies earning the same way, on the same AI demand, ended up priced the same way.</p>
+
+<h2>6. What the two answers add up to</h2>
+
+<p>Every pair trade rests on one question: is there something that forces the two prices back together? The textbook example is Alphabet's two kinds of shares, GOOGL and GOOG — slices of the same company with the same profits, so a gap between them has to close.</p>
+
+<p>SanDisk and Micron are two different companies, but over these six months they behaved like a pair with a real rubber band. They moved the same way on 80% of days. When SanDisk's price got ahead of its profits in April, its profits caught up and the gap shrank. When Micron pulled ahead in July, that gap shrank too. The lead changed hands 13 times.</p>
+
+<p>So the claim holds on all three counts. They move together, the gap comes back, and the trade built on it made money in all 12 versions tested. The thing to watch is not the share prices but what each one costs per dollar of profit. In April that number was nearly four to one, and it told you which way the gap was going to move.</p>
+
+<h2>7. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures, run the price tests and help draft this note. Gross margins and profit per share are as reported by the companies. Everything marked <span class="tag d">derived</span> I calculated from those reports or from daily closing prices.</p>
+
+<p><strong>How the test works.</strong> Prices are daily closes from March 31 to September 23, 2026, adjusted for Micron's dividends. The "gap" in the trading test is the ratio of the two share prices. "Much higher than its average" means the gap was more than 1.5 or 2 standard deviations above its rolling average over the look-back period, measured on a log scale; where a look-back reaches before April, it uses the earlier prices, but every bet was placed between April 1 and September 23. Where the signal was already on at the start, the bet opens on April 1. Each bet puts equal dollars on the two sides and is closed when the gap returns to its rolling average. Borrowing costs and trading fees are left out. "Price for each $1 of yearly profit" is a simple price-to-earnings ratio on the latest reported quarter's adjusted profit per share times four. Micron reports its next quarter on September 30, 2026, after this note was written.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0002023554/000162828026028879/sndkq3-26ex991xpressrelease.htm">Sandisk fiscal third quarter 2026 results</a> — press release filed with the SEC, April 30, 2026 (quarter ended January 2 and April 3, 2026)</li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0002023554/000162828026053346/sndkq4-26ex991xpressrelease.htm">Sandisk fiscal fourth quarter 2026 results</a> — press release filed with the SEC, August 5, 2026</li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/723125/000072312526000004/a2026q2ex991-pressrelease.htm">Micron fiscal second quarter 2026 results</a> — press release filed with the SEC, March 18, 2026</li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0000723125/000072312526000013/a2026q3ex991-pressrelease.htm">Micron fiscal third quarter 2026 results</a> — press release filed with the SEC</li>
+<li><a href="https://www.globenewswire.com/news-release/2026/08/26/3351673/14450/en/micron-technology-to-report-fiscal-fourth-quarter-results-on-september-30-2026.html">Micron to report fiscal fourth quarter results on September 30, 2026</a> — GlobeNewswire</li>
+<li><a href="https://finance.yahoo.com/quote/SNDK/history/">SanDisk</a> and <a href="https://finance.yahoo.com/quote/MU/history/">Micron</a> daily price history — Yahoo Finance</li>
+</ol>
+<p style="margin-top:18px">This page links to original sources and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>

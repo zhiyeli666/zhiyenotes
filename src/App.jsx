@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-09-26',
+    ticker: 'SNDK · MU',
+    title: 'Why the Gap Came Back',
+    href: '/research/sandisk-micron-pair-2026',
+    desc: "Since April, SanDisk and Micron moved the same way on 80% of days, the lead changed hands 13 times, and betting on the gap between them closing made money in all 12 versions tested. What held them together was profit: at the end of March a dollar of SanDisk’s profit cost nearly four times as much as Micron’s. Now they cost about the same.",
+  },
+  {
     date: '2026-09-18',
     ticker: 'TSLA',
     title: 'A Car Company, Priced as Something Else',
