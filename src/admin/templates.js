@@ -11,10 +11,6 @@ export const MARKET_TEMPLATE = `# Daily Market Note
 ### ✍️ Reflection
 
 （在这里写今天的英文感想，3–5 句话。）
-
----
-
-*Copyright note: this page links to the original article and shares only my own reflection. No full reprint.*
 `
 
 export const DIARY_TEMPLATE = `# Simulated Portfolio Diary

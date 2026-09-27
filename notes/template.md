@@ -29,7 +29,3 @@
 ### 🗣️ Speaking log
 - Minutes I spoke: ___
 - Phrases I got stuck on / want to remember:
-
----
-
-*Copyright note: this page links to the original article and shares only my own reflection. No full reprint.*
