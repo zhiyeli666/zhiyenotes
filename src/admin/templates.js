@@ -34,10 +34,6 @@ export const DIARY_TEMPLATE = `# Simulated Portfolio Diary
 ### 🤔 My Reasoning
 
 （为什么这么操作？）
-
----
-
-*Disclaimer: a learning simulation only. Not investment advice, and no real money is involved.*
 `
 
 // 两个栏目的配置。后台左侧的切换、以及保存到哪个文件夹都看这里。

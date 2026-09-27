@@ -32,9 +32,3 @@ Copy this file, save it as `YYYY-MM-DD.md`, then fill it in.
 
 ### 🔁 Review
 (Come back in a few days: was my judgment right? Why? What did I learn?)
-
-
-
----
-
-*Disclaimer: a learning simulation only. Not investment advice, and no real money is involved.*
