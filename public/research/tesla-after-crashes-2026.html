@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Happens After Tesla Crashes</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+:root{--dip:#1d4ed8}
+@media (prefers-color-scheme:dark){ :root{--dip:#5b8def} }
+.legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--text-h);margin:0 0 10px 4px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 7</p>
+<h1>What Happens After Tesla Crashes</h1>
+<p class="lede">Tesla is famous for terrible days. Sixty-five times since it started trading in 2010, the stock has lost 8% or more in a single day. The old advice is to buy when that happens. Sixteen years of prices say the old advice was right.</p>
+<p class="byline">Zhiye's Notes · October 5, 2026 · Prices from June 29, 2010 to October 2, 2026</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">True. Buying Tesla on a day it fell 8% or more beat buying on an ordinary day — by a wide margin, in every period of its history, and by more the bigger the fall.</p>
+<p>Three months after an ordinary day, the typical result was <strong>+4.6%</strong>. Three months after a day when Tesla fell 8% or more, it was <strong>+20.5%</strong> <span class="tag d">derived</span>. Those buys finished ahead <strong>75%</strong> of the time, against 57% for ordinary days.</p>
+<p>It was not one lucky stretch. Split Tesla's history into <strong>five periods</strong> and buying after a big fall came out ahead in <strong>all five</strong>. It even worked in 2021–23, when buying on an ordinary day typically <em>lost</em> money.</p>
+<p>And the deeper the fall, the better it went: <strong>+10.5%</strong> after a 5% drop, <strong>+20.5%</strong> after 8%, <strong>+31.8%</strong> after 10% <span class="tag d">derived</span>.</p>
+</div>
+
+<h2>1. The claim, written so it can be wrong</h2>
+
+<p>"Buy the dip" is one of the oldest ideas in investing. When a stock suddenly falls hard, the theory goes, people have panicked, and the price will bounce back. Tesla is the perfect place to test it, because it has had so many sudden falls.</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> When Tesla has a really bad day, that is a good time to buy. Over the following months you will do better than if you had bought on an ordinary day.</p>
+</div>
+
+<p>The comparison matters. Tesla's stock has gone up enormously since 2010, so almost any buy looks good if you wait long enough. The real question is whether a crash day is <em>better</em> than an ordinary day. So every result here is set next to the same thing measured for all days. To test the claim, I broke it into three predictions, each of which can be checked:</p>
+
+<ul class="tight">
+<li><strong>Prediction 1:</strong> buying after a big fall beats buying on an ordinary day.</li>
+<li><strong>Prediction 2:</strong> it works across Tesla's whole history, not just in one good stretch.</li>
+<li><strong>Prediction 3:</strong> buying after a crash is not riskier than buying on an ordinary day.</li>
+</ul>
+
+<h2>2. Does buying after a big fall do better? Yes</h2>
+
+<p>Tesla has traded for 4,091 days. On 65 of them it closed 8% or more below the day before — about one day in 63 <span class="tag d">derived</span>. For each of those days I looked at what happened to the price over the next three months (60 trading days) and the next year, and did the same for every ordinary day.</p>
+
+<figure>
+<div class="legend"><span><i style="background:var(--dip)"></i>Bought after a fall</span><span><i style="background:var(--muted)"></i>Bought on any day</span></div>
+<svg viewBox="0 0 720 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart: median return over the next three months after buying Tesla. Any day 4.6%, after a 5% fall 10.5%, after a 6% fall 12.3%, after an 8% fall 20.5%, after a 10% fall 31.8%">
+<g stroke="var(--border)" stroke-width="1"><line x1="200.0" y1="22" x2="200.0" y2="232"/><line x1="320.0" y1="22" x2="320.0" y2="232"/><line x1="440.0" y1="22" x2="440.0" y2="232"/><line x1="560.0" y1="22" x2="560.0" y2="232"/></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="200.0" y="252">0%</text><text x="320.0" y="252">+10%</text><text x="440.0" y="252">+20%</text><text x="560.0" y="252">+30%</text></g>
+<text x="188" y="42" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Any day</text>
+<text x="188" y="57" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">4,030 days</text>
+<path d="M200,30 h51.2 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-51.2 z" fill="var(--muted)"><title>Any day: median +4.6% over the next three months</title></path>
+<text x="263.2" y="48" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+4.6%</text>
+<text x="188" y="84" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Fell 5% or more</text>
+<text x="188" y="99" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">221 days</text>
+<path d="M200,72 h122.0 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-122.0 z" fill="var(--dip)"><title>Fell 5% or more: median +10.5% over the next three months</title></path>
+<text x="334.0" y="90" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+10.5%</text>
+<text x="188" y="126" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Fell 6% or more</text>
+<text x="188" y="141" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">144 days</text>
+<path d="M200,114 h143.6 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-143.6 z" fill="var(--dip)"><title>Fell 6% or more: median +12.3% over the next three months</title></path>
+<text x="355.6" y="132" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+12.3%</text>
+<text x="188" y="168" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Fell 8% or more</text>
+<text x="188" y="183" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">65 days</text>
+<path d="M200,156 h242.0 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-242.0 z" fill="var(--dip)"><title>Fell 8% or more: median +20.5% over the next three months</title></path>
+<text x="454.0" y="174" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+20.5%</text>
+<text x="188" y="210" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Fell 10% or more</text>
+<text x="188" y="225" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">32 days</text>
+<path d="M200,198 h377.6 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-377.6 z" fill="var(--dip)"><title>Fell 10% or more: median +31.8% over the next three months</title></path>
+<text x="589.6" y="216" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+31.8%</text>
+</svg>
+<figcaption><b>Figure 1.</b> The typical (median) price change over the 60 trading days after buying at the close, by how far Tesla fell that day <span class="tag d">derived</span>. "Any day" covers every trading day with three months of prices after it. Each row includes the bigger falls below it — a 10% fall also counts as a 5% fall.</figcaption>
+</figure>
+
+<p>Every size of fall beat an ordinary day, and the pattern climbs steadily: the bigger the fall, the bigger the bounce. That is what you would expect if the falls were overreactions, because a bigger overreaction leaves more room to come back.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> Typical (median) price change after buying at the close, and how often it finished above the buying price. All figures <span class="tag d">derived</span> from daily closing prices adjusted for Tesla's stock splits.</caption>
+<thead><tr><th>Bought on a day it fell…</th><th>Days</th><th>3 months later</th><th>Finished ahead</th><th>1 year later</th><th>Finished ahead</th></tr></thead>
+<tbody>
+<tr><td>Any day</td><td class="n">4,030</td><td class="n">+4.6%</td><td class="n">57%</td><td class="n">+21.8%</td><td class="n">71%</td></tr>
+<tr><td>5% or more</td><td class="n">221</td><td class="n">+10.5%</td><td class="n">65%</td><td class="n">+30.6%</td><td class="n">75%</td></tr>
+<tr><td>6% or more</td><td class="n">144</td><td class="n">+12.3%</td><td class="n">66%</td><td class="n">+33.9%</td><td class="n">76%</td></tr>
+<tr class="total"><td>8% or more</td><td class="n">65</td><td class="n">+20.5%</td><td class="n">75%</td><td class="n">+47.2%</td><td class="n">77%</td></tr>
+<tr><td>10% or more</td><td class="n">32</td><td class="n">+31.8%</td><td class="n">81%</td><td class="n">+89.3%</td><td class="n">87%</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The advantage builds over months rather than days. One month after an 8% fall, the typical result was +3.2%, not far from +2.1% for an ordinary day. By three months it was +20.5% against +4.6%, and by a year +47.2% against +21.8%. Prediction 1 is true.</p>
+
+<h2>3. Was it just one lucky stretch? No</h2>
+
+<p>A result like this could come from a single wild period. 2020 alone had 11 days with an 8% fall, and the stock rose more than 700% that year. If all the good results came from 2020, the claim would really be about 2020, not about Tesla.</p>
+
+<p>So I split Tesla's history into five periods and ran the test in each one separately.</p>
+
+<figure>
+<div class="legend"><span><i style="background:var(--dip)"></i>Bought after an 8% fall</span><span><i style="background:var(--muted)"></i>Bought on any day</span></div>
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grouped bar chart: in each of five periods since 2010, the median three-month return after an 8% fall beat the median for any day">
+<g stroke="var(--border)" stroke-width="1"><line x1="90" y1="260.0" x2="690" y2="260.0"/><line x1="90" y1="162.2" x2="690" y2="162.2"/><line x1="90" y1="113.3" x2="690" y2="113.3"/><line x1="90" y1="64.4" x2="690" y2="64.4"/></g>
+<line x1="90" y1="211.1" x2="690" y2="211.1" stroke="var(--muted)" stroke-width="1.2"/>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end"><text x="80" y="264.0">-10%</text><text x="80" y="215.1">0%</text><text x="80" y="166.2">+10%</text><text x="80" y="117.3">+20%</text><text x="80" y="68.4">+30%</text></g>
+<rect x="112" y="65.9" width="36" height="145.2" rx="3" fill="var(--dip)"><title>2010–13, after an 8% fall: median +29.7%</title></rect>
+<text x="130" y="59.9" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+30%</text>
+<rect x="152" y="155.9" width="36" height="55.2" rx="3" fill="var(--muted)"><title>2010–13, any day: median +11.3%</title></rect>
+<text x="170" y="149.9" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+11%</text>
+<text x="150" y="276" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)" text-anchor="middle">2010–13</text>
+<text x="150" y="292" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">12 falls</text>
+<rect x="232" y="189.6" width="36" height="21.5" rx="3" fill="var(--dip)"><title>2014–17, after an 8% fall: median +4.4%</title></rect>
+<text x="250" y="183.6" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+4%</text>
+<rect x="272" y="205.7" width="36" height="5.4" rx="3" fill="var(--muted)"><title>2014–17, any day: median +1.1%</title></rect>
+<text x="290" y="199.7" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+1%</text>
+<text x="270" y="276" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)" text-anchor="middle">2014–17</text>
+<text x="270" y="292" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">5 falls</text>
+<rect x="352" y="54.7" width="36" height="156.4" rx="3" fill="var(--dip)"><title>2018–20, after an 8% fall: median +32.0%</title></rect>
+<text x="370" y="48.7" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+32%</text>
+<rect x="392" y="155.4" width="36" height="55.7" rx="3" fill="var(--muted)"><title>2018–20, any day: median +11.4%</title></rect>
+<text x="410" y="149.4" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+11%</text>
+<text x="390" y="276" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)" text-anchor="middle">2018–20</text>
+<text x="390" y="292" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">18 falls</text>
+<rect x="472" y="123.1" width="36" height="88.0" rx="3" fill="var(--dip)"><title>2021–23, after an 8% fall: median +18.0%</title></rect>
+<text x="490" y="117.1" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+18%</text>
+<rect x="512" y="211.1" width="36" height="22.0" rx="3" fill="var(--muted)"><title>2021–23, any day: median -4.5%</title></rect>
+<text x="530" y="248.1" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">-4%</text>
+<text x="510" y="276" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)" text-anchor="middle">2021–23</text>
+<text x="510" y="292" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">18 falls</text>
+<rect x="592" y="134.4" width="36" height="76.8" rx="3" fill="var(--dip)"><title>2024–26, after an 8% fall: median +15.7%</title></rect>
+<text x="610" y="128.4" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+16%</text>
+<rect x="632" y="190.6" width="36" height="20.5" rx="3" fill="var(--muted)"><title>2024–26, any day: median +4.2%</title></rect>
+<text x="650" y="184.6" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700" fill="var(--text-h)" text-anchor="middle">+4%</text>
+<text x="630" y="276" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)" text-anchor="middle">2024–26</text>
+<text x="630" y="292" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="middle">11 falls</text>
+</svg>
+<figcaption><b>Figure 2.</b> Typical (median) price change over the 60 trading days after buying, within each period <span class="tag d">derived</span>. "Falls" counts the days in that period when Tesla dropped 8% or more and three months of prices followed.</figcaption>
+</figure>
+
+<p>Buying after a big fall won in all five periods. The clearest case is 2021–23. That was a bad stretch for Tesla — a typical ordinary-day buy was down 4.5% three months later. Buying after an 8% fall in the same years was up 18.0%.</p>
+
+<p>There is one more way a result like this can fool you. Big falls tend to come in bunches: 2022 had 11 of them. If one bad month produces four big-fall days, it gets counted four times. To check, I counted each bunch only once, using just its first big fall and skipping the next 20 trading days. The advantage got smaller but did not go away: the typical three-month result was <strong>+14.0%</strong> after an 8% fall and <strong>+17.0%</strong> after a 10% fall, against +4.6% for an ordinary day <span class="tag d">derived</span>. Counted this way, buying after a big fall still came out ahead in all five periods. For smaller 5% drops, though, the edge almost disappeared (+4.9%) — another sign that it is the really big falls that matter. Prediction 2 is true.</p>
+
+<h2>4. Is it riskier? No</h2>
+
+<p>Buying into a crash feels dangerous. What if the fall is the start of something much worse? The numbers say this happened less often, not more.</p>
+
+<ul class="tight">
+<li><strong>Big losses were rarer.</strong> After an 8% fall, only 3 of 64 buys lost more than 20% over the next three months — 4.7%. For ordinary days it was 9.6%, about twice as often <span class="tag d">derived</span>.</li>
+<li><strong>The fall was usually undone.</strong> Within a week of an 8% fall, Tesla was back above its pre-crash price 15% of the time. Within a month, 48%. Within three months, <strong>78%</strong> <span class="tag d">derived</span>.</li>
+</ul>
+
+<p>The worst case shows what the bad outcome looks like. On October 3, 2022, Tesla fell 8.6%, and over the next three months it fell another 53.5% as the 2022 slide got worse. It happens. It just happened less often after a crash than after an ordinary day. Prediction 3 is true.</p>
+
+<h2>5. The ten worst days</h2>
+
+<p>Here are Tesla's ten biggest one-day falls, and what happened afterwards.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 2.</b> Tesla's ten largest one-day falls since it listed on June 29, 2010. Causes are given where news reports from the time confirm them. Changes afterwards are from the close on the day of the fall <span class="tag d">derived</span>.</caption>
+<thead><tr><th>Date</th><th>Fall</th><th>What happened</th><th>3 months later</th><th>1 year later</th></tr></thead>
+<tbody>
+<tr><td>Sep 8, 2020</td><td class="n neg">−21.1%</td><td>Left out of the S&amp;P 500 index</td><td class="n pos">+72.3%</td><td class="n pos">+122.2%</td></tr>
+<tr><td>Jan 13, 2012</td><td class="n neg">−19.3%</td><td>Two senior Model S engineers left</td><td class="n pos">+45.2%</td><td class="n pos">+45.9%</td></tr>
+<tr><td>Mar 16, 2020</td><td class="n neg">−18.6%</td><td>Covid market crash</td><td class="n pos">+130.3%</td><td class="n pos">+679.3%</td></tr>
+<tr><td>Feb 5, 2020</td><td class="n neg">−17.2%</td><td>Fell from a record after China deliveries were delayed by Covid</td><td class="n neg">−4.5%</td><td class="n pos">+494.0%</td></tr>
+<tr><td>Jul 6, 2010</td><td class="n neg">−16.1%</td><td>One week after its stock-market debut</td><td class="n pos">+36.4%</td><td class="n pos">+80.8%</td></tr>
+<tr><td>Mar 18, 2020</td><td class="n neg">−16.0%</td><td>Covid market crash</td><td class="n pos">+158.9%</td><td class="n pos">+836.9%</td></tr>
+<tr><td>Mar 10, 2025</td><td class="n neg">−15.4%</td><td>Analyst cut delivery forecasts as tech stocks sold off</td><td class="n pos">+49.5%</td><td class="n pos">+79.5%</td></tr>
+<tr><td>Dec 27, 2010</td><td class="n neg">−15.1%</td><td>—</td><td class="n neg">−13.1%</td><td class="n pos">+7.9%</td></tr>
+<tr><td>Jul 23, 2026</td><td class="n neg">−14.5%</td><td>Profit missed forecasts; heavy spending plans</td><td class="n">not yet</td><td class="n">not yet</td></tr>
+<tr><td>Nov 6, 2013</td><td class="n neg">−14.5%</td><td>—</td><td class="n pos">+18.2%</td><td class="n pos">+58.1%</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Look at what caused several of them. A decision not to add Tesla to an index. Two engineers leaving. An analyst cutting a forecast. Each was real news, but each was about a single event, and the price fell as if the company itself had been badly damaged. Of the nine falls with three months of history, seven were higher three months later, and all nine were higher a year later.</p>
+
+<h2>6. What the three answers add up to</h2>
+
+<p>All three predictions held. Buying Tesla after a big fall did better than buying on an ordinary day. It did so in every period of the company's history, including a bad one. And it was not riskier — big losses afterwards were rarer, and most falls had been undone within three months.</p>
+
+<p>The size of the fall matters most. A 5% drop is common for Tesla and carries only a small edge. An 8% or 10% drop is rare, usually set off by one piece of news, and is where the advantage is large. For Tesla, a crash day has been one of the best days to buy.</p>
+
+<h2>7. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to collect the price history, run the calculations, check what caused the biggest falls and help draft this note. Everything marked <span class="tag d">derived</span> I calculated from daily closing prices.</p>
+
+<p><strong>How the test works.</strong> Prices are daily closes from June 29, 2010 to October 2, 2026, adjusted for Tesla's 2020 and 2022 stock splits. A "fall" is a close at least 5%, 6%, 8% or 10% below the previous close. Each buy is at the close on the day of the fall; "3 months later" is 60 trading days and "1 year later" is 250 trading days. "Any day" is every trading day with enough prices after it — 4,030 days for three months. The figures are medians: half the results were better and half worse. The five periods are 2010–13, 2014–17, 2018–20, 2021–23 and 2024–26. In the "counted once" check, a fall that comes within 20 trading days of an earlier counted fall is skipped. Trading fees are left out.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://finance.yahoo.com/quote/TSLA/history/">Tesla daily price history</a> — Yahoo Finance</li>
+<li><a href="https://www.cnn.com/2020/09/08/investing/tesla-stock-plunge">Tesla shares suffer their worst day ever</a> — CNN, September 8, 2020</li>
+<li><a href="https://money.cnn.com/2012/01/13/news/companies/tesla_motors_stock/index.htm">Tesla stock plunges 20% following exec departure</a> — CNN Money, January 13, 2012</li>
+<li><a href="https://www.fool.com/investing/2020/03/16/why-tesla-stock-plummeted-monday.aspx">Why Tesla stock plummeted Monday</a> — The Motley Fool, March 16, 2020</li>
+<li><a href="https://fortune.com/2020/02/05/tesla-shares-plunge/">Tesla shares plunge 17%, their worst one-day drop in eight years</a> — Fortune, February 5, 2020</li>
+<li><a href="https://www.cnbc.com/2025/03/10/tesla-shares-plunge-14percent-head-for-worst-day-in-five-years.html">Tesla shares plunge 15%, suffering steepest drop in five years</a> — CNBC, March 10, 2025</li>
+<li><a href="https://www.cnbc.com/2025/06/05/tesla-shares-musk-trump.html">Tesla stock tanks 14% as Musk-Trump spat escalates</a> — CNBC, June 5, 2025</li>
+<li><a href="https://electrek.co/2026/07/23/tesla-tsla-crashes-12-q2-2026-earnings-miss/">Tesla crashes after Q2 2026 earnings miss</a> — Electrek, July 23, 2026</li>
+</ol>
+<p style="margin-top:18px">This page links to original sources and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>

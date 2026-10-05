@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-10-05',
+    ticker: 'TSLA',
+    title: 'What Happens After Tesla Crashes',
+    href: '/research/tesla-after-crashes-2026',
+    desc: "Sixty-five times since 2010, Tesla has fallen 8% or more in a single day. Buying at the close on those days beat buying on an ordinary day: a typical +20.5% three months later against +4.6%, ahead 75% of the time against 57%. It held in all five periods of Tesla’s history, and the bigger the fall, the bigger the bounce.",
+  },
+  {
     date: '2026-09-26',
     ticker: 'SNDK · MU',
     title: 'Why the Gap Came Back',
