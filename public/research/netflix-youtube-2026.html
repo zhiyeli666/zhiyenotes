@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Losing Screen Time, Not Money</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+:root{--line:#1d4ed8}
+@media (prefers-color-scheme:dark){ :root{--line:#5b8def} }
+.legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--text-h);margin:0 0 10px 4px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 8</p>
+<h1>Losing Screen Time, Not Money</h1>
+<p class="lede">Netflix's share price has fallen by a quarter this year, and the reason everyone gives is YouTube: people are spending more of their TV time there and less on Netflix. The first half is true. But Netflix's own accounts show no damage at all — it is making more money from every hour people watch.</p>
+<p class="byline">Zhiye's Notes · October 17, 2026 · Company figures through June 30, 2026</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">False. YouTube is winning the fight for TV time, but losing that fight has not hurt Netflix's business. Its sales and profits are growing seven times faster than its viewing.</p>
+<p>In a year, Netflix's share of all American TV viewing slipped from <strong>8.8% to 7.8%</strong> while YouTube's climbed to a record <strong>14.2%</strong>. That part of the story is real.</p>
+<p>Over the same stretch, Netflix's revenue grew <strong>14.7%</strong> and its operating profit <strong>14.4%</strong>, comparing the first half of 2026 with the first half of 2025 <span class="tag d">derived</span>. Hours watched grew just <strong>2%</strong>. The difference is that each hour watched now brings in <strong>25.6¢</strong>, up from 22.8¢ <span class="tag d">derived</span>.</p>
+</div>
+
+<h2>1. The claim, written so it can be wrong</h2>
+
+<p>Netflix had a rough September. The stock fell 14% in the month. Two big banks cut their ratings, and both pointed to the same thing: YouTube taking a bigger share of the time people spend in front of the TV. Even Netflix's co-CEO said at an event that "we're not growing as fast as I want us to."</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> YouTube is eating Netflix. People are moving their TV time to YouTube, and that is starting to damage Netflix's business.</p>
+</div>
+
+<p>The claim has two halves, and they can be checked separately:</p>
+
+<ul class="tight">
+<li><strong>Prediction 1:</strong> Netflix is losing TV time to YouTube.</li>
+<li><strong>Prediction 2:</strong> this is showing up in Netflix's sales.</li>
+<li><strong>Prediction 3:</strong> this is showing up in Netflix's profits.</li>
+</ul>
+
+<h2>2. Is Netflix losing TV time? Yes</h2>
+
+<p>The research firm Nielsen measures what share of all TV viewing in American homes goes to each company — every channel, every app, on the TV set. Here is July 2025 against July 2026.</p>
+
+<figure>
+<div class="legend"><span><i style="border:2px solid var(--line);background:transparent"></i>July 2025</span><span><i style="background:var(--line)"></i>July 2026</span></div>
+<svg viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Share of US TV viewing time, July 2025 to July 2026: YouTube rose from 13.4% to 14.2%, Netflix fell from 8.8% to 7.8%, cable fell from 22.2% to 18.7%">
+<g stroke="var(--border)" stroke-width="1"><line x1="170" y1="24" x2="170" y2="190"/><line x1="270" y1="24" x2="270" y2="190"/><line x1="370" y1="24" x2="370" y2="190"/><line x1="470" y1="24" x2="470" y2="190"/><line x1="570" y1="24" x2="570" y2="190"/><line x1="670" y1="24" x2="670" y2="190"/></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="170" y="208">0%</text><text x="270" y="208">5%</text><text x="370" y="208">10%</text><text x="470" y="208">15%</text><text x="570" y="208">20%</text><text x="670" y="208">25%</text></g>
+<text x="156" y="60" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="var(--text-h)" text-anchor="end">YouTube</text>
+<line x1="438.0" y1="55" x2="454.0" y2="55" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+<circle cx="438.0" cy="55" r="7" fill="var(--panel)" stroke="var(--line)" stroke-width="2.5"><title>YouTube, July 2025: 13.4%</title></circle>
+<circle cx="454.0" cy="55" r="7" fill="var(--line)" stroke="var(--panel)" stroke-width="2"><title>YouTube, July 2026: 14.2%</title></circle>
+<text x="426.0" y="59.5" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)" text-anchor="end">13.4%</text>
+<text x="466.0" y="59.5" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">14.2%</text>
+<text x="156" y="115" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="var(--text-h)" text-anchor="end">Netflix</text>
+<line x1="346.0" y1="110" x2="326.0" y2="110" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+<circle cx="346.0" cy="110" r="7" fill="var(--panel)" stroke="var(--line)" stroke-width="2.5"><title>Netflix, July 2025: 8.8%</title></circle>
+<circle cx="326.0" cy="110" r="7" fill="var(--line)" stroke="var(--panel)" stroke-width="2"><title>Netflix, July 2026: 7.8%</title></circle>
+<text x="314.0" y="114.5" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)" text-anchor="end">7.8%</text>
+<text x="358.0" y="114.5" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">8.8%</text>
+<text x="156" y="170" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="var(--text-h)" text-anchor="end">Cable TV</text>
+<line x1="614.0" y1="165" x2="544.0" y2="165" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+<circle cx="614.0" cy="165" r="7" fill="var(--panel)" stroke="var(--line)" stroke-width="2.5"><title>Cable TV, July 2025: 22.2%</title></circle>
+<circle cx="544.0" cy="165" r="7" fill="var(--line)" stroke="var(--panel)" stroke-width="2"><title>Cable TV, July 2026: 18.7%</title></circle>
+<text x="532.0" y="169.5" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)" text-anchor="end">18.7%</text>
+<text x="626.0" y="169.5" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">22.2%</text>
+</svg>
+<figcaption><b>Figure 1.</b> Share of all US TV viewing time, from Nielsen's monthly Gauge report. July 2026 was the last month of the World Cup, shown on Fox, which pulled some viewing away from every streaming service that month. Nielsen's YouTube figure covers the main YouTube app, not the YouTube TV cable service.</figcaption>
+</figure>
+
+<p>YouTube gained 0.8 points and Netflix lost 1.0. The direction is clear: YouTube's share is higher than a year ago and Netflix's is lower. Prediction 1 is true.</p>
+
+<p>Two details are worth keeping in mind, though. First, Netflix's own viewing is not shrinking. Its members watched more than 97 billion hours in the first half of 2026, up 2% on the year before. Netflix is not losing hours; it is just growing more slowly than YouTube. Second, the biggest loser on the chart is not Netflix but cable TV, which dropped 3.5 points <span class="tag d">derived</span> — more than YouTube's gain and Netflix's loss put together.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 1.</b> Hours of Netflix watched worldwide, from Netflix's twice-yearly engagement reports and shareholder letters. Netflix gives the first half of 2026 as "more than 97 billion".</caption>
+<thead><tr><th>Period</th><th>Hours watched</th><th>Change on a year earlier</th></tr></thead>
+<tbody>
+<tr><td>First half of 2024</td><td class="n">94 billion</td><td class="n">—</td></tr>
+<tr><td>First half of 2025</td><td class="n">95 billion</td><td class="n">+1%</td></tr>
+<tr><td>Second half of 2025</td><td class="n">96 billion</td><td class="n">+2%</td></tr>
+<tr class="total"><td>First half of 2026</td><td class="n">97+ billion</td><td class="n">+2%</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>3. Is it hurting sales? No</h2>
+
+<p>If YouTube were eating Netflix, the first place it would show is in how much money Netflix takes in. It does not show.</p>
+
+<div class="tw">
+<table>
+<caption><b>Table 2.</b> Netflix's results from its shareholder letters. 2024 and 2025 are full-year actual figures; the 2026 column is Netflix's own forecast from July 2026. Growth for 2025 is <span class="tag d">derived</span>.</caption>
+<thead><tr><th></th><th>2024</th><th>2025</th><th>2026 forecast</th></tr></thead>
+<tbody>
+<tr><td>Revenue</td><td class="n">$39.0B</td><td class="n">$45.2B</td><td class="n">$51.0B–$51.4B</td></tr>
+<tr><td>Revenue growth</td><td class="n">—</td><td class="n">+16%</td><td class="n">+13% to +14%</td></tr>
+<tr><td>Operating profit</td><td class="n">$10.4B</td><td class="n">$13.3B</td><td class="n">up 20% or more</td></tr>
+<tr class="total"><td>Operating margin</td><td class="n">26.7%</td><td class="n">29.5%</td><td class="n">31.5%</td></tr>
+<tr><td>Advertising revenue</td><td class="n">—</td><td class="n">over $1.5B</td><td class="n">about $3B</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>That is not a forecast holding up on hope. The first half of 2026 has already happened: revenue was <strong>$24.81 billion</strong>, against $21.62 billion in the first half of 2025 — up <strong>14.7%</strong> <span class="tag d">derived</span>. That is the year when Netflix's share of TV time was supposedly being eaten. Prediction 2 is false.</p>
+
+<h2>4. Is it hurting profits? No</h2>
+
+<p>Profits tell the same story. Operating profit — what is left from sales after paying for shows, staff and everything else that runs the business — was <strong>$8.15 billion</strong> in the first half of 2026, up from $7.12 billion a year earlier. That is <strong>+14.4%</strong> <span class="tag d">derived</span>, almost exactly in line with sales.</p>
+
+<p>The margin, the share of each dollar of sales kept as operating profit, has climbed every year: 26.7% in 2024, 29.5% in 2025, and 31.5% forecast for 2026. The second quarter of 2026 was a little lower than a year earlier, 33.4% against 34.1%, but Netflix had told investors in April to expect that, because more of this year's new shows were released in the first half. It expects 33.2% in the third quarter, against 28.2% a year ago. Prediction 3 is false.</p>
+
+<h2>5. How you lose time and still make more money</h2>
+
+<p>The trick is in one number: how much Netflix earns for every hour someone watches it.</p>
+
+<figure>
+<svg viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Growth from the first half of 2025 to the first half of 2026: hours watched up 2%, revenue up 14.7%, operating profit up 14.4%, revenue per hour watched up 12.4%">
+<g stroke="var(--border)" stroke-width="1"><line x1="230" y1="16" x2="230" y2="196"/><line x1="350" y1="16" x2="350" y2="196"/><line x1="470" y1="16" x2="470" y2="196"/><line x1="590" y1="16" x2="590" y2="196"/></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="230" y="214">+0%</text><text x="350" y="214">+5%</text><text x="470" y="214">+10%</text><text x="590" y="214">+15%</text></g>
+<text x="218" y="36" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Hours watched</text>
+<text x="218" y="51" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">more than 97B vs 95B hours</text>
+<path d="M230,24 h44.0 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-44.0 z" fill="var(--muted)"><title>Hours watched: +2.0%</title></path>
+<text x="286.0" y="42" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+2.0%</text>
+<text x="218" y="80" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Revenue</text>
+<text x="218" y="95" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">$24.81B vs $21.62B</text>
+<path d="M230,68 h348.8 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-348.8 z" fill="var(--line)"><title>Revenue: +14.7%</title></path>
+<text x="590.8" y="86" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+14.7%</text>
+<text x="218" y="124" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Operating profit</text>
+<text x="218" y="139" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">$8.15B vs $7.12B</text>
+<path d="M230,112 h341.6 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-341.6 z" fill="var(--line)"><title>Operating profit: +14.4%</title></path>
+<text x="583.6" y="130" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+14.4%</text>
+<text x="218" y="168" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Revenue per hour watched</text>
+<text x="218" y="183" font-family="system-ui,sans-serif" font-size="11" fill="var(--muted)" text-anchor="end">25.6¢ vs 22.8¢</text>
+<path d="M230,156 h293.6 a4,4 0 0 1 4,4 v18 a4,4 0 0 1 -4,4 h-293.6 z" fill="var(--line)"><title>Revenue per hour watched: +12.4%</title></path>
+<text x="535.6" y="174" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="700" fill="var(--text-h)">+12.4%</text>
+</svg>
+<figcaption><b>Figure 2.</b> First half of 2026 against first half of 2025. Revenue per hour watched is revenue divided by hours watched <span class="tag d">derived</span>; it uses 97 billion hours for 2026, which Netflix gives as "more than 97 billion", so the true figure is slightly lower. All growth figures are <span class="tag d">derived</span>.</figcaption>
+</figure>
+
+<p>Hours went up 2%. Money went up about 15%. So each hour watched now brings in about <strong>12% more</strong> than it did a year ago. Netflix's letters give two reasons:</p>
+
+<ul class="tight">
+<li><strong>Higher prices.</strong> Netflix raised prices in the first half of 2026 in markets including the US, Mexico and Spain, and said the results were in line with its earlier price rises and with what it expected.</li>
+<li><strong>Advertising.</strong> The cheaper plan with ads is now a real business. Ad revenue went from over $1.5 billion in 2025 to an expected $3 billion this year — roughly doubling.</li>
+</ul>
+
+<p>Think of a cinema whose share of the town's free time slips a little because a new park opens. If the cinema still sells as many tickets as before, charges a bit more for each one, and starts showing adverts before the film, it makes more money than ever. The park winning does not mean the cinema is losing.</p>
+
+<h2>6. What the three answers add up to</h2>
+
+<p>Only one of the three predictions held. Netflix is losing share of TV time to YouTube — that is real and measurable. But the claim that this is eating Netflix's business fails twice. Sales grew 14.7% in the first half of 2026. Profits grew 14.4%. Each hour of viewing earned 12% more than the year before.</p>
+
+<p>The share price, down 25% this year and 43% from its high last October, is pricing in the claim. The accounts are not showing it. A company whose viewing grows 2% and whose revenue grows 15% has turned slow viewing growth into fast money growth. That is not what being eaten looks like.</p>
+
+<h2>7. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures and help draft this note. Revenue, operating profit, margins, hours watched and forecasts are as reported by Netflix; TV-share figures are as reported by Nielsen. Everything marked <span class="tag d">derived</span> I calculated from those figures.</p>
+
+<p><strong>How the numbers were put together.</strong> First-half figures add up Netflix's first and second quarters: revenue of $12.25 billion and $12.56 billion in 2026, against $10.54 billion and $11.08 billion in 2025; operating profit of $3.96 billion and $4.19 billion in 2026, against $3.35 billion and $3.77 billion in 2025. Netflix's first-quarter 2026 profit also included a one-off $2.8 billion break-up fee from Warner Bros. Discovery, but that was booked below operating profit and is not in any figure here. Hours watched cover about 99% of all Netflix viewing worldwide, while Nielsen's shares cover TV sets in the US only. Nielsen is changing how the Gauge is measured from this autumn, so later months may not compare exactly. Share prices are closing prices: $93.76 on December 31, 2025, $124.14 at the high on October 21, 2025, and $70.53 on October 16, 2026. Netflix reports its third quarter on October 20, 2026, after this note was written.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0001065280/000106528026000211/ex991_q226.htm">Netflix second-quarter 2026 shareholder letter</a> — filed with the SEC, July 16, 2026 (revenue, profit, hours watched, 2026 forecast, ads, prices)</li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/1065280/000106528026000137/ex991_q126.htm">Netflix first-quarter 2026 shareholder letter</a> — filed with the SEC, April 16, 2026</li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/1065280/000106528026000033/ex991_q425.htm">Netflix fourth-quarter 2025 shareholder letter</a> — filed with the SEC, January 20, 2026 (2024 and 2025 full-year results)</li>
+<li><a href="http://about.netflix.com/en/news/what-we-watched-the-first-half-of-2025">What We Watched: the first half of 2025</a> — Netflix</li>
+<li><a href="https://www.nielsen.com/news-center/2026/tv-usage-kicks-usual-summer-slowdown-fueled-by-world-cup-and-streaming-in-nielsens-july-gauge-reports/">Nielsen's July 2026 Gauge reports</a> — Nielsen, September 10, 2026</li>
+<li><a href="https://www.thewrap.com/media-platforms/streaming/youtube-viewership-july-2026/">YouTube extends streaming lead with 14% of TV viewership in July</a> — TheWrap (Netflix 7.8%)</li>
+<li><a href="https://www.nielsen.com/news-center/2025/youtube-netflix-ride-the-wave-of-summer-streaming-highs-in-nielsens-media-distributor-gauge/">YouTube, Netflix ride the wave of summer streaming highs</a> — Nielsen, July 2025 figures</li>
+<li><a href="https://thedesk.net/2025/08/nielsen-the-gauge-july-2025/">YouTube gives streaming a lift in Nielsen's July Gauge</a> — The Desk (cable at 22.2% in July 2025)</li>
+<li><a href="https://www.fool.com/investing/2026/10/01/why-netflix-lost-14-in-september/">Why Netflix lost 14% in September</a> — The Motley Fool, October 1, 2026</li>
+<li><a href="https://www.hollywoodreporter.com/business/digital/netflix-stock-falls-wells-fargo-downgrade-engagement-trends-1236705628/">Netflix stock falls after Wells Fargo downgrade</a> — The Hollywood Reporter</li>
+<li><a href="https://finance.yahoo.com/quote/NFLX/history/">Netflix daily price history</a> — Yahoo Finance</li>
+</ol>
+<p style="margin-top:18px">This page links to original sources and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>

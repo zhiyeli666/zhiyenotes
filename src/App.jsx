@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-10-17',
+    ticker: 'NFLX',
+    title: 'Losing Screen Time, Not Money',
+    href: '/research/netflix-youtube-2026',
+    desc: "Netflix's share of American TV time slipped from 8.8% to 7.8% in a year while YouTube hit a record 14.2%, and the stock is down a quarter. But in the first half of 2026 Netflix's revenue grew 14.7% and its operating profit 14.4%, against just 2% more hours watched. Each hour watched now earns 25.6 cents, up from 22.8.",
+  },
+  {
     date: '2026-10-05',
     ticker: 'TSLA',
     title: 'What Happens After Tesla Crashes',
