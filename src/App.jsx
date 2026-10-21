@@ -103,7 +103,7 @@ const columns = [
     title: 'Virtual Trading Journal',
     photo: '/photos/journal.jpg',
     tab: 'Journal',
-    desc: 'A journal of imaginary trades using virtual money only, starting from $1,000,000 in virtual capital. No real trading — just practicing judgment.',
+    desc: 'A journal of imaginary trades using virtual money only, starting from $1,000,000 in virtual capital. No real trading — just practicing judgment. Trade dates are in Beijing time (UTC+8).',
   },
   ...(research.length
     ? [
