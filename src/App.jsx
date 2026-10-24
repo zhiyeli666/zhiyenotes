@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-10-24',
+    ticker: 'TSLA',
+    title: 'One Percent of Waymo',
+    href: '/research/tesla-robotaxi-waymo-2026',
+    desc: "Tesla's results made its Robotaxi sound like a business that has arrived. But with nobody at the wheel it has driven 3.1 million miles against Waymo's 271.3 million, about 1%, and even in Austin Waymo has gone ten times as far. Tesla publishes no ride count, and its finance chief says costs are still above target.",
+  },
+  {
     date: '2026-10-17',
     ticker: 'NFLX',
     title: 'Losing Screen Time, Not Money',
