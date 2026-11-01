@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-11-01',
+    ticker: 'SNDK',
+    title: 'A Price Boom, Not an AI Boom',
+    href: '/research/sandisk-price-boom-2026',
+    desc: "SanDisk trades as an AI stock, but its annual report tells another story: it sold only about 15% more storage while revenue rose 175%, and almost two-thirds of the extra money came from chips for phones, PCs and cars sold at nearly three times the old price. A stress test shows its profit would vanish if flash prices returned to 2025 levels, and in data-center drives it is the smallest of the five big makers.",
+  },
+  {
     date: '2026-10-24',
     ticker: 'TSLA',
     title: 'One Percent of Waymo',

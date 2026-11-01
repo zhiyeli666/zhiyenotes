@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Price Boom, Not an AI Boom</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+:root{--vol:#1d4ed8; --price:#c2410c}
+@media (prefers-color-scheme:dark){ :root{--vol:#5b8def; --price:#e0691f} }
+.legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--text-h);margin:0 0 10px 4px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+.part{font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin:52px 0 -40px;font-weight:600}
+blockquote{margin:22px 0;padding:4px 0 4px 20px;border-left:3px solid var(--accent-border);color:var(--text-h);font-family:var(--heading);font-size:18px;line-height:1.5}
+blockquote p{margin:0 0 6px}
+blockquote cite{display:block;font-family:var(--sans);font-size:13.5px;font-style:normal;color:var(--muted)}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 10</p>
+<h1>A Price Boom, Not an AI Boom</h1>
+<p class="lede">SanDisk is traded as an AI stock, and its results read like one: data-center sales up more than fivefold in a year, 85 cents of every sales dollar kept after making the chips. Dig into its annual report and a different company appears. Most of the extra money came from selling ordinary chips — for phones, laptops and cars — at nearly three times the old price.</p>
+<p class="byline">Zhiye's Notes · November 1, 2026 · Results for the quarter ended October 2, 2026 · Share prices before the November stock split</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">False. SanDisk's boom is a price boom that AI set off, not an AI sales boom. That makes its profits a bet on flash prices — and the industry's own forecasters expect the shortage behind those prices to end in the second half of 2027.</p>
+<p>In fiscal 2026, SanDisk sold only about <strong>15% more</strong> storage than the year before, yet its revenue rose <strong>175%</strong>. Almost <strong>two-thirds</strong> of the extra revenue came from its Edge business — chips for phones, PCs and cars — where volume barely grew and the price per gigabyte nearly tripled <span class="tag d">derived</span>.</p>
+<p>Because its costs hardly moved, almost all of its profit is price. A stress test shows SanDisk would still break even if flash prices fell about <strong>80%</strong> — which is roughly where they were in 2025. And in the market that is actually tied to AI, drives for data centers, SanDisk is the <strong>smallest</strong> of the five big makers.</p>
+</div>
+
+<h2>1. The claim, written so it can be wrong</h2>
+
+<p>SanDisk makes NAND flash, the memory that stores data even when the power is off. Over the past year it has become one of the hottest stocks in the market, and the explanation is always the same: artificial intelligence. AI data centers need enormous amounts of fast storage, and SanDisk sells it.</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> SanDisk's boom is an AI boom. It is making record profits because AI data centers are buying its chips in huge numbers, and that demand is here to stay.</p>
+</div>
+
+<p>To test it, this note asks four questions. Where did the extra money actually come from? Why did a small shortage produce such enormous profits? How much of those profits would survive if prices fell? And how strong is SanDisk in the part of the market that really is driven by AI?</p>
+
+<p class="part">Part one · Where the money came from</p>
+<h2>2. Price, not volume</h2>
+
+<p>Revenue can grow in only two ways: selling more, or charging more. Most companies never tell you which. SanDisk does, in one paragraph of its annual report, and that paragraph changes the whole story.</p>
+
+<p>For the year to July 2026, SanDisk's revenue grew from $7.4 billion to $20.2 billion. But the amount of storage it sold, measured in exabytes, grew by only "mid-teens percent". Selling about 15% more while earning 175% more means the average price per gigabyte rose by roughly <strong>140%</strong> — about two and a half times the year before <span class="tag d">derived</span>.</p>
+
+<figure>
+<div class="legend"><span><i style="background:var(--vol)"></i>Growth in storage sold (exabytes)</span><span><i style="background:var(--price)"></i>Growth in revenue per gigabyte</span></div>
+<svg viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fiscal 2026 growth in exabytes sold versus revenue per gigabyte: Datacenter almost 120% and almost 150%; Edge high single digits and almost 180%; Consumer down mid-teens and up low fifties; all of SanDisk mid-teens and about 139%">
+<g stroke="var(--border)" stroke-width="1"><line x1="190" y1="14" x2="190" y2="292"/><line x1="300" y1="14" x2="300" y2="292"/><line x1="410" y1="14" x2="410" y2="292"/><line x1="520" y1="14" x2="520" y2="292"/><line x1="630" y1="14" x2="630" y2="292"/></g>
+<line x1="190" y1="14" x2="190" y2="292" stroke="var(--muted)" stroke-width="1.2"/>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="190" y="310">0%</text><text x="300" y="310">+50%</text><text x="410" y="310">+100%</text><text x="520" y="310">+150%</text><text x="630" y="310">+200%</text></g>
+<text x="144" y="49" font-family="system-ui,sans-serif" font-size="13.5" font-weight="600" fill="var(--text-h)" text-anchor="end">Datacenter</text>
+<rect x="190.0" y="22" width="264.0" height="19" rx="3" fill="var(--vol)"><title>Datacenter, exabytes sold: almost 120%</title></rect>
+<text x="462.0" y="36" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">almost 120%</text>
+<rect x="190.0" y="46" width="330.0" height="19" rx="3" fill="var(--price)"><title>Datacenter, revenue per gigabyte: almost 150%</title></rect>
+<text x="528.0" y="60" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">almost 150%</text>
+<text x="144" y="119" font-family="system-ui,sans-serif" font-size="13.5" font-weight="600" fill="var(--text-h)" text-anchor="end">Edge</text>
+<rect x="190.0" y="92" width="17.6" height="19" rx="3" fill="var(--vol)"><title>Edge, exabytes sold: high single digits</title></rect>
+<text x="215.6" y="106" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">high single digits</text>
+<rect x="190.0" y="116" width="396.0" height="19" rx="3" fill="var(--price)"><title>Edge, revenue per gigabyte: almost 180%</title></rect>
+<text x="594.0" y="130" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">almost 180%</text>
+<text x="144" y="189" font-family="system-ui,sans-serif" font-size="13.5" font-weight="600" fill="var(--text-h)" text-anchor="end">Consumer</text>
+<rect x="157.0" y="162" width="33.0" height="19" rx="3" fill="var(--vol)"><title>Consumer, exabytes sold: down mid-teens</title></rect>
+<text x="198.0" y="176" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">down mid-teens</text>
+<rect x="190.0" y="186" width="114.4" height="19" rx="3" fill="var(--price)"><title>Consumer, revenue per gigabyte: low fifties</title></rect>
+<text x="312.4" y="200" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">low fifties</text>
+<text x="144" y="259" font-family="system-ui,sans-serif" font-size="13.5" font-weight="700" fill="var(--text-h)" text-anchor="end">All of SanDisk</text>
+<rect x="190.0" y="232" width="33.0" height="19" rx="3" fill="var(--vol)"><title>All of SanDisk, exabytes sold: mid-teens</title></rect>
+<text x="231.0" y="246" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">mid-teens</text>
+<rect x="190.0" y="256" width="305.8" height="19" rx="3" fill="var(--price)"><title>All of SanDisk, revenue per gigabyte: about 139%*</title></rect>
+<text x="503.8" y="270" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700" fill="var(--text-h)">about 139%*</text>
+</svg>
+<figcaption><b>Figure 1.</b> Fiscal 2026 (year ended July 3, 2026) against fiscal 2025, by end market, in SanDisk's own words from its annual report. Bar lengths use the midpoint of each described range. *The company-wide price figure is <span class="tag d">derived</span>: 175% revenue growth on about 15% more exabytes.</figcaption>
+</figure>
+
+<p>Split by business, the pattern sharpens. The data-center business really did grow its volume — almost 120% more storage sold — and AI is the reason. But the Edge business, which sells flash for phones, laptops, cars and other devices, sold only a high-single-digit percentage more, and charged almost <strong>180%</strong> more per gigabyte. In consumer products like memory cards, SanDisk sold <em>less</em> than the year before and still made more money.</p>
+
+<p>Now weigh the businesses by how much they added. Of the $12.9 billion of extra revenue, Edge supplied <strong>$8.0 billion</strong>, data centers $4.2 billion and consumer $0.7 billion. That is 62% from Edge, and most of it was price <span class="tag d">derived</span>.</p>
+
+<p>The cost side makes the point even clearer. SanDisk's cost of making what it sold rose only 12% over the year, from $5.1 billion to $5.8 billion, while the amount sold rose about 15% — so the cost of each gigabyte barely changed <span class="tag d">derived</span>. Same factories, same chips, same cost, far higher price. Nearly all of the jump in profit is that gap.</p>
+
+<p>So why do phone chips cost so much more because of AI? Because they come out of the same factories. SanDisk gets all of its flash from fabs it shares with Kioxia in Japan, and every maker in the industry faces the same choice of where to send each wafer. When AI data centers started buying every high-capacity drive they could get, they pulled supply away from everyone else, and the price rose for every kind of flash at once. AI did not make SanDisk sell many more phone chips. It made every phone chip more expensive.</p>
+
+<p>In the latest quarter the mix shifted: SanDisk said about 60% of its growth over the previous quarter came from selling more and about 40% from higher prices, and data-center sales rose 61% in three months. But a quarter of extra volume does not change what the annual numbers show about where its profit level comes from. SanDisk keeps 85 cents of every sales dollar because flash costs several times what it costs to make — and that is a statement about price.</p>
+
+<p class="part">Part two · Why prices went so high</p>
+<h2>3. How a 4% shortage makes 85% margins</h2>
+
+<p>Here is the strangest number in this story. TrendForce, the research firm that tracks the memory industry most closely, estimates that the whole NAND flash market will end 2026 just <strong>4–5% short</strong> of what buyers want. A gap that small helped push SanDisk's average price per gigabyte to about two and a half times the year before.</p>
+
+<p>That is how commodities with no substitutes behave. A cloud company building an AI data center cannot swap flash for something else, and it cannot leave the servers empty while it waits. When there is not quite enough to go round, the buyers who need it most simply bid higher until someone else drops out. The price does not rise by 5% to close a 5% gap. It rises until enough people give up.</p>
+
+<p>And people are giving up. TrendForce expects global smartphone production to fall 15–20% in 2026 and laptop shipments about 10%, both because memory has made devices more expensive. SanDisk's own consumer business sold mid-teens percent fewer exabytes. High prices are destroying demand at the cheap end of the market, and every chip a phone maker does not buy is a chip freed up for someone else.</p>
+
+<p>The same mechanism works in reverse, and it is just as violent. If a 4–5% shortage can more than double the price, a small surplus can crash it. A memory boom does not need demand to collapse in order to end. It only needs supply to edge slightly ahead.</p>
+
+<p>TrendForce expects exactly that to begin in 2027. Its July forecast says suppliers will keep adding output by moving to chips with more layers, that Chinese makers will raise their share of world flash output to nearly 19% as new equipment comes online, and that phones and laptops will stay weak. Its conclusion: the market's balance "is expected to turn positive in the second half of 2027." In plain words, the shortage ends.</p>
+
+<p class="part">Part three · The stress test</p>
+<h2>4. What happens to profit when prices fall</h2>
+
+<p>If SanDisk's profit is mostly price, the obvious question is how much survives a fall in price. Its latest quarter makes this easy to work out, because its costs are so small.</p>
+
+<p>In the quarter to October 2, SanDisk had $11.0 billion of sales. Making the chips cost about $1.6 billion, and running the company — research, sales, staff — cost about $0.5 billion. Everything else, about <strong>$8.9 billion</strong>, was operating profit <span class="tag d">derived</span>. Now hold the volume and costs fixed and lower only the price.</p>
+
+<figure>
+<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart: SanDisk quarterly operating profit falls in a straight line as flash prices fall, from $8.9 billion at today's prices to zero at about an 80% price fall">
+<g stroke="var(--border)" stroke-width="1"><line x1="70" y1="192.0" x2="650" y2="192.0"/><line x1="70" y1="147.4" x2="650" y2="147.4"/><line x1="70" y1="102.9" x2="650" y2="102.9"/><line x1="70" y1="58.3" x2="650" y2="58.3"/></g>
+<line x1="70" y1="236.6" x2="650" y2="236.6" stroke="var(--muted)" stroke-width="1.2"/>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end"><text x="62" y="240.6">$0B</text><text x="62" y="196.0">$2B</text><text x="62" y="151.4">$4B</text><text x="62" y="106.9">$6B</text><text x="62" y="62.3">$8B</text></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="70.0" y="290">0%</text><text x="198.9" y="290">−20%</text><text x="327.8" y="290">−40%</text><text x="456.7" y="290">−60%</text><text x="585.6" y="290">−80%</text></g>
+<text x="360.0" y="312" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle">fall in flash prices from the latest quarter</text>
+<path d="M70.0,38.8 L650.0,260.0" stroke="var(--price)" stroke-width="2.4" fill="none"/>
+<circle cx="70.0" cy="38.8" r="5.5" fill="var(--price)" stroke="var(--price)" stroke-width="2.2"><title>Prices 0% lower: about $8.9 billion a quarter</title></circle>
+<circle cx="231.1" cy="100.3" r="5.5" fill="var(--price)" stroke="var(--price)" stroke-width="2.2"><title>Prices 25% lower: about $6.1 billion a quarter</title></circle>
+<circle cx="392.2" cy="161.7" r="5.5" fill="var(--price)" stroke="var(--price)" stroke-width="2.2"><title>Prices 50% lower: about $3.4 billion a quarter</title></circle>
+<circle cx="424.4" cy="174.0" r="5.5" fill="var(--panel)" stroke="var(--price)" stroke-width="2.2"><title>Prices 55% lower: about $2.8 billion a quarter</title></circle>
+<circle cx="572.7" cy="230.5" r="5.5" fill="var(--panel)" stroke="var(--price)" stroke-width="2.2"><title>Prices 78% lower: about $0.3 billion a quarter</title></circle>
+<circle cx="588.8" cy="236.7" r="5.5" fill="var(--price)" stroke="var(--price)" stroke-width="2.2"><title>Prices 80.5% lower: about $-0.0 billion a quarter</title></circle>
+<text x="80.0" y="26.8" font-family="ui-monospace,Consolas,monospace" font-weight="700" font-size="12" fill="var(--text-h)" text-anchor="start">$8.9B today</text>
+<text x="219.1" y="118.3" font-family="ui-monospace,Consolas,monospace" font-weight="700" font-size="12" fill="var(--text-h)" text-anchor="end">$6.1B</text>
+<text x="380.2" y="179.7" font-family="ui-monospace,Consolas,monospace" font-weight="700" font-size="12" fill="var(--text-h)" text-anchor="end">$3.4B</text>
+<text x="434.4" y="162.0" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="start">what the share price implies</text>
+<text x="582.7" y="218.5" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="start">back to 2025 prices</text>
+<text x="578.8" y="254.6" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="end">break-even ≈ −80%</text>
+</svg>
+<figcaption><b>Figure 2.</b> SanDisk's operating profit per quarter if it sold the same amount at lower prices, with costs unchanged, using its latest quarter's adjusted (non-GAAP) figures <span class="tag d">derived</span>. "Back to 2025 prices" and "what the share price implies" are estimates explained in the notes. Real results would also depend on volume, which this test holds fixed.</figcaption>
+</figure>
+
+<p>The line shows two things. First, profit falls much faster than price. A 25% fall in price cuts profit by about 31%; a 50% fall cuts it by about 62% <span class="tag d">derived</span>. That is because the price cut comes straight out of profit while the costs stay put.</p>
+
+<p>Second, SanDisk does not lose money until prices fall about <strong>80%</strong> <span class="tag d">derived</span>. That sounds like an enormous cushion — until you ask where prices were before the boom. In fiscal 2025 SanDisk kept 30 cents of each sales dollar after making its chips; now it keeps 85. With costs roughly unchanged, that means today's prices are about four and a half times the 2025 level, and a return to 2025 prices would be a fall of about <strong>78%</strong> <span class="tag d">derived</span>. In other words, the whole of SanDisk's current profit is the distance between today's flash price and the price of a year and a half ago.</p>
+
+<p>The share price already expects some of that distance to close. At $1,330 before the results, SanDisk was valued as if its long-run yearly profit would be about 70% below today's pace, if it were priced like an average large US company. In this test, that is roughly what a <strong>55%</strong> price fall would do <span class="tag d">derived</span>. Investors are betting on a big fall in flash prices — but not on a full return to 2025.</p>
+
+<h2>5. How much the contracts protect</h2>
+
+<p>SanDisk's answer to this risk is its new long-term supply contracts. About half of what it expects to sell in fiscal 2027, and about two-thirds of fiscal 2028, is now covered by multi-year deals, backed — for the first five of them — by more than $11 billion of financial guarantees.</p>
+
+<blockquote>
+<p>"There are now very substantial customers that do not want to play the quarter-by-quarter price game."</p>
+<cite>— David Goeckeler, SanDisk CEO, April 2026 earnings call</cite>
+</blockquote>
+
+<p>Run the stress test through the contracts. If half of fiscal 2027's sales are at fixed prices and the other half fall 50%, the average price falls only 25%, and profit drops by about 31% instead of 62% <span class="tag d">derived</span>. For the next year or so, that is real protection.</p>
+
+<p>It fades with time, though. SanDisk's finance chief explained in April that within each contract, the near-term part is mostly fixed and "the longer out you go, there is more variable." In 2028, after TrendForce expects supply to have caught up, much of the contracted volume will be priced closer to whatever the market says. The contracts guarantee that customers keep buying. They guarantee much less about what those customers will pay.</p>
+
+<p class="part">Part four · The competition</p>
+<h2>6. Smallest where AI matters most</h2>
+
+<p>If the price boom fades, what will matter is who sells the most flash that AI actually needs: big, fast drives for data centers, called enterprise SSDs. This is where SanDisk is weakest.</p>
+
+<figure>
+<svg viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Share of enterprise SSD revenue among the top five makers in the second quarter of 2026: Samsung 38.2%, SK hynix 23.0%, Micron 18.6%, Kioxia 12.3%, SanDisk 7.9%">
+<g stroke="var(--border)" stroke-width="1"><line x1="200" y1="10" x2="200" y2="200"/><line x1="300" y1="10" x2="300" y2="200"/><line x1="400" y1="10" x2="400" y2="200"/><line x1="500" y1="10" x2="500" y2="200"/><line x1="600" y1="10" x2="600" y2="200"/></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="200" y="218">0%</text><text x="300" y="218">10%</text><text x="400" y="218">20%</text><text x="500" y="218">30%</text><text x="600" y="218">40%</text></g>
+<text x="188" y="33" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Samsung</text>
+<path d="M200,16 h378.0 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-378.0 z" fill="var(--muted)"><title>Samsung: 38.2%</title></path>
+<text x="590.0" y="33" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">38.2%</text>
+<text x="188" y="70" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">SK hynix + Solidigm</text>
+<path d="M200,53 h226.0 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-226.0 z" fill="var(--muted)"><title>SK hynix + Solidigm: 23.0%</title></path>
+<text x="438.0" y="70" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">23.0%</text>
+<text x="188" y="107" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Micron</text>
+<path d="M200,90 h182.0 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-182.0 z" fill="var(--muted)"><title>Micron: 18.6%</title></path>
+<text x="394.0" y="107" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">18.6%</text>
+<text x="188" y="144" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="var(--text-h)" text-anchor="end">Kioxia</text>
+<path d="M200,127 h119.0 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-119.0 z" fill="var(--muted)"><title>Kioxia: 12.3%</title></path>
+<text x="331.0" y="144" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">12.3%</text>
+<text x="188" y="181" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="var(--text-h)" text-anchor="end">SanDisk</text>
+<path d="M200,164 h75.0 a4,4 0 0 1 4,4 v16 a4,4 0 0 1 -4,4 h-75.0 z" fill="var(--price)"><title>SanDisk: 7.9%</title></path>
+<text x="287.0" y="181" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)">7.9%</text>
+</svg>
+<figcaption><b>Figure 3.</b> Share of enterprise SSD revenue among the five largest makers, April–June 2026, calculated from TrendForce's revenue estimates <span class="tag d">derived</span>. Together the five took in $37.6 billion in the quarter.</figcaption>
+</figure>
+
+<p>Samsung alone sold almost five times as much data-center storage as SanDisk. SK hynix, with its Solidigm business, sold nearly three times as much. Even Kioxia, which shares SanDisk's factories, sold more than half again as much. SanDisk's data-center business is growing fast — its high-capacity QLC drives have just entered volume production — but it is growing from the back of the pack.</p>
+
+<p>SanDisk has also been choosing price over size. In the April–June quarter, its revenue grew the least of the five big flash makers, about 51% against 70–99% for the others, which TrendForce put down to SanDisk being "conservative" about how much it shipped. While the shortage lasts, holding back supply keeps prices high and margins fat: in the spring quarter SanDisk kept 84.6 cents of each sales dollar after making its chips, a little above Kioxia's roughly 80 cents on wafers from the same fabs. But a strategy of selling less to earn more per chip works only as long as buyers have nowhere else to go.</p>
+
+<p>And its factories are not entirely its own. SanDisk owns 49.9% of the Flash Ventures fabs and takes roughly half their output; Kioxia takes the other half and sells it in the same markets. That is also why SanDisk's spending on factories looks so small — about $177 million of its own equipment purchases last year — because most of the cost of building fabs sits inside the joint venture. Low spending on SanDisk's books is a feature of how it is organised, not proof that the industry has stopped building.</p>
+
+<h2>7. What it adds up to</h2>
+
+<p>The claim fails on its own terms. SanDisk's record profits are not mainly the result of AI data centers buying its chips. AI set off an industry-wide shortage, and SanDisk's profit came from the price that shortage created — above all on the ordinary chips for phones, laptops and cars that make up most of its business.</p>
+
+<p>That matters because price is the most fragile part of a memory company's earnings. SanDisk's costs barely moved, so nearly all its profit is the gap between today's price and the price of 2025. The shortage behind that price is only a few percent of supply, high prices are already shrinking demand from phones and laptops, and TrendForce expects supply to overtake demand in the second half of 2027. SanDisk's contracts will soften the first part of any fall, but they lock in volume more firmly than price — and in the AI drives that will keep growing after the shortage ends, SanDisk is the smallest of the five.</p>
+
+<p>SanDisk may well stay a very profitable company. But it is a flash-price company that AI made rich, not an AI company that happens to make flash.</p>
+
+<h2>8. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures, read the annual report and help draft this note. Revenue, cost, margin, volume and contract figures are as reported by the companies; market and share figures are from TrendForce. Everything marked <span class="tag d">derived</span> I calculated from those figures.</p>
+
+<p><strong>How the numbers were put together.</strong> Volume and price changes by business are quoted from the "Net Revenue" section of SanDisk's fiscal 2026 annual report, which describes them in words ("almost 120%", "high single-digits percent"); Figure 1 plots the middle of each description. The company-wide price rise assumes 15% more exabytes. The stress test uses the quarter ended October 2, 2026: $11.03 billion of revenue, an 85.1% adjusted gross margin (so about $1.64 billion of product cost) and $513 million of adjusted operating expenses, and lowers price while holding volume and costs fixed. "Back to 2025 prices" compares the adjusted gross margin now (85.1%) with the reported gross margin in fiscal 2025 (30.1%) and assumes the cost per gigabyte is about the same, which the annual report's cost and volume figures support. "What the share price implies" takes the October 29, 2026 close of $1,330.05, divides it by FactSet's 18.7 forward P/E for the S&P 500 to get about $71 of yearly profit per share, compares that with about $224 at the current pace (the middle of SanDisk's $55–57 forecast for next quarter, times four), and finds the price fall that cuts operating profit by the same proportion. Enterprise SSD shares divide each company's revenue by the top five's total. SanDisk shares will split eight-for-one on November 20, 2026; all SanDisk share prices here are from before the split.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0002023554/000162828026057406/sndk-20260703.htm">Sandisk Form 10-K for fiscal 2026</a> — filed with the SEC (revenue, exabytes and price per gigabyte by business; costs; Flash Ventures; equipment purchases)</li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/0002023554/000162828026068243/sndkq1-27ex991xpressrelease.htm">Sandisk fiscal first quarter 2027 results</a> — press release filed with the SEC, October 29, 2026</li>
+<li><a href="https://www.investing.com/news/transcripts/earnings-call-transcript-sandisk-beats-q1-2027-estimates-shares-fall-93CH-4985403">Sandisk Q1 fiscal 2027 earnings call transcript</a> — Investing.com (margins, costs, volume and price split, contract coverage, forecast)</li>
+<li><a href="https://www.fool.com/earnings/call-transcripts/2026/04/30/sandisk-sndk-q3-2026-earnings-transcript/">Sandisk Q3 fiscal 2026 earnings call transcript</a> — The Motley Fool (contract pricing, guarantees, CEO quote)</li>
+<li><a href="https://www.globenewswire.com/news-release/2026/07/21/3330544/0/en/nand-flash-supply-growth-to-outpace-demand-in-2027-easing-supply-constraints-in-2h27-says-trendforce.html">NAND Flash supply growth to outpace demand in 2027</a> — TrendForce via GlobeNewswire, July 21, 2026</li>
+<li><a href="https://www.trendforce.com/presscenter/news/20260730-13158.html">Diverging memory market outlook in 2027</a> — TrendForce, July 30, 2026</li>
+<li><a href="https://www.trendforce.com/presscenter/news/20260818-13186.html">Top five NAND Flash brands' revenue rises 77% in 2Q26</a> — TrendForce, August 18, 2026</li>
+<li><a href="https://www.trendforce.com/presscenter/news/20260901-13210.html">Top five enterprise SSD vendors' revenue in 2Q26</a> — TrendForce, September 1, 2026</li>
+<li><a href="https://www.trendforce.com/news/2026/07/31/news-kioxia-1qfy26-gross-margin-hits-80-reaffirms-50-lta-target-for-2028/">Kioxia 1QFY26 gross margin hits 80%</a> — TrendForce, July 31, 2026</li>
+<li><a href="https://insight.factset.com/sp-500-earnings-season-update-october-23-2026">S&amp;P 500 earnings season update, October 23, 2026</a> — FactSet</li>
+</ol>
+<p style="margin-top:18px">This page links to original sources and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>
