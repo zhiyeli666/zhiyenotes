@@ -1,4 +1,5 @@
-// 构建时给 public/research/ 下的每一篇研究页自动插入左上角的 Home 键。
+// 构建时给 public/research/ 下的每一篇研究页自动插入左上角的 Home 键，
+// 以及浏览器标签页上的网站图标（和主页同一个 /favicon.svg）。
 //
 // 为什么放在构建里而不是写进每个 html：研究页是一篇篇手写的独立页面，
 // 每加一篇就要记得复制一遍按钮，迟早会漏。这里统一注入，新增页面什么都不用做。
@@ -12,6 +13,9 @@ const BUTTON = `<a class="home-btn" href="/" title="Back to Zhiye's Notes">
 <svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="zg-home" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f8dfb"/><stop offset="0.55" stop-color="#1d4ed8"/><stop offset="1" stop-color="#4c1fb8"/></linearGradient></defs><rect width="48" height="48" rx="11" fill="url(#zg-home)"/><path fill="#fff" d="M13.4 11.6h21.2v4.05L19.9 32.4h15.1v4.0H12.2v-4.05L26.9 15.6H13.4z"/><path fill="#fff" d="M13.4 11.6h21.2v2.5H13.4zM12.2 33.9h22.8v2.5H12.2z"/></svg>
 Home</a>
 `
+
+// 浏览器标签页上的网站图标，和主页用同一个文件
+const FAVICON = `<link rel="icon" type="image/svg+xml" href="/favicon.svg">\n`
 
 const STYLE = `
 /* 返回首页（由 scripts/inject-research-home.js 在构建时插入） */
@@ -36,30 +40,38 @@ export function injectResearchHome() {
 
       const files = (await readdir(dir)).filter((f) => f.endsWith('.html'))
       let done = 0
+      let icons = 0
       const skipped = []
 
       for (const file of files) {
         const path = join(dir, file)
         let html = await readFile(path, 'utf8')
+        let changed = false
 
-        // 已经有了就不重复插（手写页面里自己加过的情况）
+        // 标签页图标：页面里自己没写过才加
+        if (!html.includes('rel="icon"') && html.includes('</head>')) {
+          html = html.replace('</head>', `${FAVICON}</head>`)
+          icons++
+          changed = true
+        }
+
         if (html.includes('class="home-btn"')) {
+          // 已经有了就不重复插（手写页面里自己加过的情况）
           skipped.push(`${file} (already has one)`)
-          continue
-        }
-        // 结构不对就跳过并报出来，别默默改坏
-        if (!html.includes('</style>') || !html.includes('<body>')) {
+        } else if (!html.includes('</style>') || !html.includes('<body>')) {
+          // 结构不对就跳过并报出来，别默默改坏
           skipped.push(`${file} (no <body> or </style>)`)
-          continue
+        } else {
+          html = html.replace('</style>', `${STYLE}</style>`)
+          html = html.replace('<body>', `<body>\n${BUTTON}`)
+          done++
+          changed = true
         }
 
-        html = html.replace('</style>', `${STYLE}</style>`)
-        html = html.replace('<body>', `<body>\n${BUTTON}`)
-        await writeFile(path, html)
-        done++
+        if (changed) await writeFile(path, html)
       }
 
-      console.log(`\n  research pages: Home 键已注入 ${done}/${files.length} 篇`)
+      console.log(`\n  research pages: Home 键已注入 ${done}/${files.length} 篇，标签页图标 ${icons}/${files.length} 篇`)
       for (const s of skipped) console.log(`    skipped: ${s}`)
     },
   }
