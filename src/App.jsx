@@ -117,7 +117,7 @@ const columns = [
     title: 'Virtual Trading Journal',
     photo: '/photos/journal.jpg',
     tab: 'Journal',
-    desc: 'A journal of imaginary trades using virtual money only. The first account started from $1,000,000 in virtual capital and closed on 2026-11-03 at about +25.2%; a new $10,000 virtual account started on 2026-11-04. No real trading — just practicing judgment. Trade dates are in Beijing time (UTC+8).',
+    desc: 'Imaginary trades with virtual money only: a new $10,000 account and a closed $1,000,000 one. Dates are in Beijing time (UTC+8).',
   },
   ...(research.length
     ? [
@@ -142,6 +142,11 @@ const marketRaw = import.meta.glob('../notes/*.md', {
   eager: true,
 })
 const diaryRaw = import.meta.glob('../portfolio-diary/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+})
+const diary10kRaw = import.meta.glob('../portfolio-diary-10k/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
@@ -190,6 +195,7 @@ function loadNotes(raw) {
 
 const marketNotes = loadNotes(marketRaw)
 const diaryNotes = loadNotes(diaryRaw)
+const diary10kNotes = loadNotes(diary10kRaw)
 
 // ---- Small helpers that make the notes easier to read ------------------
 
@@ -283,13 +289,39 @@ function NotesSection({ title, notes, id }) {
       <h2 className="notes-heading">
         {title}
       </h2>
+      <NotesList notes={notes} />
+    </section>
+  )
+}
+
+// The trading journal: one list per account, newest account first. Only the
+// first account starts with its newest month open.
+function AccountsSection({ title, accounts, id }) {
+  return (
+    <section className="notes-section" id={id}>
+      <h2 className="notes-heading">
+        {title}
+      </h2>
+      {accounts.map((a, i) => (
+        <div className="notes-account" key={a.label}>
+          <h3 className="notes-account-name">{a.label}</h3>
+          <NotesList notes={a.notes} expand={i === 0} />
+        </div>
+      ))}
+    </section>
+  )
+}
+
+function NotesList({ notes, expand = true }) {
+  return (
+    <>
       <p className="notes-hint">
-        {notes.length} entries · click any row to open it
+        {notes.length} {notes.length === 1 ? 'entry' : 'entries'} · click any row to open it
       </p>
       <div className="notes-list">
         {groupByMonth(notes).map((g, gi) => (
           // Only the newest month is expanded; older months start collapsed.
-          <details className="month" key={g.ym} open={gi === 0}>
+          <details className="month" key={g.ym} open={expand && gi === 0}>
             <summary>
               <span className="month-name">{monthLabel(g.ym)}</span>
               <span className="month-count">
@@ -302,7 +334,7 @@ function NotesSection({ title, notes, id }) {
                 <details
                   className={n.weekly ? 'note weekly' : 'note'}
                   key={n.key}
-                  open={gi === 0 && i === 0}
+                  open={expand && gi === 0 && i === 0}
                 >
                   <summary>
                     <span className="note-date">{n.key}</span>
@@ -319,7 +351,7 @@ function NotesSection({ title, notes, id }) {
           </details>
         ))}
       </div>
-    </section>
+    </>
   )
 }
 
@@ -385,11 +417,11 @@ function App() {
   }
 
   // How many different days are covered across both daily columns.
-  const days = new Set([...marketNotes, ...diaryNotes].map((n) => n.key)).size
+  const days = new Set([...marketNotes, ...diaryNotes, ...diary10kNotes].map((n) => n.key)).size
 
   const stats = [
     { value: marketNotes.length, label: 'market notes' },
-    { value: diaryNotes.length, label: 'journal days' },
+    { value: diaryNotes.length + diary10kNotes.length, label: 'journal days' },
     // Only counts once there is at least one research note to point at.
     ...(research.length
       ? [
@@ -477,10 +509,13 @@ function App() {
           notes={marketNotes}
           id="market-notes"
         />
-        <NotesSection
+        <AccountsSection
           title="Virtual Trading Journal"
-          notes={diaryNotes}
           id="trading-journal"
+          accounts={[
+            { label: '$10,000 Account', notes: diary10kNotes },
+            { label: '$1,000,000 Account (closed)', notes: diaryNotes },
+          ]}
         />
         {research.length > 0 && <ResearchSection />}
       </div>

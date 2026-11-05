@@ -3,11 +3,11 @@
 // 提交后 GitHub Actions 会自动重新部署网站。
 
 // 允许操作的文件夹。写死在这里，是为了万一有人拿到登录权限，
-// 也只能改这两个文件夹里的笔记，动不了代码或配置。
-export const DIRS = ['notes', 'portfolio-diary']
+// 也只能改这几个文件夹里的笔记，动不了代码或配置。
+export const DIRS = ['notes', 'portfolio-diary', 'portfolio-diary-10k']
 
 // 只允许 notes/2026-07-28.md 这种路径
-const PATH_RE = /^(notes|portfolio-diary)\/\d{4}-\d{2}-\d{2}\.md$/
+const PATH_RE = /^(notes|portfolio-diary|portfolio-diary-10k)\/\d{4}-\d{2}-\d{2}\.md$/
 
 export function isAllowedPath(path) {
   return typeof path === 'string' && PATH_RE.test(path)

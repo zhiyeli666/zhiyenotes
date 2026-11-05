@@ -36,7 +36,7 @@ export const DIARY_TEMPLATE = `# Simulated Portfolio Diary
 （为什么这么操作？）
 `
 
-// 两个栏目的配置。后台左侧的切换、以及保存到哪个文件夹都看这里。
+// 几个栏目的配置。后台左侧的切换、以及保存到哪个文件夹都看这里。
 export const COLLECTIONS = {
   notes: {
     label: '📰 每日市场笔记',
@@ -44,8 +44,13 @@ export const COLLECTIONS = {
     template: MARKET_TEMPLATE,
   },
   'portfolio-diary': {
-    label: '📈 模拟盘日记',
+    label: '📈 模拟盘日记（100万，已结束）',
     dir: 'portfolio-diary',
+    template: DIARY_TEMPLATE,
+  },
+  'portfolio-diary-10k': {
+    label: '📈 模拟盘日记（1万）',
+    dir: 'portfolio-diary-10k',
     template: DIARY_TEMPLATE,
   },
 }
