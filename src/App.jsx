@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-11-06',
+    ticker: 'KOSPI',
+    title: 'Made in Korea',
+    href: '/research/korea-kospi-crash-2026',
+    desc: "South Korea's stock market fell 8% and trading was stopped, and the headlines blamed Wall Street. But 8 of the KOSPI's 15 worst days this year came after a calm night on the Nasdaq. The crashes are built at home: two chip stocks went from 34% to 57% of the market, and the buyers were using borrowed money and 2x funds that must sell when prices fall.",
+  },
+  {
     date: '2026-11-01',
     ticker: 'SNDK',
     title: 'A Price Boom, Not an AI Boom',

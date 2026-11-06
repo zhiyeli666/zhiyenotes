@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Made in Korea</title>
+<style>
+:root{
+  --text:#4a5568; --text-h:#0f172a; --muted:#8a94a6; --bg:#f2f5fa;
+  --glow:rgba(29,78,216,.09); --grid:rgba(15,23,42,.035); --border:#e0e5ee;
+  --code-bg:#f1f4f9; --accent:#1d4ed8; --accent-bg:rgba(29,78,216,.08);
+  --accent-border:rgba(29,78,216,.35); --panel:#ffffff;
+  --pos:#167a4a; --neg:#c0322b; --warn:#b45309; --warn-bg:rgba(180,83,9,.1);
+  --shadow:rgba(15,23,42,.08) 0 10px 20px -8px, rgba(15,23,42,.04) 0 3px 6px -3px;
+  --sans:system-ui,'Segoe UI',Roboto,sans-serif;
+  --heading:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --text:#a8b1c1; --text-h:#f1f5f9; --muted:#78839a; --bg:#0b0e14;
+    --glow:rgba(126,168,255,.1); --grid:rgba(255,255,255,.028); --border:#262c38;
+    --code-bg:#171c25; --accent:#7ea8ff; --accent-bg:rgba(126,168,255,.12);
+    --accent-border:rgba(126,168,255,.4); --panel:#141922;
+    --pos:#4ade80; --neg:#f87171; --warn:#fbbf24; --warn-bg:rgba(251,191,36,.12);
+    --shadow:rgba(0,0,0,.5) 0 10px 20px -8px, rgba(0,0,0,.3) 0 3px 6px -3px;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100svh; font:17px/1.65 var(--sans);
+  letter-spacing:.18px; color:var(--text); background-color:var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 50% -12%,var(--glow),transparent 72%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,44px 44px,44px 44px;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+.paper{max-width:800px;margin:0 auto;padding:56px 24px 72px}
+h1,h2{font-family:var(--heading);font-weight:600;color:var(--text-h);letter-spacing:-.3px}
+h1{font-size:40px;line-height:1.15;margin:0 0 16px}
+h2{font-size:25px;line-height:1.25;margin:52px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 16px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-border)}
+a:hover{border-bottom-color:var(--accent)}
+.eyebrow{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.byline{font-size:15px;color:var(--muted);margin:0 0 36px}
+.lede{font-size:19px;line-height:1.6;color:var(--text-h)}
+.pos{color:var(--pos);font-weight:600}
+.neg{color:var(--neg);font-weight:600}
+
+.verdict{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:26px 28px;margin:0 0 12px;box-shadow:var(--shadow)
+}
+.verdict h2{margin:0 0 12px;padding:0;border:0;font-size:15px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);font-family:var(--sans);font-weight:600}
+.verdict p:last-child{margin-bottom:0}
+.verdict .big{font-family:var(--heading);font-size:23px;line-height:1.4;color:var(--text-h);margin-bottom:14px}
+
+.callout{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-left-width:4px;border-radius:0 12px 12px 0;padding:18px 22px;margin:26px 0
+}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text-h)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+
+.tw{overflow-x:auto;margin:24px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:500px;font-size:15px;background:var(--panel)}
+caption{caption-side:bottom;text-align:left;font-size:13.5px;color:var(--muted);padding-top:10px;line-height:1.5}
+th,td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:left}
+th{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--code-bg);white-space:nowrap}
+td.n{font-family:var(--mono);text-align:right;color:var(--text-h);white-space:nowrap}
+tr.total td{font-weight:700;background:var(--accent-bg);border-bottom:2px solid var(--accent-border)}
+tbody tr:last-child td{border-bottom:0}
+
+figure{margin:32px 0;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:22px 20px 16px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:560px}
+figcaption{font-size:13.5px;color:var(--muted);line-height:1.55;padding-top:14px;margin-top:4px;border-top:1px solid var(--border)}
+figcaption b{color:var(--text-h)}
+
+ul.tight{padding-left:22px;margin:0 0 16px}
+ul.tight li{margin-bottom:9px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;padding:2px 8px;
+  border-radius:999px;background:var(--code-bg);color:var(--muted);border:1px solid var(--border)}
+.tag.d{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+
+.footer{margin-top:52px;padding-top:24px;border-top:1px solid var(--border);
+  font-size:14px;color:var(--muted);line-height:1.65}
+.footer ol{padding-left:20px}
+.footer li{margin-bottom:7px}
+@media (max-width:640px){
+  h1{font-size:30px} h2{font-size:21px} body{font-size:16px} .paper{padding:36px 18px 56px}
+  .verdict .big{font-size:20px}
+}
+:root{--two:#c2410c; --rest:#1d4ed8}
+@media (prefers-color-scheme:dark){ :root{--two:#e0691f; --rest:#5b8def} }
+.legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--text-h);margin:0 0 10px 4px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px}
+.legend i.dot{width:10px;height:10px;border-radius:50%}
+</style>
+</head>
+<body>
+<main class="paper">
+
+<p class="eyebrow">Research Note · No. 11</p>
+<h1>Made in Korea</h1>
+<p class="lede">On Friday morning South Korea's stock market fell 8% within minutes and trading was stopped. The headlines blamed Wall Street's AI sell-off. But this is the market that has had 23 days of 5%-plus falls this year, after only four in the previous six years combined. Most of those falls had little to do with America.</p>
+<p class="byline">Zhiye's Notes · November 6, 2026 · Prices through the November 6 close</p>
+
+<div class="verdict">
+<h2>Verdict</h2>
+<p class="big">False. Wall Street lights the match on some days, but Korea's crashes are made in Korea: a whole stock market resting on two companies, bought with borrowed money by people who are forced to sell when prices fall.</p>
+<p>Of the KOSPI's 15 worst days this year, <strong>8 came after a night when the Nasdaq fell less than 1% or actually rose</strong> <span class="tag d">derived</span>. Last night's US moves explain only about one-eighth of Korea's daily swings since late May.</p>
+<p>The real amplifiers are at home. Samsung and SK Hynix went from 34% of the market to 57%. Take them out and the rest of the market is <strong>down 3%</strong> this year, while the index is up 20% <span class="tag d">derived</span>. And as foreign funds sold more than ₩217 trillion of Korean shares, the buyers on the other side were increasingly using borrowed money and 2x funds that must sell when prices fall.</p>
+</div>
+
+<h2>1. The claim, written so it can be wrong</h2>
+
+<p>At 9:03 this morning, the Korea Exchange stopped all trading for 20 minutes. The KOSPI, Korea's main index, had fallen 8% just after the open and dropped below 5,000 points. Samsung Electronics and SK Hynix were each down around 10%. It closed down 6.0% at 5,060, about 44% below its record close in June.</p>
+
+<p>The explanation came quickly. The night before, the Nasdaq had fallen 5.5% in a sell-off of AI stocks. Bad news in New York, disaster in Seoul.</p>
+
+<div class="callout">
+<p><strong>The claim.</strong> South Korea's stock market keeps crashing because Wall Street's AI sell-offs spill over into Seoul. The cause is in America; Korea is the victim.</p>
+</div>
+
+<p>Today it looks true. But today is one day. This year the KOSPI has been on an extraordinarily violent ride.</p>
+
+<figure>
+<svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart of the KOSPI in 2026: from 4,214 at the end of 2025 to 9,115 on June 22, then down to 5,060 on November 6">
+<g stroke="var(--border)" stroke-width="1"><line x1="70" y1="243.4" x2="640" y2="243.4"/><line x1="70" y1="170.3" x2="640" y2="170.3"/><line x1="70" y1="97.1" x2="640" y2="97.1"/><line x1="70" y1="24.0" x2="640" y2="24.0"/></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end"><text x="62" y="247.4">4,000</text><text x="62" y="174.3">6,000</text><text x="62" y="101.1">8,000</text><text x="62" y="28.0">10,000</text></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="73.7" y="298">Jan</text><text x="181.8" y="298">Mar</text><text x="293.6" y="298">May</text><text x="405.4" y="298">Jul</text><text x="519.0" y="298">Sep</text><text x="630.8" y="298">Nov</text></g>
+<line x1="341.3" y1="24" x2="341.3" y2="280" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="335.3" y="38" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="end">Korean 2x funds launch</text>
+<path fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" d="M70.0,235.6 L75.5,232.1 L81.0,226.7 L82.8,224.2 L84.7,223.3 L86.5,223.2 L88.3,222.0 L93.8,220.6 L95.7,218.1 L97.5,217.0 L99.3,214.3 L101.2,212.7 L106.7,210.3 L108.5,211.0 L110.3,210.2 L112.2,208.6 L114.0,207.2 L119.5,208.7 L121.3,203.8 L123.2,200.6 L125.0,198.8 L126.8,198.7 L132.3,208.7 L134.1,196.3 L136.0,193.3 L137.8,200.9 L139.6,203.6 L145.1,196.0 L147.0,195.8 L148.8,193.9 L150.6,187.8 L152.5,188.3 L163.5,182.1 L165.3,177.3 L170.8,175.9 L172.6,171.4 L174.5,167.2 L176.3,159.0 L178.1,161.4 L185.5,177.9 L187.3,203.4 L189.1,185.5 L191.0,185.5 L196.5,197.6 L198.3,187.4 L200.1,184.6 L202.0,185.5 L203.8,189.0 L209.3,186.7 L211.1,183.4 L213.0,173.0 L214.8,178.9 L216.6,178.3 L222.1,192.0 L224.0,186.6 L225.8,183.4 L227.6,190.0 L229.5,190.8 L235.0,196.7 L236.8,204.9 L238.6,189.4 L240.5,198.3 L242.3,193.1 L247.8,190.4 L249.6,188.8 L251.4,175.0 L253.3,178.4 L255.1,175.4 L260.6,177.3 L262.4,171.5 L264.3,166.9 L266.1,162.0 L267.9,163.3 L273.4,162.3 L275.3,156.1 L277.1,155.0 L278.9,152.9 L280.8,152.9 L286.3,147.8 L288.1,146.8 L289.9,145.0 L291.8,148.4 L299.1,136.0 L302.8,119.7 L304.6,115.8 L306.4,115.5 L311.9,103.6 L313.8,110.2 L315.6,102.8 L317.4,97.8 L319.3,115.7 L324.8,114.8 L326.6,123.8 L328.4,126.1 L330.3,103.9 L332.1,102.7 L339.4,95.4 L341.3,88.8 L343.1,90.4 L344.9,79.7 L350.4,68.3 L352.3,67.8 L355.9,73.8 L357.7,91.3 L363.2,116.0 L365.1,93.6 L366.9,107.0 L368.7,105.8 L370.6,92.6 L376.1,77.2 L377.9,70.6 L379.7,65.5 L381.6,58.2 L383.4,58.7 L388.9,56.4 L390.7,89.7 L392.6,79.9 L394.4,63.1 L396.2,82.1 L401.7,82.7 L403.6,79.7 L405.4,86.0 L407.2,110.0 L409.1,93.9 L414.6,95.3 L416.4,109.7 L418.2,124.7 L420.1,123.0 L421.9,116.3 L427.4,140.8 L429.2,139.0 L431.1,123.3 L432.9,140.3 L440.2,151.4 L442.1,142.9 L443.9,141.1 L445.7,130.2 L447.6,145.0 L453.1,142.6 L454.9,169.4 L456.7,182.6 L458.6,185.1 L460.4,148.5 L465.9,160.9 L467.7,157.2 L469.5,148.4 L471.4,159.4 L473.2,160.8 L478.7,159.3 L480.5,157.6 L482.4,149.1 L484.2,140.5 L486.0,134.5 L493.4,138.5 L495.2,153.1 L497.0,139.1 L498.9,136.9 L504.4,144.8 L506.2,143.1 L508.0,140.7 L509.9,136.9 L511.7,141.4 L517.2,140.3 L519.0,139.7 L520.9,149.7 L522.7,149.1 L524.5,145.2 L530.0,133.9 L531.9,135.4 L533.7,131.8 L535.5,132.5 L537.4,137.0 L542.9,145.3 L544.7,147.3 L546.5,144.0 L548.4,144.1 L550.2,137.6 L555.7,133.4 L557.5,133.1 L559.4,130.8 L568.5,137.7 L570.4,138.4 L572.2,139.6 L574.0,134.8 L575.9,133.6 L583.2,135.9 L585.0,140.9 L586.8,147.4 L594.2,156.2 L596.0,169.0 L597.8,170.0 L599.7,186.6 L601.5,182.4 L607.0,178.8 L608.8,186.6 L610.7,180.0 L612.5,187.3 L614.3,186.7 L619.8,189.7 L621.7,183.5 L623.5,169.8 L625.3,172.6 L627.2,180.1 L632.7,175.4 L634.5,183.1 L636.3,181.8 L638.2,192.8 L640.0,204.7"/>
+<circle cx="388.9" cy="56.4" r="5" fill="var(--accent)" stroke="var(--panel)" stroke-width="2"><title>2026-06-22: 9,115</title></circle>
+<text x="398.9" y="50.4" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)" text-anchor="start">9,115 on June 22</text>
+<circle cx="640.0" cy="204.7" r="5" fill="var(--accent)" stroke="var(--panel)" stroke-width="2"><title>2026-11-06: 5,060</title></circle>
+<text x="650.0" y="208.7" font-family="ui-monospace,Consolas,monospace" font-size="12.5" font-weight="700" fill="var(--text-h)" text-anchor="start">5,060</text>
+</svg>
+<figcaption><b>Figure 1.</b> KOSPI daily closes, from the end of 2025 to November 6, 2026. The index touched 9,385 during trading on June 19; the record close was 9,115 on June 22.</figcaption>
+</figure>
+
+<p>It more than doubled in less than six months, then lost 44% in four and a half. It set a record for its worst day ever, a 12.1% fall on March 4, and a record for its best, a 17.9% jump on July 31 that took SK Hynix up by the 30% daily limit. Over the year its swings have been more than four times as large as America's S&amp;P 500 <span class="tag d">derived</span>. If America is the cause, America should be able to explain that. It can't.</p>
+
+<h2>2. How much of it is America?</h2>
+
+<p>Start with what is true in the claim. Korea has become far more sensitive to Wall Street. From 2023 to 2025, when the Nasdaq moved 1% in a day, the KOSPI typically moved about 0.4% the next morning. This year it is more like 1.1% to 1.3% — about three times as much <span class="tag d">derived</span>.</p>
+
+<p>But that number hides how little of Korea's movement it accounts for. Since late May, the previous night's Nasdaq move explains only about <strong>12%</strong> of the KOSPI's daily swings. Even using America's chip stocks, which are the closest match, it is about 16% <span class="tag d">derived</span>. More than four-fifths of what happens in Seoul on a given day cannot be traced to what happened in New York the night before.</p>
+
+<p>The clearest test is to look at the worst days and ask what America did just before each one.</p>
+
+<figure>
+<div class="legend"><span><i class="dot" style="background:var(--accent)"></i>Nasdaq fell less than 1%, or rose</span><span><i class="dot" style="background:var(--muted)"></i>Nasdaq fell 1% or more</span></div>
+<svg viewBox="0 0 720 325" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scatter chart of the KOSPI's 15 worst days of 2026 against the Nasdaq move the night before. Eight of the 15 came after the Nasdaq fell less than 1% or rose.">
+<rect x="455.0" y="20" width="225.0" height="250" fill="var(--accent-bg)"/>
+<text x="605.0" y="260" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">calm US night</text>
+<g stroke="var(--border)" stroke-width="1"><line x1="80" y1="238.8" x2="680" y2="238.8"/><line x1="80" y1="176.2" x2="680" y2="176.2"/><line x1="80" y1="113.8" x2="680" y2="113.8"/><line x1="80" y1="51.2" x2="680" y2="51.2"/></g>
+<line x1="530.0" y1="20" x2="530.0" y2="270" stroke="var(--muted)" stroke-width="1.2"/>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end"><text x="72" y="242.8">−12%</text><text x="72" y="180.2">−10%</text><text x="72" y="117.8">−8%</text><text x="72" y="55.2">−6%</text></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="80.0" y="288">−6%</text><text x="230.0" y="288">−4%</text><text x="380.0" y="288">−2%</text><text x="530.0" y="288">0%</text><text x="680.0" y="288">+2%</text></g>
+<text x="380.0" y="310" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle">Nasdaq's move in the US session just before</text>
+<text x="16" y="145.0" font-family="system-ui,sans-serif" font-size="12" fill="var(--muted)" text-anchor="middle" transform="rotate(-90 16 145.0)">KOSPI that day</text>
+<circle cx="453.5" cy="240.6" r="6" fill="var(--muted)" stroke="var(--panel)" stroke-width="1.5"><title>Mar 04: KOSPI -12.1%, Nasdaq -1.0%</title></circle>
+<circle cx="516.9" cy="202.4" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>Jul 28: KOSPI -10.8%, Nasdaq -0.2%</title></circle>
+<circle cx="430.6" cy="176.0" r="6" fill="var(--muted)" stroke="var(--panel)" stroke-width="1.5"><title>Jun 23: KOSPI -10.0%, Nasdaq -1.3%</title></circle>
+<circle cx="551.4" cy="143.4" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>Jul 13: KOSPI -8.9%, Nasdaq +0.3%</title></circle>
+<circle cx="216.5" cy="122.7" r="6" fill="var(--muted)" stroke="var(--panel)" stroke-width="1.5"><title>Jun 08: KOSPI -8.3%, Nasdaq -4.2%</title></circle>
+<circle cx="480.3" cy="110.4" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>Jul 02: KOSPI -7.9%, Nasdaq -0.7%</title></circle>
+<circle cx="389.0" cy="100.2" r="6" fill="var(--muted)" stroke="var(--panel)" stroke-width="1.5"><title>Oct 15: KOSPI -7.6%, Nasdaq -1.9%</title></circle>
+<circle cx="556.7" cy="90.1" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>Mar 03: KOSPI -7.2%, Nasdaq +0.4%</title></circle>
+<circle cx="379.6" cy="66.7" r="6" fill="var(--muted)" stroke="var(--panel)" stroke-width="1.5"><title>Mar 23: KOSPI -6.5%, Nasdaq -2.0%</title></circle>
+<circle cx="576.6" cy="62.7" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>Jul 16: KOSPI -6.4%, Nasdaq +0.6%</title></circle>
+<circle cx="596.2" cy="54.9" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>May 15: KOSPI -6.1%, Nasdaq +0.9%</title></circle>
+<circle cx="115.8" cy="51.9" r="6" fill="var(--muted)" stroke="var(--panel)" stroke-width="1.5"><title>Nov 06: KOSPI -6.0%, Nasdaq -5.5%</title></circle>
+<circle cx="513.4" cy="50.7" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>Jul 29: KOSPI -6.0%, Nasdaq -0.2%</title></circle>
+<circle cx="410.9" cy="50.1" r="6" fill="var(--muted)" stroke="var(--panel)" stroke-width="1.5"><title>Mar 09: KOSPI -6.0%, Nasdaq -1.6%</title></circle>
+<circle cx="495.3" cy="45.4" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>Jun 26: KOSPI -5.8%, Nasdaq -0.5%</title></circle>
+<text x="465.5" y="244.6" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--text-h)" text-anchor="start">Mar 4</text>
+<text x="504.9" y="206.4" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--text-h)" text-anchor="end">Jul 28</text>
+<text x="563.4" y="147.4" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--text-h)" text-anchor="start">Jul 13</text>
+<text x="228.5" y="126.7" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--text-h)" text-anchor="start">Jun 8</text>
+<text x="127.8" y="55.9" font-family="system-ui,sans-serif" font-size="11.5" fill="var(--text-h)" text-anchor="start">today</text>
+</svg>
+<figcaption><b>Figure 2.</b> The KOSPI's 15 worst days of 2026 by closing price, each shown against the Nasdaq's move in the US session just before it <span class="tag d">derived</span>. Dots further left mean a worse night on Wall Street; dots lower down mean a worse day in Seoul.</figcaption>
+</figure>
+
+<p>If Wall Street were the cause, the dots would run from the top right to the bottom left: worse nights, worse days. They don't. Eight of the 15 sit in the shaded area, where Wall Street had a calm night. On July 13 the KOSPI fell 8.9% after the Nasdaq <em>rose</em> 0.3%. On July 28 it fell 10.8% after the Nasdaq slipped 0.2%. And today's fall, after the worst night on the chart, was 6.0% — smaller than eleven of the other days.</p>
+
+<p>Some of those calm nights had shocks of their own, and some were bad nights for US chip stocks even though the Nasdaq held up. The record fall on March 4 came after US and Israeli strikes on Iran. But the size of the moves is the point. The same outside news arrives in every market. Very few fall 10% on it. Something in Korea is turning small shocks into crashes.</p>
+
+<h2>3. The first amplifier: a country on two stocks</h2>
+
+<p>A stock index is meant to spread risk across many companies. The KOSPI has stopped doing that. At the end of 2025, Samsung Electronics and SK Hynix together made up 34% of the market's total value. By late June they made up 57%. Even after the crash they are 46%. Both are memory-chip makers, so nearly half of the country's stock market now rises and falls with one product.</p>
+
+<figure>
+<div class="legend"><span><i style="background:var(--two)"></i>Samsung + SK Hynix</span><span><i style="background:var(--rest)"></i>Every other stock on the KOSPI</span></div>
+<svg viewBox="0 0 760 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Line chart: Samsung and SK Hynix combined market value rose to about 357 from 100 and is now 164; all other KOSPI stocks rose to about 144 and are now 97">
+<g stroke="var(--border)" stroke-width="1"><line x1="70" y1="280.0" x2="640" y2="280.0"/><line x1="70" y1="152.0" x2="640" y2="152.0"/><line x1="70" y1="88.0" x2="640" y2="88.0"/><line x1="70" y1="24.0" x2="640" y2="24.0"/></g>
+<line x1="70" y1="216.0" x2="640" y2="216.0" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="5 4"/>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="end"><text x="62" y="284.0">0</text><text x="62" y="220.0">100</text><text x="62" y="156.0">200</text><text x="62" y="92.0">300</text><text x="62" y="28.0">400</text></g>
+<g font-family="ui-monospace,Consolas,monospace" font-size="11" fill="var(--muted)" text-anchor="middle"><text x="73.7" y="298">Jan</text><text x="181.8" y="298">Mar</text><text x="293.6" y="298">May</text><text x="405.4" y="298">Jul</text><text x="519.0" y="298">Sep</text><text x="630.8" y="298">Nov</text></g>
+<path fill="none" stroke="var(--rest)" stroke-width="2" stroke-linejoin="round" d="M70.0,216.0 L75.5,215.8 L81.0,214.3 L82.8,213.5 L84.7,213.6 L86.5,213.5 L88.3,212.5 L93.8,211.7 L95.7,209.7 L97.5,209.5 L99.3,208.5 L101.2,208.5 L106.7,207.3 L108.5,206.6 L110.3,206.7 L112.2,206.5 L114.0,205.8 L119.5,206.1 L121.3,205.5 L123.2,204.9 L125.0,203.8 L126.8,204.7 L132.3,207.8 L134.1,204.4 L136.0,202.6 L137.8,204.5 L139.6,206.1 L145.1,203.5 L147.0,203.1 L148.8,201.9 L150.6,200.4 L152.5,201.0 L163.5,198.8 L165.3,196.9 L170.8,196.6 L172.6,196.0 L174.5,194.2 L176.3,193.1 L178.1,193.6 L185.5,197.9 L187.3,208.4 L189.1,202.2 L191.0,201.3 L196.5,204.7 L198.3,202.7 L200.1,201.6 L202.0,201.4 L203.8,202.5 L209.3,203.2 L211.1,201.9 L213.0,199.5 L214.8,201.0 L216.6,200.3 L222.1,205.3 L224.0,203.5 L225.8,201.5 L227.6,203.0 L229.5,203.5 L235.0,205.4 L236.8,207.7 L238.6,203.4 L240.5,205.8 L242.3,204.7 L247.8,204.4 L249.6,204.6 L251.4,200.6 L253.3,200.9 L255.1,200.0 L260.6,200.6 L262.4,199.1 L264.3,197.7 L266.1,196.1 L267.9,196.1 L273.4,196.0 L275.3,194.0 L277.1,193.0 L278.9,192.9 L280.8,192.0 L286.3,191.1 L288.1,190.2 L289.9,189.6 L291.8,190.7 L299.1,188.2 L302.8,186.5 L304.6,186.1 L306.4,186.1 L311.9,185.4 L313.8,187.5 L315.6,186.6 L317.4,185.3 L319.3,189.2 L324.8,190.9 L326.6,193.7 L328.4,195.2 L330.3,189.1 L332.1,187.2 L339.4,185.9 L341.3,187.0 L343.1,187.7 L344.9,184.8 L350.4,183.5 L352.3,185.0 L355.9,186.0 L357.7,188.7 L363.2,195.5 L365.1,191.9 L366.9,193.7 L368.7,193.5 L370.6,190.1 L376.1,185.6 L377.9,184.3 L379.7,184.6 L381.6,186.0 L383.4,186.5 L388.9,188.1 L390.7,194.5 L392.6,194.7 L394.4,193.2 L396.2,197.0 L401.7,193.7 L403.6,194.1 L405.4,193.0 L407.2,195.8 L409.1,194.4 L414.6,195.0 L416.4,197.5 L418.2,201.4 L420.1,202.7 L421.9,199.4 L427.4,203.0 L429.2,204.6 L431.1,200.9 L432.9,202.7 L440.2,206.3 L442.1,204.9 L443.9,203.8 L445.7,200.3 L447.6,203.0 L453.1,203.5 L454.9,209.3 L456.7,212.6 L458.6,212.3 L460.4,206.5 L465.9,207.4 L467.7,205.4 L469.5,202.7 L471.4,203.6 L473.2,203.0 L478.7,201.9 L480.5,202.5 L482.4,201.4 L484.2,199.9 L486.0,198.2 L493.4,200.1 L495.2,202.5 L497.0,201.5 L498.9,202.6 L504.4,202.3 L506.2,201.4 L508.0,200.9 L509.9,200.1 L511.7,199.8 L517.2,200.0 L519.0,200.2 L520.9,203.2 L522.7,202.3 L524.5,201.8 L530.0,199.9 L531.9,201.0 L533.7,200.0 L535.5,200.3 L537.4,200.7 L542.9,201.8 L544.7,202.9 L546.5,203.1 L548.4,202.7 L550.2,202.3 L555.7,202.0 L557.5,201.6 L559.4,202.1 L568.5,202.0 L570.4,202.8 L572.2,203.1 L574.0,202.5 L575.9,201.9 L583.2,201.3 L585.0,202.8 L586.8,205.0 L594.2,207.1 L596.0,208.8 L597.8,208.9 L599.7,212.5 L601.5,211.0 L607.0,209.2 L608.8,212.0 L610.7,211.2 L612.5,212.9 L614.3,213.8 L619.8,215.2 L621.7,214.2 L623.5,211.9 L625.3,212.7 L627.2,214.1 L632.7,212.9 L634.5,214.7 L636.3,213.6 L638.2,215.1 L640.0,217.7"/>
+<path fill="none" stroke="var(--two)" stroke-width="2" stroke-linejoin="round" d="M70.0,216.0 L75.5,212.2 L81.0,208.4 L82.8,207.0 L84.7,205.7 L86.5,205.8 L88.3,206.2 L93.8,206.1 L95.7,206.9 L97.5,205.9 L99.3,204.5 L101.2,202.6 L106.7,202.2 L108.5,204.3 L110.3,203.0 L112.2,201.6 L114.0,201.1 L119.5,202.4 L121.3,197.5 L123.2,194.9 L125.0,194.7 L126.8,192.8 L132.3,199.2 L134.1,190.7 L136.0,190.5 L137.8,195.9 L139.6,196.2 L145.1,191.8 L147.0,192.5 L148.8,192.5 L150.6,187.9 L152.5,187.4 L163.5,184.0 L165.3,181.8 L170.8,180.8 L172.6,176.5 L174.5,174.8 L176.3,167.0 L178.1,169.0 L185.5,180.6 L187.3,191.5 L189.1,181.7 L191.0,183.4 L196.5,191.6 L198.3,183.0 L200.1,181.6 L202.0,183.3 L203.8,185.5 L209.3,181.3 L211.1,179.8 L213.0,171.7 L214.8,176.0 L216.6,176.6 L222.1,183.7 L224.0,180.5 L225.8,180.4 L227.6,185.6 L229.5,185.6 L235.0,189.2 L236.8,194.7 L238.6,184.0 L240.5,190.3 L242.3,186.0 L247.8,183.4 L249.6,181.1 L251.4,172.0 L253.3,175.5 L255.1,173.7 L260.6,174.7 L262.4,170.5 L264.3,167.8 L266.1,164.9 L267.9,166.5 L273.4,165.5 L275.3,161.7 L277.1,162.2 L278.9,159.9 L280.8,161.6 L286.3,157.3 L288.1,157.7 L289.9,156.8 L291.8,158.8 L299.1,148.6 L302.8,131.8 L304.6,127.9 L306.4,127.6 L311.9,114.5 L313.8,118.4 L315.6,111.2 L317.4,107.6 L319.3,121.7 L324.8,117.5 L326.6,123.1 L328.4,122.9 L330.3,107.7 L332.1,109.9 L339.4,103.4 L341.3,93.3 L343.1,93.9 L344.9,86.5 L350.4,75.2 L352.3,71.6 L355.9,76.9 L357.7,93.1 L363.2,110.1 L365.1,89.6 L366.9,102.5 L368.7,101.5 L370.6,92.0 L376.1,82.0 L377.9,76.3 L379.7,69.7 L381.6,58.1 L383.4,57.7 L388.9,51.7 L390.7,80.0 L392.6,67.6 L394.4,50.2 L396.2,65.9 L401.7,72.9 L403.6,68.6 L405.4,78.3 L407.2,102.2 L409.1,85.3 L414.6,85.8 L416.4,98.5 L418.2,109.3 L420.1,104.8 L421.9,102.8 L427.4,125.8 L429.2,120.4 L431.1,108.4 L432.9,125.8 L440.2,132.3 L442.1,124.7 L443.9,124.5 L445.7,117.9 L447.6,130.8 L453.1,127.1 L454.9,148.5 L456.7,158.0 L458.6,161.7 L460.4,128.3 L465.9,141.6 L467.7,141.0 L469.5,135.5 L471.4,147.3 L473.2,150.0 L478.7,150.4 L480.5,147.2 L482.4,139.0 L484.2,131.5 L486.0,127.3 L493.4,128.6 L495.2,141.7 L497.0,126.6 L498.9,121.8 L504.4,131.9 L506.2,131.6 L508.0,129.8 L509.9,126.7 L511.7,132.6 L517.2,130.8 L519.0,129.7 L520.9,136.3 L522.7,137.1 L524.5,133.3 L530.0,123.3 L531.9,123.1 L533.7,120.6 L535.5,120.9 L537.4,125.5 L542.9,133.4 L544.7,133.8 L546.5,129.5 L548.4,130.4 L550.2,123.2 L555.7,118.7 L557.5,119.0 L559.4,115.2 L568.5,123.9 L570.4,123.2 L572.2,124.1 L574.0,119.4 L575.9,119.1 L583.2,123.1 L585.0,126.2 L586.8,129.9 L594.2,136.6 L596.0,148.9 L597.8,149.8 L599.7,163.1 L601.5,160.9 L607.0,159.9 L608.8,164.1 L610.7,157.5 L612.5,163.2 L614.3,160.7 L619.8,161.6 L621.7,156.1 L623.5,144.0 L625.3,145.6 L627.2,152.1 L632.7,148.7 L634.5,154.7 L636.3,155.2 L638.2,165.7 L640.0,175.0"/>
+<circle cx="640" cy="175.0" r="4.5" fill="var(--two)" stroke="var(--panel)" stroke-width="2"/><circle cx="640" cy="217.7" r="4.5" fill="var(--rest)" stroke="var(--panel)" stroke-width="2"/>
+<text x="650" y="179.0" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)">Two stocks <tspan font-family="ui-monospace,Consolas,monospace" font-weight="700">164</tspan></text>
+<text x="650" y="221.7" font-family="system-ui,sans-serif" font-size="12.5" font-weight="600" fill="var(--text-h)">The rest <tspan font-family="ui-monospace,Consolas,monospace" font-weight="700">97</tspan></text>
+</svg>
+<figcaption><b>Figure 3.</b> Combined market value, with the end of 2025 set to 100 <span class="tag d">derived</span>. The dashed line marks 100. Estimated from share prices and reported KOSPI market value; the method matches published figures for the two companies' share of the market at each date checked (see notes).</figcaption>
+</figure>
+
+<p>This splits the KOSPI into two very different markets. The two chip stocks more than tripled by June, and even now are worth 64% more than at the start of the year. Everything else — banks, carmakers, shipbuilders, all of it — is <strong>down about 3%</strong> <span class="tag d">derived</span>. The headline says Korean stocks are up 20% in 2026. For the market outside those two companies, that is not true.</p>
+
+<p>It also means the crash is mostly a two-stock event. Of the ₩3,300 trillion wiped off the KOSPI since June, about two-thirds came from these two names <span class="tag d">derived</span>. When your index has that much in two shares, a bad day for them is a national event: on July 28, Samsung fell 13.4% and SK Hynix 14.6%, and the whole market fell 10.8% with them.</p>
+
+<h2>4. The second amplifier: borrowed money</h2>
+
+<p>Concentration explains why the index moves with two stocks. It does not explain why those two stocks move so far. For that, look at who has been holding them.</p>
+
+<p>Through this whole rally, foreign investors were sellers. They have sold a net <strong>₩217 trillion</strong> of Korean shares so far this year, and by mid-October about ₩173 trillion of what they had sold was Samsung and SK Hynix alone. Every share sold has a buyer, and a growing part of the buying came from Korean retail investors using leverage. Global funds with no need to sell were handing the stock to local investors who could be forced to.</p>
+
+<p>That leverage came in two forms. The first is margin debt: money borrowed from a broker to buy shares. It reached a record of about <strong>₩38.6 trillion</strong> in June. If the price falls far enough, the broker sells your shares for you, whether you want to or not.</p>
+
+<p>The second is newer and stranger: 2x funds on a single stock. A Hong Kong fund offering twice SK Hynix's daily move grew to $13 billion in June, the largest of its kind in the world. On May 27, Korea launched 16 products of its own on Samsung and SK Hynix, and retail investors put in a net ₩14 trillion. By Goldman Sachs's estimate, funds listed abroad make up about half of Korea's total leveraged exposure.</p>
+
+<p>These funds have a built-in flaw. To deliver twice each day's move, they must reset their position at the end of every day. If the stock falls, the fund has lost money and must sell shares to get back to 2x. If it falls further the next day, the fund must sell again. No one decides to do this; it is arithmetic. Goldman estimated that on a day when the market moves 5%, this rebalancing tied to SK Hynix alone could be more than 20% of the stock's normal daily trading.</p>
+
+<div class="callout">
+<p><strong>The loop.</strong> The price falls. Margin lenders sell the shares of borrowers who can no longer cover their loans. Leveraged funds sell to reset. That selling pushes the price lower, which triggers more forced selling. None of the sellers has an opinion about Samsung. They simply have no choice.</p>
+</div>
+
+<p>The damage to the buyers has been severe. Korea's 2x SK Hynix fund had fallen more than 80% from its peak by late July, and the finance minister apologised in parliament. Because the fund resets daily, it can lose far more than twice the stock's fall: in one stretch SK Hynix fell 17.9% and a 2x product lost 47.5%.</p>
+
+<p>Leverage did not start this. The market was already swinging wildly before the Korean funds launched, with annualised volatility of about 53% from January to late May, and margin debt was already at a 20-year high in February. But things got worse afterwards. Volatility rose to about 66%, and 17 of the year's 23 big falls have come since May 27 <span class="tag d">derived</span>.</p>
+
+<h2>5. Do the circuit breakers help?</h2>
+
+<p>Korea's circuit breaker stops trading for 20 minutes when the market is down 8%. The idea is to give people time to think instead of panic. This year it has had plenty of practice: the index has touched −8% on 12 separate days <span class="tag d">derived</span>.</p>
+
+<p>On those 12 days, the index's low averaged −9.7% and its close averaged −7.9%, so it did recover a little from the worst point. But on half of them it closed within a point of the low <span class="tag d">derived</span>. The pause gave people a moment. It did not change the direction. That makes sense given what is driving the selling: a human can stop to think, but a margin call or a fund's daily reset cannot. The next day the market rose seven times out of eleven, by an average of about 2%, which looks less like a rescue than like a market that had been pushed too far by forced sellers.</p>
+
+<h2>6. Is the business broken?</h2>
+
+<p>If these crashes reflected trouble at the companies, you would expect the companies to be in trouble. They have just reported record quarters. In the three months to September, Samsung made ₩107.4 trillion of operating profit, the first time it has passed ₩100 trillion in a quarter. SK Hynix made ₩83.3 trillion, keeping 80 won of every 100 in sales as operating profit.</p>
+
+<p>Yet at today's prices each company is valued at only about two and a half times its operating profit, if you multiply the latest quarter by four <span class="tag d">derived</span>. SK Hynix's shares are 61% below their June peak and Samsung's 48%, while their profits have kept growing.</p>
+
+<p>That does not make them bargains. Memory chips run in cycles, profits at the top are the highest they will ever be, and investors plainly do not believe these will last. But the outlook for their main product is different from the one facing flash makers. TrendForce expects flash to loosen in the second half of 2027, while the shortage of DRAM, the fast memory where these two companies earn most of their money, is expected to widen in 2027. So far, the crash has come from the way the shares are held, not from the chips.</p>
+
+<h2>7. What it adds up to</h2>
+
+<p>The claim fails. America is one source of shocks, and Korea has become three times as sensitive to it. But most of Korea's worst days had little to do with the night before on Wall Street, and the worst night on Wall Street this year produced a smaller fall than many calm ones.</p>
+
+<p>Korea's crashes come from how its market is built. Almost half of it now rests on two companies making one product, and in the rush to own them, shares passed from global funds that could wait to local investors who could not. When prices fall, borrowed money and 2x funds force selling that has nothing to do with what those companies are worth.</p>
+
+<p>That is why a company can post record profits and lose 10% of its value in a morning. The news came from New York. The crash was made in Korea.</p>
+
+<h2>8. Notes and sources</h2>
+
+<p><strong>Written with AI assistance.</strong> I used an AI assistant to gather the reported figures, run the calculations and help draft this note. Everything marked <span class="tag d">derived</span> I calculated from daily prices or reported figures. These events are very recent, and today's figures may be revised.</p>
+
+<p><strong>How the numbers were put together.</strong> Prices are daily closes from Yahoo Finance. Sensitivity to America is the slope from comparing each KOSPI daily change with the Nasdaq's change in the US session just before it: about 0.35–0.42 for each year from 2023 to 2025, 1.29 from January to May 26, 2026, and 1.07 from May 27 to November 6. "Explains about 12%" is the R-squared of that comparison after May 27; it was about 21% earlier in 2026, and about 16% and 27% using the Philadelphia Semiconductor index. Volatility is the annualised standard deviation of daily changes: 61% for the KOSPI and 14% for the S&amp;P 500 in 2026. The two-stock market values use share prices and about 5.85 billion Samsung common shares and 728 million SK Hynix shares, an estimate; total KOSPI value is scaled from the reported ₩7,450 trillion on June 22. This gives the two a share of 34% at the end of 2025, 41% at the end of April and 47% today, matching published figures. Samsung's preferred shares are counted in "the rest". The count of 12 days uses the daily low; an official circuit breaker needs the fall to last a full minute, and one report counted today's as the 11th. Valuation multiples use the same estimated market values, divided by the latest quarter's operating profit times four.</p>
+
+<p><strong>This is a learning exercise, not investment advice.</strong> I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.</p>
+
+<div class="footer">
+<p><strong>Sources</strong></p>
+<ol>
+<li><a href="https://www.asiae.co.kr/en/article/2026110610032663847">KOSPI triggers circuit breaker after falling 8%</a> — The Asia Business Daily, November 6, 2026</li>
+<li><a href="https://www.khan.co.kr/en/article/202611061430097/">KOSPI triggers sell-side sidecar after circuit breaker</a> — The Kyunghyang Shinmun, November 6, 2026</li>
+<li><a href="https://news.jkn.co.kr/editions/english/post/1074623">KOSPI market cap wipes out ₩3,331 trillion from peak</a> — JKN (market values, the two companies' share, foreign selling)</li>
+<li><a href="https://biz.heraldcorp.com/article/10900326">Foreign selling of Samsung and SK Hynix this year</a> — Herald Business (in Korean)</li>
+<li><a href="https://www.koreajoongangdaily.com/business/seoul-shares-post-record-18-percent-jump-to-reclaim-6500-point-level-on-chip-rally/12802481">Kospi jumps a record 18%</a> — Korea JoongAng Daily, July 31, 2026</li>
+<li><a href="https://www.koreaherald.com/article/10686698">Korean stocks plunge 8%, circuit breakers triggered</a> — The Korea Herald, March 4, 2026</li>
+<li><a href="https://en.sedaily.com/finance/2026/06/30/korean-retail-investors-margin-debt-hits-record-38-trillion">Korean retail investors' margin debt hits record ₩38 trillion</a> — Seoul Economic Daily, June 30, 2026</li>
+<li><a href="https://en.sedaily.com/finance/2026/02/09/korean-retail-margin-debt-hits-20-year-high-amid-fomo">Korean retail margin debt hits 20-year high</a> — Seoul Economic Daily, February 9, 2026</li>
+<li><a href="https://www.koreatimes.co.kr/business/banking-finance/20260711/hong-kong-retail-investors-reel-as-sk-hynix-etf-swings-turn-painful">Hong Kong retail investors reel as SK hynix ETF swings turn painful</a> — The Korea Times, July 11, 2026 (fund size, Goldman Sachs estimates)</li>
+<li><a href="https://www.cnbc.com/2026/07/29/korea-leveraged-etf-kodex-sk-hynix.html">Minister apologizes as Korean leveraged ETF investors nurse heavy losses</a> — CNBC, July 29, 2026</li>
+<li><a href="https://en.sedaily.com/finance/2026/07/21/sk-hynix-falls-18-percent-but-leveraged-etf-loses-48">SK hynix falls 18% but leveraged ETF loses 48%</a> — Seoul Economic Daily, July 21, 2026</li>
+<li><a href="https://news.samsung.com/global/samsung-electronics-announces-third-quarter-2026-results">Samsung Electronics third quarter 2026 results</a> — Samsung</li>
+<li><a href="https://www.investing.com/news/company-news/sk-hynix-q3-2026-slides-revenue-tops-100t-80-margin-on-ai-boom-93CH-4977357">SK hynix Q3 2026 results</a> — Investing.com</li>
+<li><a href="https://www.trendforce.com/presscenter/news/20260730-13158.html">Diverging memory market outlook in 2027</a> — TrendForce, July 30, 2026</li>
+<li><a href="https://finance.yahoo.com/quote/%5EKS11/history/">KOSPI daily price history</a> — Yahoo Finance</li>
+</ol>
+<p style="margin-top:18px">This page links to original sources and shares only my own analysis — no full reprints. Nothing here is investment advice.</p>
+</div>
+
+</main>
+</body>
+</html>
