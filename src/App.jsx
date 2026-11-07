@@ -33,7 +33,7 @@ const research = [
     ticker: 'KOSPI',
     title: 'Made in Korea',
     href: '/research/korea-kospi-crash-2026',
-    desc: "South Korea's stock market fell 8% and trading was stopped, and the headlines blamed Wall Street. But 8 of the KOSPI's 15 worst days this year came after a calm night on the Nasdaq. The crashes are built at home: two chip stocks went from 34% to 57% of the market, and the buyers were using borrowed money and 2x funds that must sell when prices fall.",
+    desc: "South Korea's stock market has fallen 5% or more on 23 days this year, and most of those falls had little to do with Wall Street. The shocks come from outside; the size of the moves comes from a market that has concentrated into two chip companies, and whose shares have passed from foreign funds to local investors using borrowed money and 2x funds that are forced to sell when prices drop.",
   },
   {
     date: '2026-11-01',
