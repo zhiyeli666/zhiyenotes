@@ -82,11 +82,70 @@ export async function listDir(env, dir) {
     .sort((a, b) => b.date.localeCompare(a.date)) // 新的在前
 }
 
-export async function readFile(env, path) {
+export async function readFile(env, path, ref) {
   const { branch } = config(env)
-  const file = await gh(env, `/contents/${path}?ref=${branch}`)
-  if (!file) return null
+  const file = await gh(env, `/contents/${path}?ref=${encodeURIComponent(ref || branch)}`)
+  // 目录会返回数组；只有单个文件才有正文。type 偶尔缺，但只要有 content 就能读。
+  if (!file || Array.isArray(file)) return null
+  if (file.type && file.type !== 'file') return null
+  if (typeof file.content !== 'string') return null
   return { content: decodeBase64(file.content), sha: file.sha }
+}
+
+// 列出一个目录里的文件。目录还不存在（比如第一次发研究笔记）时返回空数组。
+export async function listFiles(env, dir, ref) {
+  const { branch } = config(env)
+  const items = await gh(env, `/contents/${dir}?ref=${encodeURIComponent(ref || branch)}`)
+  if (!Array.isArray(items)) return []
+  return items.filter((item) => item.type === 'file')
+}
+
+// 当前分支的提交，以及它的树。一次提交多个文件时以此为父提交。
+export async function getHead(env) {
+  const { branch } = config(env)
+  const ref = await gh(env, `/git/ref/heads/${encodeURIComponent(branch)}`)
+  if (!ref?.object?.sha) throw new Error('找不到要提交到的分支。')
+  const commit = await gh(env, `/git/commits/${ref.object.sha}`)
+  if (!commit?.tree?.sha) throw new Error('读不到仓库当前的文件树。')
+  return { sha: ref.object.sha, tree: commit.tree.sha, branch }
+}
+
+// 多个文件同一次提交。content 为 null 表示删除。
+// 用 Git Data API 而不是逐个 Contents API，这样页面和首页列表不会分成两次部署。
+export async function commitFiles(env, head, files, message) {
+  const { branch } = config(env)
+  if (!files?.length) throw new Error('没有要提交的文件。')
+
+  // content 直接放进 tree，GitHub 会顺便建 blob。sha 为 null 表示删除。
+  const tree = files.map((file) => {
+    if (file.content == null) {
+      return { path: file.path, mode: '100644', type: 'blob', sha: null }
+    }
+    return { path: file.path, mode: '100644', type: 'blob', content: file.content }
+  })
+
+  const createdTree = await gh(env, '/git/trees', {
+    method: 'POST',
+    body: JSON.stringify({ base_tree: head.tree, tree }),
+  })
+  if (!createdTree?.sha) throw new Error('GitHub 没有生成新的文件树。')
+
+  const commit = await gh(env, '/git/commits', {
+    method: 'POST',
+    body: JSON.stringify({
+      message,
+      tree: createdTree.sha,
+      parents: [head.sha],
+    }),
+  })
+  if (!commit?.sha) throw new Error('GitHub 没有生成提交。')
+
+  const updated = await gh(env, `/git/refs/heads/${encodeURIComponent(branch)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ sha: commit.sha }),
+  })
+  if (!updated?.object?.sha) throw new Error('提交没有写上分支，请刷新后再试。')
+  return { sha: commit.sha }
 }
 
 export async function writeFile(env, path, content, sha, message) {

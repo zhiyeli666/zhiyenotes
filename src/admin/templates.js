@@ -36,6 +36,36 @@ export const DIARY_TEMPLATE = `# Simulated Portfolio Diary
 （为什么这么操作？）
 `
 
+// 股票分析的正文骨架。导语、标题、日期在表单里单独填，不写在这里。
+export const RESEARCH_TEMPLATE = `## Verdict
+
+State the conclusion in one sentence.
+
+One or two paragraphs of the evidence behind it.
+
+## The claim
+
+Write the argument here. Link a source like [the company release](https://example.com). After a figure you calculated yourself, write {derived}.
+
+| Measure | Figure |
+| --- | ---: |
+| Revenue | $0 {derived} |
+
+> **The claim.** State the claim this note is testing.
+
+## Notes and sources
+
+**Written with AI assistance.** I used an AI assistant to gather the reported figures, check the arithmetic and help draft this note. Anything I calculated rather than read off a report is marked {derived}. The argument, and any mistake in it, is mine.
+
+**How the numbers were put together.** Explain each derived figure here.
+
+**This is a learning exercise, not investment advice.** I am a teenager writing publicly about how to read a business. I would rather be corrected than believed.
+
+### Sources
+
+1. [Source title](https://example.com) — Publication, Month D, YYYY
+`
+
 // 几个栏目的配置。后台左侧的切换、以及保存到哪个文件夹都看这里。
 export const COLLECTIONS = {
   notes: {

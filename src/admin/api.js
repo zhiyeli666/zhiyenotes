@@ -42,4 +42,15 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ path, sha }),
     }),
+  research: (slug) => request(`/api/research?slug=${encodeURIComponent(slug)}`),
+  saveResearch: (payload) =>
+    request('/api/research', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  removeResearch: (slug) =>
+    request('/api/research-delete', {
+      method: 'POST',
+      body: JSON.stringify({ slug }),
+    }),
 }
