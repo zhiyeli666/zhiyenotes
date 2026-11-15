@@ -20,10 +20,11 @@ import remarkGfm from 'remark-gfm'
 
 // ---- Deep research notes -----------------------------------------------
 // Unlike the two daily columns, each of these is a complete standalone page
-// living in public/research/. To publish a new one: drop the .html file into
-// public/research/, then add an entry here (newest first). Use the href
-// WITHOUT the .html extension — Cloudflare Pages redirects to the clean URL,
-// so linking straight to it saves a redirect on every click.
+// living in public/research/. Publish from 工作台 → 股票分析: one save writes
+// the HTML page and inserts an entry here (newest first) in the same commit.
+// By hand still works: drop the .html file into public/research/, then add an
+// entry here. Use the href WITHOUT the .html extension — Cloudflare Pages
+// redirects to the clean URL, so linking straight to it saves a redirect.
 //
 // While this list is empty the Stock Analysis card and section hide
 // themselves, so the site never shows an empty column.

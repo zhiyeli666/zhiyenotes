@@ -267,6 +267,7 @@
   font-family: var(--mono);
   font-size: 13px;
   padding-bottom: 10px;
+  overflow-wrap: anywhere;
 }
 
 .editor-actions {
@@ -377,5 +378,104 @@
 
   .editor-actions .btn {
     flex: 1;
+  }
+}
+
+/* 股票分析。hidden 要压过 .admin-body 的 display:grid，不然藏不住。 */
+.admin-body[hidden] {
+  display: none;
+}
+
+.research-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(120px, 0.7fr) 170px;
+  gap: 10px 12px;
+}
+
+.research-fields label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  min-width: 0;
+}
+
+.research-fields .span-2 {
+  grid-column: span 2;
+}
+
+.research-fields .span-all {
+  grid-column: 1 / -1;
+}
+
+.input.area {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.field-help {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.field-help code {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.msg.info {
+  color: var(--text);
+  background: var(--code-bg);
+}
+
+.research-preview {
+  width: 100%;
+  height: 70vh;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.note-item.research-link {
+  font-family: var(--sans);
+  display: grid;
+  gap: 2px;
+}
+
+.research-link-top {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.research-link .ticker {
+  color: var(--accent);
+}
+
+.legacy-mark {
+  margin-left: auto;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.item-title {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 860px) {
+  .research-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .research-fields .span-2,
+  .research-fields .span-all {
+    grid-column: auto;
   }
 }

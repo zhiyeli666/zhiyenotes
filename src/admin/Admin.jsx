@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm'
 import '../App.css'
 import './Admin.css'
 import { api } from './api.js'
+import ResearchWorkbench from './ResearchPanel.jsx'
 import { COLLECTIONS } from './templates.js'
 
 // ============================================================
@@ -71,19 +72,50 @@ function Login({ onDone }) {
   )
 }
 
+function CollectionSwitch({ collection, onChange }) {
+  return (
+    <div className="seg">
+      {Object.entries(COLLECTIONS).map(([key, c]) => (
+        <button
+          key={key}
+          className={`seg-btn ${collection === key ? 'on' : ''}`}
+          onClick={() => onChange(key)}
+        >
+          {c.label}
+        </button>
+      ))}
+      <button
+        className={`seg-btn ${collection === 'research' ? 'on' : ''}`}
+        onClick={() => onChange('research')}
+      >
+        📊 股票分析
+      </button>
+    </div>
+  )
+}
+
 function Workbench({ onLogout }) {
   const [collection, setCollection] = useState('notes')
   const [notes, setNotes] = useState({})
+  const [research, setResearch] = useState([])
+  const [researchError, setResearchError] = useState(null)
+  const [researchDirty, setResearchDirty] = useState(false)
   const [editing, setEditing] = useState(null) // 正在编辑的笔记
   const [original, setOriginal] = useState('') // 打开时的原文，用来判断"有没有改动"
   const [msg, setMsg] = useState(null) // { type: 'ok' | 'error', text }
   const [busy, setBusy] = useState(false)
   const [tab, setTab] = useState('write') // 手机上：写 / 预览
 
+  const onResearchDirty = useCallback((value) => {
+    setResearchDirty(value)
+  }, [])
+
   const refresh = useCallback(async () => {
     try {
       const data = await api.list()
       setNotes(data.notes || {})
+      setResearch(data.research || [])
+      setResearchError(data.researchError || null)
     } catch (err) {
       setMsg({ type: 'error', text: err.message })
     }
@@ -118,9 +150,11 @@ function Workbench({ onLogout }) {
   }
 
   function newNote() {
+    const section = COLLECTIONS[collection]
+    if (!section) return
     if (dirty && !confirm('当前笔记还没保存，确定要新建吗？')) return
     const date = today()
-    const content = COLLECTIONS[collection].template.replaceAll('{{date}}', date)
+    const content = section.template.replaceAll('{{date}}', date)
     setEditing({
       path: `${COLLECTIONS[collection].dir}/${date}.md`,
       collection,
@@ -191,8 +225,15 @@ function Workbench({ onLogout }) {
     setBusy(false)
   }
 
+  function switchCollection(key) {
+    if (key === collection) return
+    const pending = dirty || researchDirty
+    if (pending && !confirm('当前内容还没保存，确定要离开吗？')) return
+    setCollection(key)
+  }
+
   async function logout() {
-    if (dirty && !confirm('还有没保存的修改，确定退出吗？')) return
+    if ((dirty || researchDirty) && !confirm('还有没保存的修改，确定退出吗？')) return
     await api.logout()
     onLogout()
   }
@@ -218,20 +259,11 @@ function Workbench({ onLogout }) {
 
       {msg && <p className={`msg ${msg.type === 'ok' ? 'ok' : 'error'}`}>{msg.text}</p>}
 
-      <div className="admin-body">
+      {/* 两个栏目都留在页面上，只是藏起没在看的那个，这样换栏目不会丢掉还没保存的草稿。 */}
+      <div className="admin-body" hidden={collection === 'research'}>
         {/* 左边：栏目切换 + 笔记列表 */}
         <aside className="sidebar">
-          <div className="seg">
-            {Object.entries(COLLECTIONS).map(([key, c]) => (
-              <button
-                key={key}
-                className={`seg-btn ${collection === key ? 'on' : ''}`}
-                onClick={() => setCollection(key)}
-              >
-                {c.label}
-              </button>
-            ))}
-          </div>
+          <CollectionSwitch collection={collection} onChange={switchCollection} />
 
           <button className="btn primary block" onClick={newNote}>
             ＋ 写新的一篇
@@ -327,6 +359,16 @@ function Workbench({ onLogout }) {
             </>
           )}
         </section>
+      </div>
+
+      <div className="admin-body" hidden={collection !== 'research'}>
+        <ResearchWorkbench
+          items={research}
+          error={researchError}
+          onRefresh={refresh}
+          onDirty={onResearchDirty}
+          switcher={<CollectionSwitch collection={collection} onChange={switchCollection} />}
+        />
       </div>
     </div>
   )
