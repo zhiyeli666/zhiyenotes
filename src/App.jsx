@@ -29,6 +29,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: '2026-11-15',
+    ticker: 'NVDA',
+    title: 'The Business Did Not Resign',
+    href: '/research/nvidia-business-did-not-resign-2026',
+    desc: "Jensen Huang resigned as Nvidia's president, chief executive and a director on November 12, and Colette Kress was appointed interim chief executive. The shares were already falling, and the published reports of how far they fell do not agree. The last complete accounts are still the August quarter — revenue of $96.2 billion and a $108.0 billion third-quarter guide — with the actual third quarter due November 17.",
+  },
+  {
     date: '2026-11-06',
     ticker: 'KOSPI',
     title: 'Made in Korea',
