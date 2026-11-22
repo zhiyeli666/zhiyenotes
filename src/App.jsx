@@ -30,6 +30,13 @@ import remarkGfm from 'remark-gfm'
 // themselves, so the site never shows an empty column.
 const research = [
   {
+    date: "2026-11-21",
+    ticker: "ANT",
+    title: "A $104 Billion Loss, Mostly on Paper",
+    href: "/research/anthropic-loss-analysis-2026",
+    desc: "Why Anthropic’s reported loss differs from its operating performance, cash flow, and future computing commitments.",
+  },
+  {
     date: '2026-11-15',
     ticker: 'NVDA',
     title: 'The Business Did Not Resign',
